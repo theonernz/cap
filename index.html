@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>海鸥吃扇贝.io</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>海鸥吃扇贝.io</h1>
+            <p class="subtitle">完整版：多用户、能力值系统、智能AI、中英文双语、小地图</p>
+        </div>
+        
+        <div class="controls-container">
+            <button onclick="game.startGame()" id="startButton">开始游戏</button>
+            <button onclick="game.pauseGame()" id="pauseButton">暂停/继续</button>
+            <button onclick="game.restartGame()" id="restartButton">重新开始</button>
+            <button onclick="ui.changeName()" id="changeNameButton">更改名称</button>
+            <button onclick="minimap.toggleMiniMap()" id="minimapBtn">切换小地图</button>
+            <button onclick="ui.toggleLanguage()" class="lang-btn" id="languageBtn">English</button>
+        </div>
+        
+        <div class="game-area-wrapper">
+            <div class="left-panel">
+                <div class="stats-panel">
+                    <h3 class="panel-title">游戏状态</h3>
+                    <div class="stat-item">
+                        <span class="stat-label" id="playerNameLabel">玩家名称</span>
+                        <span class="stat-value" id="playerName">海鸥玩家</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label" id="powerLabel">能力值</span>
+                        <span class="stat-value" id="power">100</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label" id="sizeLabel">大小</span>
+                        <span class="stat-value" id="size">1.0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label" id="scallopsEatenLabel">吃掉扇贝</span>
+                        <span class="stat-value" id="scallopsEaten">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label" id="gameTimeLabel">游戏时间</span>
+                        <span class="stat-value" id="gameTime">0s</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label" id="playerCountLabel">玩家数量</span>
+                        <span class="stat-value" id="playerCount">1</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">AI玩家数量</span>
+                        <span class="stat-value" id="aiPlayerCount">3</span>
+                    </div>
+                </div>
+                
+                <div class="settings-panel">
+                    <h3 class="panel-title">游戏设置</h3>
+                    <div class="setting-item">
+                        <span class="setting-label" id="leaderboardSizeLabel">排行榜数量</span>
+                        <input type="number" class="setting-input" id="leaderboardSize" min="5" max="20" value="10">
+                    </div>
+                    <div class="setting-item">
+                        <span class="setting-label" id="strongTransferLabel">强海鸥获得%</span>
+                        <input type="number" class="setting-input" id="strongTransferRate" min="1" max="100" value="40">
+                    </div>
+                    <div class="setting-item">
+                        <span class="setting-label" id="weakTransferLabel">弱海鸥损失%</span>
+                        <input type="number" class="setting-input" id="weakTransferRate" min="1" max="100" value="5">
+                    </div>
+                    <div class="setting-item">
+                        <span class="setting-label" id="aiCountLabel">AI海鸥数量</span>
+                        <input type="number" class="setting-input" id="aiSeagullCount" min="5" max="50" value="20">
+                    </div>
+                    <div class="setting-item">
+                        <span class="setting-label" id="aiPlayerCountLabel">AI玩家数量</span>
+                        <input type="number" class="setting-input" id="aiPlayerCountInput" min="1" max="10" value="3">
+                    </div>
+                    <div class="setting-item">
+                        <span class="setting-label" id="scallopDensityLabel">扇贝密度</span>
+                        <input type="number" class="setting-input" id="scallopDensity" min="50" max="1000" value="500">
+                    </div>
+                    <div class="setting-item">
+                        <span class="setting-label" id="growthSpeedLabel">成长速度</span>
+                        <input type="number" class="setting-input" id="growthSpeed" min="0.5" max="5" step="0.5" value="1">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <div class="game-area-container">
+                    <canvas id="gameCanvas"></canvas>
+                    
+                    <div class="game-overlay">
+                        <div class="overlay-info">
+                            <div class="overlay-item">
+                                <span>坐标:</span>
+                                <span id="worldCoordinates">(0, 0)</span>
+                            </div>
+                            <div class="overlay-item">
+                                <span>地图:</span>
+                                <span id="mapSize">5000x5000</span>
+                            </div>
+                            <div class="overlay-item">
+                                <span>速度:</span>
+                                <span id="speedValue">0</span>
+                            </div>
+                            <div class="overlay-item">
+                                <span>缩放:</span>
+                                <span id="zoomValue">1.0x</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="control-hint" id="controlHint">
+                        <h3>游戏控制说明</h3>
+                        <p>使用鼠标拖拽控制海鸥移动：</p>
+                        <ul style="text-align: left; margin: 10px 0;">
+                            <li><strong>鼠标左键拖拽</strong> - 控制移动方向和速度</li>
+                            <li><strong>拖拽时按住右键</strong> - 加速移动</li>
+                            <li><strong>拖得越远</strong> - 移动速度越快</li>
+                            <li><strong>空格键</strong> - 快速停止</li>
+                            <li><strong>鼠标滚轮</strong> - 缩放地图</li>
+                            <li><strong>点击小地图</strong> - 快速跳转位置</li>
+                        </ul>
+                        <p style="margin-top: 10px;">点击任意位置开始游戏</p>
+                    </div>
+                    
+                    <button class="toggle-minimap-btn" onclick="minimap.toggleMiniMap()">切换小地图</button>
+                    
+                    <div class="zoom-controls">
+                        <div class="zoom-btn" id="zoomInBtn">+</div>
+                        <div class="zoom-btn" id="zoomOutBtn">-</div>
+                    </div>
+                    
+                    <div class="game-over" id="gameOverScreen">
+                        <h2>游戏结束!</h2>
+                        <p class="final-score">最终能力值: <span id="finalScore">0</span></p>
+                        <button onclick="game.restartGame()">重新开始</button>
+                    </div>
+                </div>
+                
+                <div class="bottom-panels">
+                    <div class="instructions-panel">
+                        <h3 class="panel-title">游戏说明</h3>
+                        <ul class="instructions-list">
+                            <li>鼠标左键拖拽控制海鸥移动</li>
+                            <li>拖拽时按住右键加速</li>
+                            <li>吃掉扇贝增加能力值和大小</li>
+                            <li>强海鸥遇到弱海鸥会转移能力值</li>
+                            <li>能力值清零时海鸥死亡</li>
+                            <li>使用滚轮或+/-按钮缩放地图</li>
+                            <li>点击小地图快速跳转位置</li>
+                            <li>AI玩家具有智能觅食和避险能力</li>
+                        </ul>
+                    </div>
+                
+                    <div class="leaderboard-panel">
+                        <div class="leaderboard-header">
+                            <h3 class="panel-title">排行榜</h3>
+                            <button onclick="ui.updateLeaderboardSize()" style="padding: 5px 10px; font-size: 0.8rem;">更新</button>
+                        </div>
+                        <div class="leaderboard-list" id="leaderboardList">
+                            <div class="leaderboard-item current-player">
+                                <span class="leaderboard-rank">1</span>
+                                <span class="leaderboard-name">海鸥玩家</span>
+                                <span class="leaderboard-power">100</span>
+                                <span class="leaderboard-size">1.0</span>
+                            </div>
+                        </div>
+                        <div class="leaderboard-update-time" id="leaderboardUpdateTime">最后更新: 0秒前</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript 模块 -->
+    <script src="js/config.js"></script>
+    <script src="js/entities.js"></script>
+    <script src="js/ai.js"></script>
+    <script src="js/collision.js"></script>
+    <script src="js/minimap.js"></script>
+    <script src="js/drawing.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

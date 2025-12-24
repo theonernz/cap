@@ -44,9 +44,10 @@ const DrawingSystem = {
             
             // þ╗ÿÕêÂµ░┤ÞâîµÖ»
             this.drawWaterBackground();
-              // 绘制扇贝
+            
+            // þ╗ÿÕêÂµëçÞ┤Ø
             scallops.forEach(scallop => {
-                this.drawScallop(scallop.x, scallop.y, scallop.currentSize || scallop.size, scallop.color, scallop.innerColor, zoomLevel, scallop.isGrowing, scallop.growthProgress);
+                this.drawScallop(scallop.x, scallop.y, scallop.currentSize || scallop.size, scallop.color, scallop.innerColor, zoomLevel, scallop.isGrowing, scallop.growthProgress, scallop);
             });
             
             // þ╗ÿÕêÂAIµÁÀÚ©Ñ
@@ -226,20 +227,82 @@ const DrawingSystem = {
             this.ctx.fillText(nameText, screenX, nameTextY);
         }
         
-        this.ctx.restore();    },
+        this.ctx.restore();
+    },
     
-    // 绘制扇贝
-    drawScallop(x, y, size, color, innerColor, zoomLevel, isGrowing, growthProgress) {
-        const drawSize = size;
+    // þ╗ÿÕêÂµëçÞ┤Ø
+    drawScallop(x, y, size, color, innerColor, zoomLevel, isGrowing, growthProgress, scallop) {
+        const drawSize = size;  // Õ£¿õ©ûþòîÕØÉµáçþ│╗õ©¡´╝îõ©ìÚ£ÇÞªüÚóØÕñûþ╝®µö¥
         
+        // µêÉÚò┐Õè¿þö╗´╝ÜÞäëÕè¿µòêµ×£
         let animationScale = 1.0;
         if (isGrowing && growthProgress !== undefined) {
+            // õ¢┐þö¿µ¡úÕ╝ªµ│óÕêøÕ╗║ÞäëÕè¿µòêµ×£
             animationScale = 1.0 + Math.sin(growthProgress * Math.PI * 4) * 0.15;
         }
         
         const finalSize = drawSize * animationScale;
         
+        // µëçÞ┤ØþÄïÕàëþÄ»µòêµ×£
+        if (scallop && (scallop.isKing || scallop.isKingCandidate)) {
+            this.ctx.save();
+            const time = Date.now() / 1000;
+            const glowSize = finalSize + 8 + Math.sin(time * 3) * 3;
+            
+            // ÕñûÕ▒éÚçæÞë▓ÕàëþÄ»
+            const gradient = this.ctx.createRadialGradient(x, y, finalSize, x, y, glowSize);
+            gradient.addColorStop(0, 'rgba(255, 215, 0, 0)');
+            gradient.addColorStop(0.7, scallop.isKing ? 'rgba(255, 215, 0, 0.6)' : 'rgba(255, 105, 180, 0.4)');
+            gradient.addColorStop(1, 'rgba(255, 215, 0, 0)');
+            this.ctx.fillStyle = gradient;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, glowSize, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.restore();
+            
+            // µëçÞ┤ØþÄïµáçÞ«░
+            if (scallop.isKing) {
+                this.ctx.save();
+                this.ctx.font = 'bold 16px Arial';
+                this.ctx.textAlign = 'center';
+                this.ctx.textBaseline = 'middle';
+                this.ctx.fillStyle = '#FFD700';
+                this.ctx.strokeStyle = '#000';
+                this.ctx.lineWidth = 3;
+                this.ctx.strokeText('­ƒææ', x, y - finalSize - 15);
+                this.ctx.fillText('­ƒææ', x, y - finalSize - 15);
+                this.ctx.restore();
+            }
+        }
+        
+        // ÕÅÿÞ┤¿µëçÞ┤ØÞ¡ªÕæèµòêµ×£
+        if (scallop && scallop.isSpoiled) {
+            this.ctx.save();
+            const time = Date.now() / 500;
+            this.ctx.strokeStyle = `rgba(255, 0, 0, ${0.5 + Math.sin(time) * 0.3})`;
+            this.ctx.lineWidth = 2;
+            this.ctx.setLineDash([5, 5]);
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, finalSize + 5, 0, Math.PI * 2);
+            this.ctx.stroke();
+            this.ctx.setLineDash([]);
+            
+            // µ»ÆµáçÞ«░
+            this.ctx.font = 'bold 14px Arial';
+            this.ctx.textAlign = 'center';
+            this.ctx.textBaseline = 'middle';
+            this.ctx.fillStyle = '#FF0000';
+            this.ctx.strokeStyle = '#000';
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeText('Ôÿá', x, y - finalSize - 12);
+            this.ctx.fillText('Ôÿá', x, y - finalSize - 12);
+            this.ctx.restore();
+        }
+        
+        // µêÉÚò┐ÕàëþÄ»µòêµ×£
         if (isGrowing && CONFIG.scallopGrowth.showGrowthEffect) {
+            // ...existing code...
+        }
             this.ctx.save();
             this.ctx.strokeStyle = `rgba(76, 175, 80, ${0.8 * (1 - growthProgress)})`;
             this.ctx.lineWidth = 3;
@@ -260,9 +323,10 @@ const DrawingSystem = {
         this.ctx.arc(x, y, finalSize, 0, Math.PI * 2);
         this.ctx.fill();
         
+        // þ╗ÿÕêÂµëçÞ┤Øþ║╣þÉå
         this.ctx.strokeStyle = '#DDD';
         this.ctx.lineWidth = 1;
-        const lineCount = Math.floor(size / 1.5);
+        const lineCount = Math.floor(size / 1.5);  // µá╣µì«ÕñºÕ░ÅÞ░âµò┤þ║╣þÉåþ║┐µØíµò░ÚçÅ
         for (let i = 0; i < lineCount; i++) {
             const angle = (i / lineCount) * Math.PI;
             this.ctx.beginPath();
@@ -276,6 +340,7 @@ const DrawingSystem = {
         this.ctx.arc(x, y, finalSize * 0.6, 0, Math.PI * 2);
         this.ctx.fill();
         
+        // µÀ╗ÕèáÕàëµ│¢µòêµ×£´╝êÕñºµëçÞ┤Øµø┤µÿÄµÿ¥´╝ë
         if (size >= 12) {
             this.ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
             this.ctx.beginPath();

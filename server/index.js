@@ -83,6 +83,52 @@ const roomManager = new RoomManager(logger);
 
 // ==================== REST API Endpoints ====================
 
+// Games List API - Returns configured games from games.ini
+app.get('/api/games', async (req, res) => {
+    try {
+        const gamesConfigPath = path.join(__dirname, '../game/config/games.ini');
+        const gamesParser = new ConfigParser(gamesConfigPath);
+        const gamesSection = gamesParser.getSection('games');
+        
+        if (!gamesSection || !gamesSection.list) {
+            return res.json({ success: true, games: [] });
+        }
+        
+        // Parse game list
+        const gameIds = gamesSection.list.split(',').map(id => id.trim());
+        const games = [];
+        
+        // Load each game's manifest
+        for (const gameId of gameIds) {
+            try {
+                const gameConfig = gamesParser.getSection(gameId);
+                if (!gameConfig) continue;
+                
+                // Load manifest.json
+                const manifestPath = path.join(__dirname, '..', gameConfig.path, 'manifest.json');
+                const fs = require('fs').promises;
+                const manifestData = await fs.readFile(manifestPath, 'utf8');
+                const manifest = JSON.parse(manifestData);
+                
+                // Check if game is enabled in config
+                if (gameConfig.enabled !== false) {
+                    games.push(manifest);
+                } else if (gameConfig.comingSoon === true) {
+                    // Include coming soon games
+                    games.push(manifest);
+                }
+            } catch (error) {
+                logger.warn('Failed to load game manifest', { gameId, error: error.message });
+            }
+        }
+        
+        res.json({ success: true, games });
+    } catch (error) {
+        logger.error('Failed to load games list', { error: error.message });
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
 // User Registry API
 app.get('/api/users', async (req, res) => {
     try {

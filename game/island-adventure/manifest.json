@@ -1,0 +1,43 @@
+{
+  "gameId": "island-adventure",
+  "name": {
+    "zh": "海鸥岛屿冒险",
+    "en": "Seagull Island Adventure"
+  },
+  "description": {
+    "zh": "探索神秘岛屿，收集资源，建造基地，与其他海鸥一起生存！",
+    "en": "Explore mysterious islands, collect resources, build bases, and survive with other seagulls!"
+  },
+  "icon": "🏝️",
+  "badge": {
+    "text": {
+      "zh": "即将推出",
+      "en": "Coming Soon"
+    },
+    "icon": "🗓️",
+    "type": "coming-soon"
+  },
+  "version": "0.1.0",
+  "status": "development",
+  "stats": {
+    "rating": 0,
+    "expectedRelease": "2026 Q1",
+    "preorders": 1234
+  },
+  "paths": {
+    "entry": "game/island-adventure/index.html",
+    "manifest": "game/island-adventure/manifest.json"
+  },
+  "features": {
+    "multiplayer": true,
+    "singleplayer": true,
+    "openWorld": true,
+    "crafting": true,
+    "building": true
+  },
+  "tags": ["adventure", "survival", "open-world", "crafting"],
+  "developmentStatus": {
+    "progress": 15,
+    "nextMilestone": "Alpha testing"
+  }
+}

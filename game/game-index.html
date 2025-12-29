@@ -349,84 +349,11 @@
     </header>
     
     <div class="dashboard-container">
-            <div class="games-grid">
-                <!-- 吃扇贝游戏 -->
-                <div class="game-card featured">
-                    <div class="game-badge">🔥 <span data-lang-key="hot">热门</span></div>
-                    <div class="game-icon">🦅</div>
-                    <h3 class="game-title" data-lang-key="seagullEatScallops">海鸥吃扇贝</h3>
-                    <p class="game-description" data-lang-key="scallopsDescription">
-                        控制你的海鸥在大海中吃扇贝，增强能力，与其他玩家竞争排行榜！
-                    </p>
-                    <div class="game-stats">
-                        <span>👥 <span data-lang-key="online">在线</span>: <strong id="onlinePlayers">0</strong></span>
-                        <span>⭐ <span data-lang-key="rating">评分</span>: <strong>4.8</strong></span>
-                    </div>
-                    
-                    <!-- Room List Section -->
-                    <div class="room-list-container" style="margin-top: 25px;">
-                        <div class="room-list-header">
-                            <h2 style="font-size: 1.3rem;">🏠 <span data-lang-key="availableRooms">可用房间</span></h2>
-                            <div style="display: flex; gap: 10px;">
-                                <button class="refresh-btn" onclick="refreshRoomList()" title="刷新房间列表">
-                                    🔄
-                                </button>
-                                <button class="create-room-btn" id="createRoomBtn" onclick="showCreateRoomModal()" disabled title="创建新房间">
-                                    ➕
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div class="room-list" id="roomList">
-                            <div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.7);">
-                                <p data-lang-key="loadingRooms">加载房间列表中...</p>
-                            </div>
-                        </div>
-                        
-                        <div style="text-align: center; margin-top: 15px;">
-                            <button class="play-btn secondary" onclick="enterGameAnonymous('scallopsIO')" style="display: inline-block;">
-                                👤 <span data-lang-key="anonymousTry">匿名试玩</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- 即将推出的游戏 -->
-                <div class="game-card coming-soon">
-                    <div class="game-badge coming-soon-badge" data-lang-key="comingSoon">即将推出</div>
-                    <div class="game-icon">🏝️</div>
-                    <h3 class="game-title" data-lang-key="seagullIsland">海鸥岛屿冒险</h3>
-                    <p class="game-description" data-lang-key="islandDescription">
-                        探索神秘岛屿，收集资源，建造基地，与其他海鸥一起生存！
-                    </p>
-                    <div class="game-stats">
-                        <span>🗓️ <span data-lang-key="expected">预计</span>: <strong>2026 Q1</strong></span>
-                        <span>📢 <span data-lang-key="preorder">预约</span>: <strong>1,234</strong></span>
-                    </div>
-                    <div class="game-actions">
-                        <button class="play-btn primary" disabled>
-                            <span data-lang-key="inDev">开发中...</span>
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- 即将推出的游戏2 -->
-                <div class="game-card coming-soon">
-                    <div class="game-badge coming-soon-badge" data-lang-key="comingSoon">即将推出</div>
-                    <div class="game-icon">⚔️</div>
-                    <h3 class="game-title" data-lang-key="seagullBattle">海鸥大乱斗</h3>
-                    <p class="game-description" data-lang-key="battleDescription">
-                        实时对战，技能组合，团队协作，成为最强海鸥战士！
-                    </p>
-                    <div class="game-stats">
-                        <span>🗓️ <span data-lang-key="expected">预计</span>: <strong>2026 Q2</strong></span>
-                        <span>📢 <span data-lang-key="preorder">预约</span>: <strong>856</strong></span>
-                    </div>
-                    <div class="game-actions">
-                        <button class="play-btn primary" disabled>
-                            <span data-lang-key="inDev">开发中...</span>
-                        </button>
-                    </div>
+            <!-- Dynamic Games Grid Container -->
+            <div class="games-grid" id="gamesGridContainer">
+                <!-- Games will be dynamically loaded here -->
+                <div style="text-align: center; padding: 60px; color: white;">
+                    <p>加载游戏列表中...</p>
                 </div>
             </div>
         </div>
@@ -493,7 +420,13 @@ eneral/js/config.js?v=1.1"></script>
     <script src="../general/js/seagull-world/ui.js?v=1.1"></script>
     <script src="../general/js/dashboard.js?v=1.1"></script>
     
+    <!-- Dynamic Game Loader -->
+    <script src="../general/js/game-loader.js?v=1.1"></script>
+    
     <script>
+        // Initialize game loader
+        const gameLoader = new GameLoader();
+        
         // Room management state
         let currentUser = null;
         let canCreateRoom = false;
@@ -819,6 +752,9 @@ eneral/js/config.js?v=1.1"></script>
         
         // Initialize
         async function initializeGameHall() {
+            // Load and render games dynamically
+            await gameLoader.renderGames('gamesGridContainer');
+            
             // Update online players
             updateOnlinePlayers();
             setInterval(updateOnlinePlayers, 30000);

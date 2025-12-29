@@ -1,0 +1,40 @@
+{
+  "gameId": "eatscallop",
+  "name": {
+    "zh": "海鸥吃扇贝",
+    "en": "Seagull Eat Scallops"
+  },
+  "description": {
+    "zh": "控制你的海鸥在大海中吃扇贝，增强能力，与其他玩家竞争排行榜！",
+    "en": "Control your seagull to eat scallops in the ocean, enhance abilities, and compete with other players!"
+  },
+  "icon": "🦅",
+  "badge": {
+    "text": {
+      "zh": "热门",
+      "en": "Hot"
+    },
+    "icon": "🔥",
+    "type": "featured"
+  },
+  "version": "1.12",
+  "status": "active",
+  "stats": {
+    "rating": 4.8,
+    "showOnlinePlayers": true
+  },
+  "paths": {
+    "entry": "game/eatscallop/eatscallop-index.html",
+    "manifest": "game/eatscallop/manifest.json"
+  },
+  "features": {
+    "multiplayer": true,
+    "singleplayer": true,
+    "anonymousPlay": true,
+    "roomSystem": true,
+    "ranking": true
+  },
+  "tags": ["io", "multiplayer", "casual", "competitive"],
+  "releaseDate": "2025-01-01",
+  "lastUpdate": "2025-12-29"
+}

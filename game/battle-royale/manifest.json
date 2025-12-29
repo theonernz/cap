@@ -1,0 +1,43 @@
+{
+  "gameId": "battle-royale",
+  "name": {
+    "zh": "海鸥大乱斗",
+    "en": "Seagull Battle Royale"
+  },
+  "description": {
+    "zh": "实时对战，技能组合，团队协作，成为最强海鸥战士！",
+    "en": "Real-time battles, skill combos, team cooperation, become the strongest seagull warrior!"
+  },
+  "icon": "⚔️",
+  "badge": {
+    "text": {
+      "zh": "即将推出",
+      "en": "Coming Soon"
+    },
+    "icon": "🗓️",
+    "type": "coming-soon"
+  },
+  "version": "0.1.0",
+  "status": "development",
+  "stats": {
+    "rating": 0,
+    "expectedRelease": "2026 Q2",
+    "preorders": 856
+  },
+  "paths": {
+    "entry": "game/battle-royale/index.html",
+    "manifest": "game/battle-royale/manifest.json"
+  },
+  "features": {
+    "multiplayer": true,
+    "pvp": true,
+    "teamPlay": true,
+    "skillSystem": true,
+    "ranking": true
+  },
+  "tags": ["battle", "pvp", "team", "competitive"],
+  "developmentStatus": {
+    "progress": 5,
+    "nextMilestone": "Prototype development"
+  }
+}

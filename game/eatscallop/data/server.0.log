@@ -1,0 +1,7 @@
+[2025-12-29 08:38:26.758][INFO] Logger initialized {"level":"INFO","maxFileSize":"50MB","maxFiles":5,"logFile":"C:\\Phonis\\Games\\Seagull\\game\\eatscallop\\data\\server.0.log"}
+[2025-12-29 08:38:26.764][INFO] Server starting with NO CACHE headers for development
+[2025-12-29 08:38:26.765][INFO] Room Manager initialized
+[2025-12-29 08:38:26.790][INFO] Seagull Multiplayer Server running {"port":3000,"host":"0.0.0.0"}
+[2025-12-29 08:38:26.790][INFO] Server accessible at: {"local":"http://localhost:3000"}
+[2025-12-29 08:38:26.791][INFO] Network address available {"interface":"Wi-Fi","url":"http://192.168.1.68:3000"}
+[2025-12-29 08:38:26.804][INFO] Room Manager initialization complete {"roomCount":2}

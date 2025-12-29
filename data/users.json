@@ -1,0 +1,88 @@
+{
+  "version": "1.0.0",
+  "users": {
+    "user_test_phonis": {
+      "userId": "user_test_phonis",
+      "username": "phonis",
+      "passwordHash": "test123",
+      "profile": {
+        "displayName": "Phonis",
+        "avatar": "🦅",
+        "bio": "",
+        "motto": "",
+        "createdAt": 1766912000000,
+        "lastLogin": 1766961966782
+      },
+      "world": {
+        "seagullCoins": 100,
+        "worldLevel": 1,
+        "totalPlayTime": 0,
+        "totalGamesPlayed": 0
+      },
+      "games": {},
+      "achievements": [],
+      "friends": [],
+      "preferences": {
+        "language": "zh",
+        "theme": "light"
+      }
+    },
+    "user_1766913477944_kulfvrlz2": {
+      "userId": "user_1766913477944_kulfvrlz2",
+      "username": "phonis1",
+      "passwordHash": "123456",
+      "profile": {
+        "displayName": "phonis1",
+        "avatar": "🦅",
+        "bio": "",
+        "motto": "",
+        "createdAt": 1766913477944,
+        "lastLogin": 1766913477944
+      },
+      "world": {
+        "seagullCoins": 100,
+        "worldLevel": 1,
+        "totalPlayTime": 0,
+        "totalGamesPlayed": 0
+      },
+      "games": {},
+      "achievements": [],
+      "friends": [],
+      "preferences": {
+        "language": "zh",
+        "theme": "light"
+      }
+    },
+    "user_1766968556886_dexi0vdvl": {
+      "userId": "user_1766968556886_dexi0vdvl",
+      "username": "liuliu",
+      "passwordHash": "7ee282dea84c7e71ce6fb868de471aa5716b302580ff14bdf9281c3c86d44749",
+      "profile": {
+        "displayName": "liuliu",
+        "avatar": "🦅",
+        "bio": "",
+        "motto": "",
+        "createdAt": 1766968556886,
+        "lastLogin": 1766968556886
+      },
+      "world": {
+        "seagullCoins": 100,
+        "worldLevel": 1,
+        "totalPlayTime": 0,
+        "totalGamesPlayed": 0
+      },
+      "games": {},
+      "achievements": [],
+      "friends": [],
+      "preferences": {
+        "language": "en",
+        "theme": "light"
+      }
+    }
+  },
+  "metadata": {
+    "created": "2025-12-28T00:00:00.000Z",
+    "lastModified": "2025-12-29T00:35:56.899Z",
+    "totalUsers": 3
+  }
+}

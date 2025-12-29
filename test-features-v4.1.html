@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>功能测试 - 海鸥世界 v4.1</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px;
+            color: white;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+        }
+        
+        .test-section {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .test-section h2 {
+            margin-bottom: 15px;
+            color: #ffd700;
+        }
+        
+        .test-item {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .test-item h3 {
+            margin-bottom: 10px;
+            color: #87ceeb;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+        .status.success {
+            background: #4caf50;
+            color: white;
+        }
+        
+        .status.pending {
+            background: #ff9800;
+            color: white;
+        }
+        
+        .status.info {
+            background: #2196f3;
+            color: white;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            background: #4caf50;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            margin-right: 10px;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+        
+        .btn.secondary {
+            background: #2196f3;
+        }
+        
+        .btn.secondary:hover {
+            background: #1976d2;
+        }
+        
+        .btn.danger {
+            background: #f44336;
+        }
+        
+        .btn.danger:hover {
+            background: #da190b;
+        }
+        
+        code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 8px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .info-box {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 10px;
+            border-left: 4px solid #4caf50;
+        }
+        
+        .warning-box {
+            background: rgba(255, 152, 0, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 10px;
+            border-left: 4px solid #ff9800;
+        }
+        
+        #sessionStatus, #languageStatus, #onlineStatus {
+            font-size: 1.1rem;
+            margin-top: 10px;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 15px 30px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .back-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 海鸥世界 v4.1 功能测试</h1>
+        
+        <!-- 测试1: 会话管理 -->
+        <div class="test-section">
+            <h2>✅ 测试1: 会话管理（4小时超时）</h2>
+            
+            <div class="test-item">
+                <h3>当前状态</h3>
+                <div id="sessionStatus">检查中...</div>
+                <button class="btn" onclick="checkSession()">刷新状态</button>
+                <button class="btn secondary" onclick="simulateActivity()">模拟用户活动</button>
+                <button class="btn danger" onclick="clearSession()">清除会话</button>
+            </div>
+            
+            <div class="info-box">
+                <strong>测试步骤：</strong><br>
+                1. 前往主页登录账号（不选"记住我"）<br>
+                2. 回到本页面查看会话状态<br>
+                3. 点击"模拟用户活动"验证会话刷新<br>
+                4. 观察控制台的会话监控日志
+            </div>
+            
+            <div class="warning-box">
+                <strong>⚠️ 注意：</strong> 会话超时设置为4小时，剩余10分钟时会收到警告提醒
+            </div>
+        </div>
+        
+        <!-- 测试2: 双语切换 -->
+        <div class="test-section">
+            <h2>✅ 测试2: 双语切换功能</h2>
+            
+            <div class="test-item">
+                <h3>当前语言</h3>
+                <div id="languageStatus">检查中...</div>
+                <button class="btn" onclick="testLanguageSwitch()">测试切换</button>
+                <button class="btn secondary" onclick="window.open('index.html', '_blank')">打开主页测试</button>
+            </div>
+            
+            <div class="info-box">
+                <strong>测试步骤：</strong><br>
+                1. 打开主页 <code>index.html</code><br>
+                2. 点击右上角 🌐 语言切换按钮<br>
+                3. 验证页面所有文本是否切换<br>
+                4. 刷新页面，验证语言设置是否保存<br>
+                5. 测试登录/注册对话框的双语显示
+            </div>
+            
+            <div class="info-box">
+                <strong>✅ 已支持双语的元素：</strong><br>
+                • 导航栏（登录、注册、退出）<br>
+                • 欢迎横幅<br>
+                • 游戏卡片<br>
+                • 在线人数、评分等标签<br>
+                • 认证对话框<br>
+                • 用户统计面板
+            </div>
+        </div>
+        
+        <!-- 测试3: 在线人数 -->
+        <div class="test-section">
+            <h2>✅ 测试3: 在线人数动态更新</h2>
+            
+            <div class="test-item">
+                <h3>当前在线人数</h3>
+                <div id="onlineStatus">检查中...</div>
+                <button class="btn" onclick="checkOnlineCount()">刷新人数</button>
+                <button class="btn secondary" onclick="testServerAPI()">测试服务器API</button>
+            </div>
+            
+            <div class="info-box">
+                <strong>测试步骤：</strong><br>
+                1. 启动服务器：<code>node server/index.js</code><br>
+                2. 打开主页，查看游戏卡片的在线人数<br>
+                3. 多开几个浏览器标签页<br>
+                4. 观察在线人数是否增加（30秒自动更新）<br>
+                5. 关闭服务器，验证降级到模拟数据
+            </div>
+            
+            <div class="warning-box">
+                <strong>⚠️ 注意：</strong> 
+                如果服务器未运行，会显示模拟数据（80-150之间随机值）
+            </div>
+        </div>
+        
+        <!-- 测试4: Standalone按钮 -->
+        <div class="test-section">
+            <h2>✅ 测试4: Standalone按钮移除</h2>
+            
+            <div class="test-item">
+                <h3>验证结果 <span class="status success">✓ 已完成</span></h3>
+                <p>原"Standalone"按钮已从主页移除，替换为语言切换按钮。</p>
+                <button class="btn secondary" onclick="window.open('index.html', '_blank')">打开主页验证</button>
+            </div>
+            
+            <div class="info-box">
+                <strong>验证方法：</strong><br>
+                打开主页，确认顶部导航栏右侧只有：<br>
+                • 🌐 语言切换按钮<br>
+                • 🔓 登录按钮<br>
+                • ✨ 注册按钮
+            </div>
+        </div>
+        
+        <!-- 快速链接 -->
+        <div style="text-align: center;">
+            <a href="index.html" class="back-link">🏠 返回主页</a>
+            <a href="FEATURES_UPDATE_v4.1.md" class="back-link" target="_blank">📄 查看更新文档</a>
+        </div>
+    </div>
+    
+    <script>
+        // 检查会话状态
+        function checkSession() {
+            const sessionData = localStorage.getItem('seagullWorld_currentSession');
+            const statusDiv = document.getElementById('sessionStatus');
+            
+            if (sessionData) {
+                const session = JSON.parse(sessionData);
+                const now = Date.now();
+                const timeLeft = session.expiresAt - now;
+                const hoursLeft = Math.floor(timeLeft / (1000 * 60 * 60));
+                const minutesLeft = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                
+                statusDiv.innerHTML = `
+                    <span class="status success">✓ 已登录</span><br>
+                    用户名: <code>${session.username}</code><br>
+                    显示名: <code>${session.displayName}</code><br>
+                    剩余时间: <strong>${hoursLeft}小时 ${minutesLeft}分钟</strong><br>
+                    创建时间: ${new Date(session.createdAt).toLocaleString()}<br>
+                    过期时间: ${new Date(session.expiresAt).toLocaleString()}
+                `;
+            } else {
+                statusDiv.innerHTML = `
+                    <span class="status pending">未登录</span><br>
+                    请前往主页登录后再测试
+                `;
+            }
+        }
+        
+        // 模拟用户活动
+        function simulateActivity() {
+            const sessionData = localStorage.getItem('seagullWorld_currentSession');
+            if (!sessionData) {
+                alert('请先登录！');
+                return;
+            }
+            
+            const session = JSON.parse(sessionData);
+            // 刷新会话（延长4小时）
+            session.expiresAt = Date.now() + (4 * 60 * 60 * 1000);
+            localStorage.setItem('seagullWorld_currentSession', JSON.stringify(session));
+            
+            alert('✅ 会话已刷新！会话时间延长4小时。');
+            checkSession();
+        }
+        
+        // 清除会话
+        function clearSession() {
+            if (confirm('确定要清除当前会话吗？')) {
+                localStorage.removeItem('seagullWorld_currentSession');
+                alert('✅ 会话已清除！');
+                checkSession();
+            }
+        }
+        
+        // 检查语言设置
+        function checkLanguage() {
+            const lang = localStorage.getItem('seagullWorld_language') || 'zh';
+            const statusDiv = document.getElementById('languageStatus');
+            
+            const langName = lang === 'zh' ? '中文' : 'English';
+            statusDiv.innerHTML = `
+                <span class="status info">${langName}</span><br>
+                当前语言代码: <code>${lang}</code>
+            `;
+        }
+        
+        // 测试语言切换
+        function testLanguageSwitch() {
+            const lang = localStorage.getItem('seagullWorld_language') || 'zh';
+            const newLang = lang === 'zh' ? 'en' : 'zh';
+            localStorage.setItem('seagullWorld_language', newLang);
+            
+            alert(`✅ 语言已切换到 ${newLang === 'zh' ? '中文' : 'English'}！\n请打开主页查看效果。`);
+            checkLanguage();
+        }
+        
+        // 检查在线人数
+        async function checkOnlineCount() {
+            const statusDiv = document.getElementById('onlineStatus');
+            statusDiv.innerHTML = '正在获取...';
+            
+            try {
+                const response = await fetch('/api/stats/online');
+                if (response.ok) {
+                    const data = await response.json();
+                    statusDiv.innerHTML = `
+                        <span class="status success">✓ 服务器在线</span><br>
+                        当前在线人数: <strong>${data.count}</strong><br>
+                        更新时间: ${new Date(data.timestamp).toLocaleTimeString()}
+                    `;
+                } else {
+                    throw new Error('API返回错误');
+                }
+            } catch (error) {
+                const mockCount = Math.floor(Math.random() * 70) + 80;
+                statusDiv.innerHTML = `
+                    <span class="status pending">⚠️ 服务器离线</span><br>
+                    模拟在线人数: <strong>${mockCount}</strong><br>
+                    <small>提示: 启动服务器以获取真实数据</small>
+                `;
+            }
+        }
+        
+        // 测试服务器API
+        async function testServerAPI() {
+            try {
+                const response = await fetch('/api/stats/online');
+                const data = await response.json();
+                alert(`✅ API测试成功！\n\n${JSON.stringify(data, null, 2)}`);
+            } catch (error) {
+                alert(`❌ API测试失败！\n\n错误: ${error.message}\n\n请确保服务器正在运行：\nnode server/index.js`);
+            }
+        }
+        
+        // 页面加载时初始化
+        window.addEventListener('DOMContentLoaded', () => {
+            checkSession();
+            checkLanguage();
+            checkOnlineCount();
+        });
+    </script>
+</body>
+</html>

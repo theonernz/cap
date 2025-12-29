@@ -1,192 +1,274 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>海鸥吃扇贝.io</title>
-    <link rel="stylesheet" href="css/style.css">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>🦅 海鸥世界 Seagull World - v1.1</title>
+    <link rel="stylesheet" href="general/css/dashboard.css?v=1.1">
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>海鸥吃扇贝.io</h1>
-            <p class="subtitle">完整版：多用户、能力值系统、智能AI、中英文双语、小地图</p>
-        </div>
-        
-        <div class="controls-container">
-            <button onclick="game.startGame()" id="startButton">开始游戏</button>
-            <button onclick="game.pauseGame()" id="pauseButton">暂停/继续</button>
-            <button onclick="game.restartGame()" id="restartButton">重新开始</button>
-            <button onclick="ui.changeName()" id="changeNameButton">更改名称</button>
-            <button onclick="minimap.toggleMiniMap()" id="minimapBtn">切换小地图</button>
-            <button onclick="ui.toggleLanguage()" class="lang-btn" id="languageBtn">English</button>
-        </div>
-        
-        <div class="game-area-wrapper">
-            <div class="left-panel">
-                <div class="stats-panel">
-                    <h3 class="panel-title">游戏状态</h3>
-                    <div class="stat-item">
-                        <span class="stat-label" id="playerNameLabel">玩家名称</span>
-                        <span class="stat-value" id="playerName">海鸥玩家</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label" id="powerLabel">能力值</span>
-                        <span class="stat-value" id="power">100</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label" id="sizeLabel">大小</span>
-                        <span class="stat-value" id="size">1.0</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label" id="scallopsEatenLabel">吃掉扇贝</span>
-                        <span class="stat-value" id="scallopsEaten">0</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label" id="gameTimeLabel">游戏时间</span>
-                        <span class="stat-value" id="gameTime">0s</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label" id="playerCountLabel">玩家数量</span>
-                        <span class="stat-value" id="playerCount">1</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">AI玩家数量</span>
-                        <span class="stat-value" id="aiPlayerCount">3</span>
-                    </div>
-                </div>
-                
-                <div class="settings-panel">
-                    <h3 class="panel-title">游戏设置</h3>
-                    <div class="setting-item">
-                        <span class="setting-label" id="leaderboardSizeLabel">排行榜数量</span>
-                        <input type="number" class="setting-input" id="leaderboardSize" min="5" max="20" value="10">
-                    </div>
-                    <div class="setting-item">
-                        <span class="setting-label" id="strongTransferLabel">强海鸥获得%</span>
-                        <input type="number" class="setting-input" id="strongTransferRate" min="1" max="100" value="40">
-                    </div>
-                    <div class="setting-item">
-                        <span class="setting-label" id="weakTransferLabel">弱海鸥损失%</span>
-                        <input type="number" class="setting-input" id="weakTransferRate" min="1" max="100" value="5">
-                    </div>
-                    <div class="setting-item">
-                        <span class="setting-label" id="aiCountLabel">AI海鸥数量</span>
-                        <input type="number" class="setting-input" id="aiSeagullCount" min="5" max="50" value="20">
-                    </div>
-                    <div class="setting-item">
-                        <span class="setting-label" id="aiPlayerCountLabel">AI玩家数量</span>
-                        <input type="number" class="setting-input" id="aiPlayerCountInput" min="1" max="10" value="3">
-                    </div>
-                    <div class="setting-item">
-                        <span class="setting-label" id="scallopDensityLabel">扇贝密度</span>
-                        <input type="number" class="setting-input" id="scallopDensity" min="50" max="1000" value="500">
-                    </div>
-                    <div class="setting-item">
-                        <span class="setting-label" id="growthSpeedLabel">成长速度</span>
-                        <input type="number" class="setting-input" id="growthSpeed" min="0.5" max="5" step="0.5" value="1">
-                    </div>
-                </div>
+    <div class="dashboard-container">
+        <!-- 顶部导航栏 -->
+        <header class="dashboard-header">
+            <div class="logo-section">
+                <h1 class="world-logo" data-lang-key="seagullWorld">🦅 海鸥世界</h1>
+                <p class="world-tagline" data-lang-key="platformTagline">Seagull World - Your Gaming Platform</p>
             </div>
             
-            <div class="right-panel">
-                <div class="game-area-container">
-                    <canvas id="gameCanvas"></canvas>
-                    
-                    <div class="game-overlay">
-                        <div class="overlay-info">
-                            <div class="overlay-item">
-                                <span>坐标:</span>
-                                <span id="worldCoordinates">(0, 0)</span>
-                            </div>
-                            <div class="overlay-item">
-                                <span>地图:</span>
-                                <span id="mapSize">5000x5000</span>
-                            </div>
-                            <div class="overlay-item">
-                                <span>速度:</span>
-                                <span id="speedValue">0</span>
-                            </div>
-                            <div class="overlay-item">
-                                <span>缩放:</span>
-                                <span id="zoomValue">1.0x</span>
-                            </div>
+            <div class="header-actions">
+                <!-- 登录/注册按钮（游客模式） -->
+                <div id="guestActions" class="guest-actions">
+                    <button class="auth-btn login-btn" onclick="SeagullWorldUI.showAuthDialog('login')">
+                        🔓 <span data-lang-key="login">登录</span>
+                    </button>
+                    <button class="auth-btn register-btn" onclick="SeagullWorldUI.showAuthDialog('register')">
+                        ✨ <span data-lang-key="register">注册</span>
+                    </button>
+                </div>
+                
+                <!-- 用户菜单（已登录） -->
+                <div id="userMenu" class="user-menu" style="display: none;">
+                    <div class="user-info">
+                        <div class="user-name" id="userName">玩家</div>
+                        <div class="user-stats">
+                            <span class="user-level" id="userLevel">Lv.1</span>
+                            <span class="user-coins" id="userCoins">💰 100</span>
                         </div>
                     </div>
-                    
-                    <div class="control-hint" id="controlHint">
-                        <h3>游戏控制说明</h3>
-                        <p>使用鼠标拖拽控制海鸥移动：</p>
-                        <ul style="text-align: left; margin: 10px 0;">
-                            <li><strong>鼠标左键拖拽</strong> - 控制移动方向和速度</li>
-                            <li><strong>拖拽时按住右键</strong> - 加速移动</li>
-                            <li><strong>拖得越远</strong> - 移动速度越快</li>
-                            <li><strong>空格键</strong> - 快速停止</li>
-                            <li><strong>鼠标滚轮</strong> - 缩放地图</li>
-                            <li><strong>点击小地图</strong> - 快速跳转位置</li>
-                        </ul>
-                        <p style="margin-top: 10px;">点击任意位置开始游戏</p>
+                    <button class="logout-btn auth-btn" onclick="SeagullWorldUI.logout()"><span data-lang-key="logout">退出</span></button>
+                </div>
+                
+                <!-- 语言切换 -->
+                <button class="lang-switch-btn" id="langSwitchBtn" onclick="SeagullWorldUI.toggleLanguage()">
+                    <span id="langIcon">🌐</span> <span id="langText">EN</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- 主内容区 -->
+        <main class="dashboard-main">
+            <!-- 欢迎横幅 -->
+            <section class="welcome-banner">
+                <h2 id="welcomeTitle" data-lang-key="welcomeTitle">欢迎来到海鸥世界！</h2>
+                <p class="welcome-subtitle" data-lang-key="welcomeSubtitle">探索精彩的海鸥游戏系列</p>
+                <button class="play-btn primary" onclick="window.location.href='game/game-index.html'" style="margin-top: 20px; max-width: 300px;">
+                    🎮 <span data-lang-key="enterGameHall">进入游戏大厅</span>
+                </button>
+            </section>
+
+            <!-- 游戏卡片网格 -->
+            <section class="games-grid">
+                <!-- 游戏1: 海鸥吃扇贝.io -->
+                <div class="game-card featured">
+                    <div class="game-badge">🔥 <span data-lang-key="hot">热门</span></div>
+                    <div class="game-icon">🦅</div>
+                    <h3 class="game-title" data-lang-key="seagullEatScallops">海鸥吃扇贝.io</h3>
+                    <p class="game-description" data-lang-key="scallopsDescription">
+                        在海洋中自由翱翔，捕食扇贝成长为最强海鸥！支持单人和多人模式。
+                    </p>
+                    <div class="game-stats">
+                        <span id="onlinePlayersCount">🎮 <span data-lang-key="online">在线</span>: <span id="onlineNumber">-</span></span>
+                        <span>⭐ <span data-lang-key="rating">评分</span>: 4.8</span>
+                    </div>
+                    <div class="game-actions">
+                        <button class="play-btn primary" onclick="enterGame('scallopsIO')">
+                            🎮 <span data-lang-key="startGame">开始游戏</span>
+                        </button>
+                        <button class="play-btn secondary" onclick="enterGameAnonymous('scallopsIO')">
+                            👤 <span data-lang-key="anonymousTry">匿名试玩</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 游戏2: 海鸥竞速 -->
+                <div class="game-card coming-soon">
+                    <div class="game-badge coming-soon-badge" data-lang-key="comingSoon">即将推出</div>
+                    <div class="game-icon">🏁</div>
+                    <h3 class="game-title" data-lang-key="seagullRacing">海鸥竞速</h3>
+                    <p class="game-description" data-lang-key="racingDescription">
+                        与其他海鸥展开激烈的空中竞速比赛，穿越各种障碍挑战极限！
+                    </p>
+                    <div class="game-stats">
+                        <span>🚀 2026 Q1</span>
+                        <span data-lang-key="racing">🎯 竞速</span>
+                    </div>
+                    <div class="game-actions">
+                        <button class="play-btn disabled" disabled>
+                            ⏳ <span data-lang-key="stayTuned">敬请期待</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 游戏3: 海鸥冒险 -->
+                <div class="game-card coming-soon">
+                    <div class="game-badge coming-soon-badge" data-lang-key="inDevelopment">开发中</div>
+                    <div class="game-icon">🗺️</div>
+                    <h3 class="game-title" data-lang-key="seagullAdventure">海鸥冒险</h3>
+                    <p class="game-description" data-lang-key="adventureDescription">
+                        探索神秘的海岛世界，解锁新技能，收集宝藏，成为传奇海鸥！
+                    </p>
+                    <div class="game-stats">
+                        <span data-lang-key="openWorld">🌍 开放世界</span>
+                        <span data-lang-key="adventure">🎯 冒险</span>
+                    </div>
+                    <div class="game-actions">
+                        <button class="play-btn disabled" disabled>
+                            ⏳ <span data-lang-key="stayTuned">敬请期待</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 用户统计面板（仅登录用户可见） -->
+            <section class="user-stats-section" id="userStatsSection" style="display: none;">
+                <h3>📊 <span data-lang-key="myStats">我的统计</span></h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-info">
+                            <div class="stat-label" data-lang-key="seagullCoins">海鸥币</div>
+                            <div class="stat-value" id="totalCoins">0</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🎮</div>
+                        <div class="stat-info">
+                            <div class="stat-label" data-lang-key="playTime">游戏时长</div>
+                            <div class="stat-value" id="totalPlaytime">0h</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🏆</div>
+                        <div class="stat-info">
+                            <div class="stat-label" data-lang-key="achievements">成就</div>
+                            <div class="stat-value" id="totalAchievements">0/50</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⭐</div>
+                        <div class="stat-info">
+                            <div class="stat-label" data-lang-key="level">等级</div>
+                            <div class="stat-value" id="playerLevel">1</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- 页脚 -->
+        <footer class="dashboard-footer">
+            <p><span data-lang-key="copyright">© 2025 Seagull World. All rights reserved.</span></p>
+            <div class="footer-links">
+                <a href="#" data-lang-key="aboutUs">关于我们</a>
+                <a href="#" data-lang-key="privacy">隐私政策</a>
+                <a href="#" data-lang-key="terms">服务条款</a>
+                <a href="#" data-lang-key="contact">联系我们</a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- 认证对话框 -->
+    <div class="auth-dialog-overlay" id="authDialogOverlay" style="display: none;">
+        <div class="auth-dialog">
+            <div class="auth-dialog-header">
+                <h2 id="authDialogTitle">登录海鸥世界</h2>
+                <button class="auth-close-btn" onclick="SeagullWorldUI.closeAuthDialog()">×</button>
+            </div>
+            
+            <div class="auth-dialog-body">
+                <!-- 登录表单 -->
+                <div id="loginForm" class="auth-form">
+                    <div class="auth-branding">
+                        <span class="auth-logo">🦅</span>
+                        <p class="auth-welcome">欢迎回到海鸥世界</p>
                     </div>
                     
-                    <button class="toggle-minimap-btn" onclick="minimap.toggleMiniMap()">切换小地图</button>
-                    
-                    <div class="zoom-controls">
-                        <div class="zoom-btn" id="zoomInBtn">+</div>
-                        <div class="zoom-btn" id="zoomOutBtn">-</div>
+                    <div class="auth-input-group">
+                        <label for="loginUsername">用户名</label>
+                        <input type="text" id="loginUsername" placeholder="请输入用户名" autocomplete="username">
                     </div>
                     
-                    <div class="game-over" id="gameOverScreen">
-                        <h2>游戏结束!</h2>
-                        <p class="final-score">最终能力值: <span id="finalScore">0</span></p>
-                        <button onclick="game.restartGame()">重新开始</button>
+                    <div class="auth-input-group">
+                        <label for="loginPassword">密码</label>
+                        <input type="password" id="loginPassword" placeholder="请输入密码" autocomplete="current-password">
+                    </div>
+                    
+                    <div class="auth-remember">
+                        <label>
+                            <input type="checkbox" id="rememberMe">
+                            记住我 (30天)
+                        </label>
+                    </div>
+                    
+                    <button class="auth-submit-btn" onclick="SeagullWorldUI.handleLogin()">
+                        登录
+                    </button>
+                    
+                    <div class="auth-switch">
+                        还没有账号？
+                        <a href="#" onclick="SeagullWorldUI.switchToRegister(); return false;">立即注册</a>
                     </div>
                 </div>
                 
-                <div class="bottom-panels">
-                    <div class="instructions-panel">
-                        <h3 class="panel-title">游戏说明</h3>
-                        <ul class="instructions-list">
-                            <li>鼠标左键拖拽控制海鸥移动</li>
-                            <li>拖拽时按住右键加速</li>
-                            <li>吃掉扇贝增加能力值和大小</li>
-                            <li>强海鸥遇到弱海鸥会转移能力值</li>
-                            <li>能力值清零时海鸥死亡</li>
-                            <li>使用滚轮或+/-按钮缩放地图</li>
-                            <li>点击小地图快速跳转位置</li>
-                            <li>AI玩家具有智能觅食和避险能力</li>
-                        </ul>
+                <!-- 注册表单 -->
+                <div id="registerForm" class="auth-form" style="display: none;">
+                    <div class="auth-branding">
+                        <span class="auth-logo">🦅</span>
+                        <p class="auth-welcome">加入海鸥世界</p>
                     </div>
-                
-                    <div class="leaderboard-panel">
-                        <div class="leaderboard-header">
-                            <h3 class="panel-title">排行榜</h3>
-                            <button onclick="ui.updateLeaderboardSize()" style="padding: 5px 10px; font-size: 0.8rem;">更新</button>
-                        </div>
-                        <div class="leaderboard-list" id="leaderboardList">
-                            <div class="leaderboard-item current-player">
-                                <span class="leaderboard-rank">1</span>
-                                <span class="leaderboard-name">海鸥玩家</span>
-                                <span class="leaderboard-power">100</span>
-                                <span class="leaderboard-size">1.0</span>
-                            </div>
-                        </div>
-                        <div class="leaderboard-update-time" id="leaderboardUpdateTime">最后更新: 0秒前</div>
+                    
+                    <div class="auth-input-group">
+                        <label for="registerUsername">用户名</label>
+                        <input type="text" id="registerUsername" placeholder="3-20个字符" autocomplete="username">
+                        <small>支持字母、数字、下划线、中文</small>
+                    </div>
+                    
+                    <div class="auth-input-group">
+                        <label for="registerPassword">密码</label>
+                        <input type="password" id="registerPassword" placeholder="至少6个字符" autocomplete="new-password">
+                    </div>
+                    
+                    <div class="auth-input-group">
+                        <label for="registerPasswordConfirm">确认密码</label>
+                        <input type="password" id="registerPasswordConfirm" placeholder="再次输入密码" autocomplete="new-password">
+                    </div>
+                    
+                    <div class="auth-input-group">
+                        <label for="registerDisplayName">显示名称（可选）</label>
+                        <input type="text" id="registerDisplayName" placeholder="游戏中显示的名字">
+                    </div>
+                    
+                    <button class="auth-submit-btn" onclick="SeagullWorldUI.handleRegister()">
+                        注册并开始游戏
+                    </button>
+                    
+                    <div class="auth-switch">
+                        已有账号？
+                        <a href="#" onclick="SeagullWorldUI.switchToLogin(); return false;">立即登录</a>
                     </div>
                 </div>
+                
+                <div class="auth-error" id="authError" style="display: none;"></div>
             </div>
         </div>
     </div>
 
-    <!-- JavaScript 模块 -->
-    <script src="js/config.js"></script>
-    <script src="js/entities.js"></script>
-    <script src="js/ai.js"></script>
-    <script src="js/collision.js"></script>
-    <script src="js/minimap.js"></script>
-    <script src="js/drawing.js"></script>
-    <script src="js/ui.js"></script>
-    <script src="js/game.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/enhancements.js"></script>
+    <!-- 通知容器 -->
+    <div id="notificationContainer"></div>
+
+    <!-- JavaScript -->
+    <script src="general/js/config.js?v=1.1"></script>
+    
+    <!-- File Storage System (JSON-based) - Must load BEFORE auth.js -->
+    <script src="general/js/file-storage-client.js?v=1.1"></script>
+    
+    <!-- Seagull World Platform Systems -->
+    <script src="general/js/seagull-world/auth.js?v=1.1"></script>
+    <script src="general/js/seagull-world/ui.js?v=1.1"></script>
+    <script src="general/js/seagull-world/game-registry.js?v=1.1"></script>
+    <script src="general/js/dashboard.js?v=1.1"></script>
 </body>
 </html>

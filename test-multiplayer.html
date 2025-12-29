@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>多人模式连接测试 - Multiplayer Connection Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .test-panel {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .status {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        .status.pending {
+            background: rgba(255, 193, 7, 0.3);
+            border-left: 4px solid #ffc107;
+        }
+        .status.success {
+            background: rgba(76, 175, 80, 0.3);
+            border-left: 4px solid #4caf50;
+        }
+        .status.error {
+            background: rgba(244, 67, 54, 0.3);
+            border-left: 4px solid #f44336;
+        }
+        .config-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 5px;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        input, select {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        .log {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 15px;
+            border-radius: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            margin-top: 20px;
+        }
+        .log-entry {
+            margin: 5px 0;
+            padding: 5px;
+            border-left: 3px solid #667eea;
+        }
+        .log-entry.error {
+            border-left-color: #f44336;
+        }
+        .log-entry.success {
+            border-left-color: #4caf50;
+        }
+        .info-box {
+            background: rgba(33, 150, 243, 0.2);
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-panel">
+        <h1>🦅 多人模式连接测试</h1>
+        
+        <div class="info-box">
+            <h3>📡 服务器信息</h3>
+            <p id="serverInfo">检测中...</p>
+        </div>
+
+        <div class="config-section">
+            <h3>服务器配置</h3>
+            <label>服务器地址:</label>
+            <select id="serverSelect" onchange="updateServerUrl()">
+                <option value="local">本地 (localhost:3000)</option>
+                <option value="network">局域网 (192.168.1.68:3000)</option>
+                <option value="custom">自定义</option>
+            </select>
+            <input type="text" id="customUrl" placeholder="ws://your-ip:3000" style="display:none;">
+        </div>
+
+        <div class="config-section">
+            <h3>玩家信息</h3>
+            <input type="text" id="playerName" placeholder="玩家名称" value="测试玩家">
+            <input type="color" id="playerColor" value="#4a90e2">
+        </div>
+
+        <div style="text-align: center; margin: 20px 0;">
+            <button onclick="testConnection()">🔌 测试连接</button>
+            <button onclick="clearLog()">🗑️ 清空日志</button>
+            <button onclick="window.location.href='/game/eatscallop/eatscallop-index.html'">🎮 进入游戏</button>
+        </div>
+
+        <div id="statusDisplay" class="status pending">
+            ⏳ 等待测试...
+        </div>
+
+        <div class="log" id="logDisplay">
+            <div class="log-entry">准备开始连接测试...</div>
+        </div>
+    </div>
+
+    <script>
+        let ws = null;
+        let serverUrl = 'ws://localhost:3000';
+
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('logDisplay');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry ' + type;
+            const timestamp = new Date().toLocaleTimeString();
+            entry.textContent = `[${timestamp}] ${message}`;
+            logDiv.appendChild(entry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        function updateStatus(message, type) {
+            const statusDiv = document.getElementById('statusDisplay');
+            statusDiv.className = 'status ' + type;
+            statusDiv.textContent = message;
+        }
+
+        function updateServerUrl() {
+            const select = document.getElementById('serverSelect');
+            const customInput = document.getElementById('customUrl');
+            
+            if (select.value === 'local') {
+                serverUrl = 'ws://localhost:3000';
+                customInput.style.display = 'none';
+            } else if (select.value === 'network') {
+                serverUrl = 'ws://192.168.1.68:3000';
+                customInput.style.display = 'none';
+            } else {
+                customInput.style.display = 'block';
+                serverUrl = customInput.value || 'ws://localhost:3000';
+            }
+            
+            log(`服务器地址已更新: ${serverUrl}`);
+        }
+
+        function testConnection() {
+            updateStatus('⏳ 正在连接...', 'pending');
+            log('开始连接测试...', 'info');
+            log(`尝试连接到: ${serverUrl}`, 'info');
+
+            if (ws) {
+                log('关闭现有连接...', 'info');
+                ws.close();
+            }
+
+            try {
+                ws = new WebSocket(serverUrl);
+
+                const timeout = setTimeout(() => {
+                    if (ws.readyState !== WebSocket.OPEN) {
+                        updateStatus('❌ 连接超时 (5秒)', 'error');
+                        log('连接超时！请检查：', 'error');
+                        log('1. 服务器是否在运行？(npm start)', 'error');
+                        log('2. 服务器地址是否正确？', 'error');
+                        log('3. 防火墙是否阻止了连接？', 'error');
+                        ws.close();
+                    }
+                }, 5000);
+
+                ws.onopen = () => {
+                    clearTimeout(timeout);
+                    updateStatus('✅ WebSocket 连接成功！', 'success');
+                    log('✅ WebSocket 连接已建立', 'success');
+                    
+                    // Send join message
+                    const playerName = document.getElementById('playerName').value;
+                    const playerColor = document.getElementById('playerColor').value;
+                    
+                    const joinMessage = {
+                        type: 'join',
+                        name: playerName,
+                        color: playerColor
+                    };
+                    
+                    ws.send(JSON.stringify(joinMessage));
+                    log(`📤 发送加入消息: ${playerName}`, 'info');
+                };
+
+                ws.onmessage = (event) => {
+                    try {
+                        const data = JSON.parse(event.data);
+                        log(`📨 收到消息: ${data.type}`, 'success');
+                        
+                        if (data.type === 'connection') {
+                            log(`🆔 玩家ID: ${data.playerId}`, 'success');
+                        } else if (data.type === 'initialState') {
+                            log(`🎮 收到游戏初始状态`, 'success');
+                            log(`   - 玩家数: ${data.state.players.length}`, 'info');
+                            log(`   - AI数: ${data.state.aiSeagulls.length}`, 'info');
+                            log(`   - 扇贝数: ${data.state.scallops.length}`, 'info');
+                            updateStatus('✅ 连接成功！已收到游戏状态', 'success');
+                        } else if (data.type === 'gameState') {
+                            log(`📊 游戏状态更新`, 'info');
+                        }
+                    } catch (error) {
+                        log(`❌ 解析消息失败: ${error.message}`, 'error');
+                    }
+                };
+
+                ws.onerror = (error) => {
+                    clearTimeout(timeout);
+                    updateStatus('❌ 连接错误', 'error');
+                    log(`❌ WebSocket 错误: ${error}`, 'error');
+                    log('可能的原因:', 'error');
+                    log('1. 服务器未运行 - 请运行 npm start', 'error');
+                    log('2. 端口 3000 被占用', 'error');
+                    log('3. 服务器地址错误', 'error');
+                };
+
+                ws.onclose = (event) => {
+                    clearTimeout(timeout);
+                    if (event.wasClean) {
+                        log(`🔌 连接已关闭 (代码: ${event.code})`, 'info');
+                    } else {
+                        updateStatus('❌ 连接断开', 'error');
+                        log(`🔌 连接意外断开 (代码: ${event.code})`, 'error');
+                    }
+                };
+
+            } catch (error) {
+                updateStatus('❌ 连接失败', 'error');
+                log(`❌ 异常: ${error.message}`, 'error');
+            }
+        }
+
+        function clearLog() {
+            document.getElementById('logDisplay').innerHTML = '<div class="log-entry">日志已清空</div>';
+        }
+
+        // 获取服务器信息
+        async function checkServerStatus() {
+            try {
+                const response = await fetch('/package.json');
+                const data = await response.json();
+                document.getElementById('serverInfo').innerHTML = `
+                    <strong>项目:</strong> ${data.name}<br>
+                    <strong>版本:</strong> ${data.version}<br>
+                    <strong>本地地址:</strong> http://localhost:3000<br>
+                    <strong>当前地址:</strong> ${window.location.origin}
+                `;
+                log('✅ 服务器正在运行', 'success');
+            } catch (error) {
+                document.getElementById('serverInfo').innerHTML = `
+                    <strong style="color: #f44336;">⚠️ 无法连接到服务器</strong><br>
+                    请确保运行了 npm start
+                `;
+                log('❌ HTTP 服务器无响应', 'error');
+            }
+        }
+
+        // 页面加载时检查服务器状态
+        checkServerStatus();
+        log('页面加载完成，准备测试', 'success');
+    </script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+{
+  "name": "seagull-eat-scallops-io",
+  "version": "4.0.0",
+  "description": "海鸥吃扇贝.io - 多人在线 .io 游戏",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node server/index.js",
+    "test": "echo \"No tests configured yet\""
+  },
+  "keywords": [
+    "game",
+    "io-game",
+    "multiplayer",
+    "seagull",
+    "scallop"
+  ],
+  "author": "Seagull World",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "ws": "^8.14.2",
+    "uuid": "^9.0.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

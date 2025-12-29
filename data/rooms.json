@@ -1,0 +1,24 @@
+{
+  "rooms": [
+    {
+      "id": "bcb47e14-7a4a-4e1e-b2c3-131eaa8a8bf5",
+      "name": "Default Room",
+      "maxPlayers": 16,
+      "creatorId": null,
+      "isPrivate": false,
+      "password": null,
+      "isDefault": true,
+      "createdAt": 1766974433711
+    },
+    {
+      "id": "d16261b0-8cc7-4ec0-b4c1-f08747585bc5",
+      "name": "Phonis01",
+      "maxPlayers": 8,
+      "creatorId": "user_test_phonis",
+      "isPrivate": false,
+      "password": null,
+      "isDefault": false,
+      "createdAt": 1766979398171
+    }
+  ]
+}

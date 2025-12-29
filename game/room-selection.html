@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏠 房间选择 - 海鸥世界 v1.1</title>
+    <link rel="stylesheet" href="../general/css/dashboard.css?v=1.1">
+    <style>
+        .room-selection-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .room-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .room-header h1 {
+            font-size: 2.5rem;
+            margin: 0;
+        }
+        
+        .create-room-btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .create-room-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+        }
+        
+        .room-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .room-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .room-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .room-card.full {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .room-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .room-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .room-status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        
+        .room-status.available {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .room-status.full {
+            background: #f44336;
+            color: white;
+        }
+        
+        .room-info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .room-info-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        /* 创建房间模态框 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal.show {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-header h2 {
+            margin: 0;
+            color: white;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+        }
+        
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+        }
+        
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 15px;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .refresh-btn {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .refresh-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .empty-state h2 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <button class="back-btn" onclick="window.location.href='game-index.html'">
+        ← <span data-lang-key="backToGameHall">返回游戏大厅</span>
+    </button>
+    
+    <div class="dashboard-container">
+        <div class="room-selection-container">
+            <div class="room-header">
+                <h1>🏠 <span data-lang-key="roomSelection">房间选择</span></h1>
+                <div style="display: flex; gap: 10px;">
+                    <button class="refresh-btn" onclick="refreshRoomList()">
+                        🔄 <span data-lang-key="refresh">刷新</span>
+                    </button>
+                    <button class="create-room-btn" onclick="showCreateRoomModal()">
+                        ➕ <span data-lang-key="createRoom">创建房间</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div id="roomList" class="room-list">
+                <div class="loading">
+                    <span data-lang-key="loadingRooms">加载房间列表中...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 创建房间模态框 -->
+    <div id="createRoomModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 data-lang-key="createNewRoom">创建新房间</h2>
+                <button class="close-btn" onclick="hideCreateRoomModal()">×</button>
+            </div>
+            <form id="createRoomForm" onsubmit="createRoom(event)">
+                <div class="form-group">
+                    <label data-lang-key="roomName">房间名称</label>
+                    <input type="text" id="roomName" name="roomName" placeholder="例如：新手大厅" required maxlength="30">
+                </div>
+                
+                <div class="form-group">
+                    <label data-lang-key="maxPlayers">最大玩家数</label>
+                    <select id="maxPlayers" name="maxPlayers">
+                        <option value="2">2</option>
+                        <option value="4">4</option>
+                        <option value="6">6</option>
+                        <option value="8" selected>8</option>
+                        <option value="10">10</option>
+                        <option value="12">12</option>
+                        <option value="16">16</option>
+                        <option value="20">20</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="isPrivate" name="isPrivate" onchange="togglePasswordField()">
+                        <label for="isPrivate" data-lang-key="privateRoom">私密房间</label>
+                    </div>
+                </div>
+                
+                <div class="form-group" id="passwordGroup" style="display: none;">
+                    <label data-lang-key="roomPassword">房间密码</label>
+                    <input type="password" id="roomPassword" name="roomPassword" placeholder="设置密码（可选）">
+                </div>
+                
+                <button type="submit" class="submit-btn">
+                    <span data-lang-key="createAndJoin">创建并加入</span>
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- JavaScript -->
+    <script src="../general/js/config.js?v=1.1"></script>
+    <script src="../general/js/seagull-world/ui.js?v=1.1"></script>
+    
+    <script>
+        // 房间列表
+        let rooms = [];
+        
+        // 加载房间列表
+        async function loadRoomList() {
+            try {
+                const response = await fetch('/api/rooms');
+                const data = await response.json();
+                
+                if (data.success) {
+                    rooms = data.rooms;
+                    renderRoomList();
+                } else {
+                    showError('加载房间列表失败 / Failed to load room list');
+                }
+            } catch (error) {
+                console.error('Error loading rooms:', error);
+                showError('无法连接到服务器 / Cannot connect to server');
+            }
+        }
+        
+        // 渲染房间列表
+        function renderRoomList() {
+            const roomList = document.getElementById('roomList');
+            
+            if (rooms.length === 0) {
+                roomList.innerHTML = `
+                    <div class="empty-state">
+                        <h2>🏜️</h2>
+                        <p data-lang-key="noRoomsAvailable">暂无可用房间，创建一个吧！</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const language = localStorage.getItem('seagullWorldLanguage') || 'zh';
+            
+            roomList.innerHTML = rooms.map(room => {
+                const statusClass = room.isFull ? 'full' : 'available';
+                const statusText = room.isFull 
+                    ? (language === 'zh' ? '已满' : 'Full')
+                    : (language === 'zh' ? '可加入' : 'Available');
+                
+                return `
+                    <div class="room-card ${statusClass}" onclick="${room.isFull ? '' : `joinRoom('${room.id}')`}">
+                        <div class="room-card-header">
+                            <div class="room-name">${escapeHtml(room.name)}</div>
+                            <div class="room-status ${statusClass}">${statusText}</div>
+                        </div>
+                        <div class="room-info">
+                            <div class="room-info-item">
+                                <span>👥</span>
+                                <span>${room.currentPlayers} / ${room.maxPlayers}</span>
+                            </div>
+                            <div class="room-info-item">
+                                <span>${room.isPrivate ? '🔒' : '🌐'}</span>
+                                <span data-lang-key="${room.isPrivate ? 'private' : 'public'}">${room.isPrivate ? '私密' : '公开'}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // 刷新房间列表
+        function refreshRoomList() {
+            document.getElementById('roomList').innerHTML = '<div class="loading">刷新中...</div>';
+            loadRoomList();
+        }
+        
+        // 显示创建房间模态框
+        function showCreateRoomModal() {
+            document.getElementById('createRoomModal').classList.add('show');
+        }
+        
+        // 隐藏创建房间模态框
+        function hideCreateRoomModal() {
+            document.getElementById('createRoomModal').classList.remove('show');
+            document.getElementById('createRoomForm').reset();
+            document.getElementById('passwordGroup').style.display = 'none';
+        }
+        
+        // 切换密码字段
+        function togglePasswordField() {
+            const isPrivate = document.getElementById('isPrivate').checked;
+            document.getElementById('passwordGroup').style.display = isPrivate ? 'block' : 'none';
+        }
+        
+        // 创建房间
+        async function createRoom(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const roomData = {
+                name: formData.get('roomName'),
+                maxPlayers: parseInt(formData.get('maxPlayers')),
+                isPrivate: formData.get('isPrivate') === 'on',
+                password: formData.get('roomPassword') || null
+            };
+            
+            try {
+                const response = await fetch('/api/rooms/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(roomData)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    hideCreateRoomModal();
+                    // 直接加入创建的房间
+                    joinRoom(data.room.id);
+                } else {
+                    alert(data.error || '创建房间失败 / Failed to create room');
+                }
+            } catch (error) {
+                console.error('Error creating room:', error);
+                alert('无法连接到服务器 / Cannot connect to server');
+            }
+        }
+        
+        // 加入房间
+        function joinRoom(roomId) {
+            // 保存房间ID到sessionStorage
+            sessionStorage.setItem('selectedRoomId', roomId);
+            // 跳转到游戏页面
+            window.location.href = 'eatscallop/eatscallop-index.html';
+        }
+        
+        // HTML转义
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // 显示错误
+        function showError(message) {
+            document.getElementById('roomList').innerHTML = `
+                <div class="empty-state">
+                    <h2>❌</h2>
+                    <p>${message}</p>
+                </div>
+            `;
+        }
+        
+        // 页面加载时初始化
+        window.addEventListener('DOMContentLoaded', () => {
+            // 初始化UI和语言系统
+            if (typeof SeagullWorldUI !== 'undefined') {
+                SeagullWorldUI.init();
+            }
+            
+            // 加载房间列表
+            loadRoomList();
+            
+            // 每10秒自动刷新房间列表
+            setInterval(loadRoomList, 10000);
+        });
+        
+        // 点击模态框外部关闭
+        document.getElementById('createRoomModal').addEventListener('click', (e) => {
+            if (e.target.id === 'createRoomModal') {
+                hideCreateRoomModal();
+            }
+        });
+    </script>
+</body>
+</html>

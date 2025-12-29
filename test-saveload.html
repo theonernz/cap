@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>存档系统测试 - Save/Load Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .test-panel {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        .save-item {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #4caf50;
+        }
+        .save-item.invalid {
+            border-left-color: #f44336;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 5px;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        .log {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 15px;
+            border-radius: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
+        .log-entry {
+            margin: 5px 0;
+            padding: 5px;
+        }
+        .log-entry.error { color: #ff6b6b; }
+        .log-entry.success { color: #51cf66; }
+        .log-entry.info { color: #74c0fc; }
+        pre {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-panel">
+        <h1>🎮 存档系统测试</h1>
+        <p style="text-align: center;">测试存档的保存和加载功能</p>
+    </div>
+
+    <div class="test-panel">
+        <h2>📋 存档列表</h2>
+        <button onclick="loadSaves()">🔄 刷新列表</button>
+        <button onclick="fixUndefinedSave()">🔧 修复 undefined 存档</button>
+        <div id="savesContainer"></div>
+    </div>
+
+    <div class="test-panel">
+        <h2>📝 操作日志</h2>
+        <button onclick="clearLog()">🗑️ 清空日志</button>
+        <div class="log" id="logDisplay"></div>
+    </div>
+
+    <script>
+        const API_BASE = window.location.origin;
+
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('logDisplay');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry ' + type;
+            const timestamp = new Date().toLocaleTimeString();
+            entry.textContent = `[${timestamp}] ${message}`;
+            logDiv.appendChild(entry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        function clearLog() {
+            document.getElementById('logDisplay').innerHTML = '';
+            log('日志已清空', 'info');
+        }
+
+        async function loadSaves() {
+            try {
+                log('正在加载存档列表...', 'info');
+                const response = await fetch(`${API_BASE}/api/saves/phonis?multiplayer=true`);
+                const result = await response.json();
+                
+                log(`API响应: ${JSON.stringify(result)}`, 'info');
+                
+                if (!result.success) {
+                    throw new Error(result.error);
+                }
+
+                const container = document.getElementById('savesContainer');
+                container.innerHTML = '';
+
+                if (result.saves.length === 0) {
+                    container.innerHTML = '<p>暂无存档</p>';
+                    log('没有找到存档', 'info');
+                    return;
+                }
+
+                result.saves.forEach(save => {
+                    const div = document.createElement('div');
+                    div.className = save.id ? 'save-item' : 'save-item invalid';
+                    
+                    const power = save.playerData?.power || 0;
+                    const x = Math.floor(save.playerData?.x || 0);
+                    const y = Math.floor(save.playerData?.y || 0);
+                    
+                    div.innerHTML = `
+                        <strong>${save.name || '未命名'}</strong> ${save.id ? '' : '❌ (无效ID)'}
+                        <br>ID: <code>${save.id || 'undefined'}</code>
+                        <br>时间: ${save.dateString}
+                        <br>能力: ${power} | 位置: (${x}, ${y})
+                        <br>所有者: ${save.owner?.username || '未知'}
+                        <br>
+                        <button onclick="testLoad('${save.id}')">测试加载</button>
+                        <button onclick="showSaveData('${save.id}')">查看数据</button>
+                        ${save.id ? `<button onclick="deleteSave('${save.id}')">删除</button>` : ''}
+                    `;
+                    container.appendChild(div);
+                });
+
+                log(`✅ 加载了 ${result.saves.length} 个存档`, 'success');
+            } catch (error) {
+                log(`❌ 加载失败: ${error.message}`, 'error');
+            }
+        }
+
+        async function testLoad(saveId) {
+            try {
+                log(`正在测试加载存档: ${saveId}`, 'info');
+                const response = await fetch(`${API_BASE}/api/saves/id/${saveId}`);
+                const result = await response.json();
+                
+                log(`加载结果: ${JSON.stringify(result).substring(0, 200)}...`, 'info');
+                
+                if (result.success) {
+                    log(`✅ 存档加载成功`, 'success');
+                    log(`- 名称: ${result.save.name}`, 'info');
+                    log(`- 能力: ${result.save.playerData?.power}`, 'info');
+                    log(`- 位置: (${result.save.playerData?.x}, ${result.save.playerData?.y})`, 'info');
+                } else {
+                    log(`❌ 存档加载失败: ${result.error}`, 'error');
+                }
+            } catch (error) {
+                log(`❌ 测试失败: ${error.message}`, 'error');
+            }
+        }
+
+        async function showSaveData(saveId) {
+            try {
+                const response = await fetch(`${API_BASE}/api/saves/id/${saveId}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    const popup = document.createElement('div');
+                    popup.style.cssText = `
+                        position: fixed;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        background: rgba(0, 0, 0, 0.95);
+                        padding: 30px;
+                        border-radius: 15px;
+                        max-width: 80%;
+                        max-height: 80%;
+                        overflow: auto;
+                        z-index: 1000;
+                    `;
+                    popup.innerHTML = `
+                        <h3>存档数据</h3>
+                        <pre>${JSON.stringify(result.save, null, 2)}</pre>
+                        <button onclick="this.parentElement.remove()">关闭</button>
+                    `;
+                    document.body.appendChild(popup);
+                }
+            } catch (error) {
+                log(`❌ 查看失败: ${error.message}`, 'error');
+            }
+        }
+
+        async function deleteSave(saveId) {
+            if (!confirm('确定要删除这个存档吗？')) return;
+            
+            try {
+                log(`正在删除存档: ${saveId}`, 'info');
+                const response = await fetch(`${API_BASE}/api/saves/${saveId}`, {
+                    method: 'DELETE'
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    log(`✅ 存档已删除`, 'success');
+                    loadSaves();
+                } else {
+                    log(`❌ 删除失败: ${result.error}`, 'error');
+                }
+            } catch (error) {
+                log(`❌ 删除失败: ${error.message}`, 'error');
+            }
+        }
+
+        async function fixUndefinedSave() {
+            try {
+                log('正在修复 undefined 存档...', 'info');
+                
+                // 读取所有存档
+                const response = await fetch(`${API_BASE}/game/eatscallop/data/savedgames.json`);
+                const data = await response.json();
+                
+                log(`当前存档: ${JSON.stringify(Object.keys(data.saves))}`, 'info');
+                
+                if (data.saves.undefined) {
+                    log('❌ 发现 undefined 存档，需要手动修复', 'error');
+                    log('请检查 savedgames.json 文件', 'error');
+                } else {
+                    log('✅ 没有发现 undefined 存档', 'success');
+                }
+            } catch (error) {
+                log(`❌ 检查失败: ${error.message}`, 'error');
+            }
+        }
+
+        // 页面加载时自动加载存档列表
+        log('测试页面已加载', 'success');
+        loadSaves();
+    </script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>快速诊断</title>
+</head>
+<body>
+    <h1>系统诊断</h1>
+    <div id="results"></div>
+    <script>
+        const results = document.getElementById('results');
+        
+        async function test() {
+            results.innerHTML = '<p>正在测试...</p>';
+            
+            // 测试 1: 获取用户列表
+            try {
+                const res1 = await fetch('/api/users');
+                const data1 = await res1.json();
+                results.innerHTML += `<h3>测试1: GET /api/users</h3><pre>${JSON.stringify(data1, null, 2)}</pre>`;
+            } catch(e) {
+                results.innerHTML += `<h3>测试1: 失败</h3><p>${e.message}</p>`;
+            }
+            
+            // 测试 2: 注册用户
+            try {
+                const userData = {
+                    userId: `test_${Date.now()}`,
+                    username: "testuser" + Date.now(),
+                    passwordHash: "testhash",
+                    profile: {
+                        displayName: "Test",
+                        avatar: "🦅",
+                        createdAt: Date.now(),
+                        lastLogin: Date.now()
+                    },
+                    world: { seagullCoins: 100, worldLevel: 1 }
+                };
+                
+                const res2 = await fetch('/api/users/register', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(userData)
+                });
+                const data2 = await res2.json();
+                results.innerHTML += `<h3>测试2: POST /api/users/register</h3><pre>${JSON.stringify(data2, null, 2)}</pre>`;
+            } catch(e) {
+                results.innerHTML += `<h3>测试2: 失败</h3><p>${e.message}</p>`;
+            }
+            
+            // 测试 3: 再次获取用户列表
+            try {
+                const res3 = await fetch('/api/users');
+                const data3 = await res3.json();
+                results.innerHTML += `<h3>测试3: GET /api/users (注册后)</h3><pre>${JSON.stringify(data3, null, 2)}</pre>`;
+            } catch(e) {
+                results.innerHTML += `<h3>测试3: 失败</h3><p>${e.message}</p>`;
+            }
+            
+            // 测试 4: 检查文件
+            try {
+                const res4 = await fetch('/data/users.json');
+                const data4 = await res4.json();
+                results.innerHTML += `<h3>测试4: GET /data/users.json</h3><pre>${JSON.stringify(data4, null, 2)}</pre>`;
+            } catch(e) {
+                results.innerHTML += `<h3>测试4: 失败</h3><p>${e.message}</p>`;
+            }
+        }
+        
+        test();
+    </script>
+</body>
+</html>

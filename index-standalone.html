@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seagull Eat Scallops.io - Standalone</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 id="gameTitle">Seagull Eat Scallops.io - Standalone</h1>
+            <p class="subtitle" id="gameSubtitle">TheOner Product: special for Weilin, Elaine, Jason and Maymay!</p>
+            <p class="version-info">🎮 Single-Player Mode | No Server Required</p>
+        </div>
+        
+        <div class="controls-container">
+            <button onclick="game.startGame()" id="startButton">Start Game</button>
+            <!-- Multiplayer button hidden in standalone -->
+            <button onclick="game.pauseGame()" id="pauseButton">Pause/Resume</button>
+            <button onclick="game.restartGame()" id="restartButton">Restart</button>
+            <button onclick="ui.changeName()" id="changeNameButton">Change Name</button>
+            <button onclick="SaveLoadSystem.saveGame()" id="saveButton" class="save-btn">💾 Save Game</button>
+            <button onclick="SaveLoadSystem.loadGame()" id="loadButton" class="load-btn">📂 Load Game</button>
+            <button onclick="minimap.toggleMiniMap()" id="minimapBtn">Toggle Mini Map</button>
+            <button onclick="ui.toggleLanguage()" class="lang-btn" id="languageBtn">中文</button>
+        </div>
+        
+        <div class="game-area-wrapper">
+            <div class="left-panel">
+                <div class="stats-panel">
+                    <h3 class="panel-title">Game Status</h3>
+                    <div class="stat-item">
+                        <span class="stat-label" id="playerNameLabel">Player Name</span>
+                        <span class="stat-value" id="playerName">Player Seagull</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label" id="powerLabel">Power</span>
+                        <span class="stat-value" id="power">100</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label" id="sizeLabel">Size</span>
+                        <span class="stat-value" id="size">1.0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label" id="scallopsEatenLabel">Scallops Eaten</span>
+                        <span class="stat-value" id="scallopsEaten">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label" id="gameTimeLabel">Game Time</span>
+                        <span class="stat-value" id="gameTime">0s</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label" id="playerCountLabel">Player Count</span>
+                        <span class="stat-value" id="playerCount">1</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">AI Player Count</span>
+                        <span class="stat-value" id="aiPlayerCount">5</span>
+                    </div>
+                    <!-- Network latency hidden in standalone -->
+                </div>
+                
+                <div class="leaderboard-panel">
+                    <h3 class="panel-title">Leaderboard</h3>
+                    <div class="leaderboard-list" id="leaderboardList">
+                        <div class="leaderboard-item current-player">
+                            <span class="leaderboard-rank">1</span>
+                            <span class="leaderboard-name">Player Seagull</span>
+                            <span class="leaderboard-power">100</span>
+                        </div>
+                    </div>
+                    <div class="leaderboard-update-time" id="leaderboardUpdateTime">Last Update: 00:00:00</div>
+                </div>
+                
+                <div class="instructions-panel collapsible">
+                    <h3 class="panel-title collapsible-header" onclick="togglePanel(this)">
+                        <span id="instructionsPanelTitle">Instructions</span>
+                        <span class="collapse-icon">▼</span>
+                    </h3>
+                    <div class="instructions-scroll collapsible-content">
+                        <ul class="instructions-list">
+                            <li id="instruction1">Left-click and drag to control seagull</li>
+                            <li id="instruction2">Hold right-click while dragging to boost</li>
+                            <li id="instruction3">Eat scallops to increase power and size</li>
+                            <li id="instruction4">Stronger seagulls transfer power from weaker ones</li>
+                            <li id="instruction5">Seagull dies when power reaches zero</li>
+                            <li id="instruction6">Use mouse wheel or +/- buttons to zoom</li>
+                            <li id="instruction7">Click mini map to jump to location</li>
+                            <li id="instruction8">AI players have intelligent foraging and evasion</li>
+                            <li id="instruction9">Ctrl+S to quick save, Ctrl+L to quick load</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="settings-panel collapsible">
+                    <h3 class="panel-title collapsible-header" onclick="togglePanel(this)">
+                        <span id="settingsPanelTitle">Game Settings</span>
+                        <span class="collapse-icon">▼</span>
+                    </h3>
+                    <div class="settings-scroll collapsible-content">
+                        <div class="setting-item">
+                            <span class="setting-label" id="leaderboardSizeLabel">Leaderboard Size</span>
+                            <input type="number" class="setting-input" id="leaderboardSize" min="5" max="20" value="10">
+                        </div>
+                        <div class="setting-item">
+                            <span class="setting-label" id="strongTransferLabel">Strong Gain %</span>
+                            <input type="number" class="setting-input" id="strongTransferRate" min="1" max="100" value="40">
+                        </div>
+                        <div class="setting-item">
+                            <span class="setting-label" id="weakTransferLabel">Weak Lose %</span>
+                            <input type="number" class="setting-input" id="weakTransferRate" min="1" max="100" value="5">
+                        </div>
+                        <div class="setting-item">
+                            <span class="setting-label" id="aiCountLabel">AI Seagulls</span>
+                            <input type="number" class="setting-input" id="aiSeagullCount" min="5" max="100" value="50">
+                        </div>
+                        <div class="setting-item">
+                            <span class="setting-label" id="aiPlayerCountLabel">AI Players</span>
+                            <input type="number" class="setting-input" id="aiPlayerCountInput" min="1" max="10" value="5">
+                        </div>
+                        <div class="setting-item">
+                            <span class="setting-label" id="scallopDensityLabel">Scallop Density</span>
+                            <input type="number" class="setting-input" id="scallopDensity" min="50" max="1000" value="800">
+                        </div>
+                        <div class="setting-item">
+                            <span class="setting-label" id="growthSpeedLabel">Growth Speed</span>
+                            <input type="number" class="setting-input" id="growthSpeed" min="0.5" max="5" step="0.5" value="1">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <div class="game-area-container">
+                    <canvas id="gameCanvas"></canvas>
+                    
+                    <div class="game-overlay">
+                        <div class="overlay-info">
+                            <div class="overlay-item">
+                                <span>Coord:</span>
+                                <span id="worldCoordinates">(0, 0)</span>
+                            </div>
+                            <div class="overlay-item">
+                                <span>Map:</span>
+                                <span id="mapSize">5000x5000</span>
+                            </div>
+                            <div class="overlay-item">
+                                <span>Speed:</span>
+                                <span id="speedValue">0</span>
+                            </div>
+                            <div class="overlay-item">
+                                <span>Zoom:</span>
+                                <span id="zoomValue">1.0x</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="control-hint" id="controlHint">
+                        <h3>Game Controls</h3>
+                        <p>Use mouse to control seagull movement:</p>
+                        <ul style="text-align: left; margin: 10px 0;">
+                            <li><strong>Left-click</strong> - Move toward location (hold to follow mouse)</li>
+                            <li><strong>Double left-click</strong> - Emergency brake (instant stop)</li>
+                            <li><strong>Right-click while moving</strong> - Speed boost (1.5x)</li>
+                            <li><strong>Double right-click</strong> - Max boost (2.0x)</li>
+                            <li><strong>Space key</strong> - Quick stop</li>
+                            <li><strong>Mouse wheel</strong> - Zoom map</li>
+                            <li><strong>Click mini map</strong> - Jump to location</li>
+                        </ul>
+                        <p style="margin-top: 10px;">Click anywhere to start game</p>
+                    </div>
+                    
+                    <button class="toggle-minimap-btn" onclick="minimap.toggleMiniMap()">Toggle Mini Map</button>
+                    
+                    <div class="zoom-controls">
+                        <div class="zoom-btn" id="zoomInBtn">+</div>
+                        <div class="zoom-btn" id="zoomOutBtn">-</div>
+                    </div>
+                    
+                    <div class="game-over" id="gameOverScreen">
+                        <h2 id="gameOverTitle">Game Over!</h2>
+                        <p class="final-score"><span id="finalPowerLabel">Final Power:</span> <span id="finalScore">0</span></p>
+                        <button onclick="game.restartGame()" id="gameOverRestartBtn">Restart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript 模块 -->
+    <script>
+        function togglePanel(header) {
+            const panel = header.parentElement;
+            panel.classList.toggle('collapsed');
+        }
+        
+        // Set version to standalone
+        window.GAME_VERSION = 'standalone';
+    </script>
+    <script src="js/version.js?v=1.0"></script>
+    <script src="js/config.js?v=r14"></script>
+    <script src="js/entities.js?v=r14"></script>
+    <script src="js/saveload.js?v=r14"></script>
+    <script src="js/ai.js?v=r14"></script>
+    <script src="js/collision.js?v=r14"></script>
+    <script src="js/minimap.js?v=r14"></script>
+    <script src="js/drawing.js?v=r14"></script>
+    <script src="js/ui.js?v=r14"></script>
+    <!-- Network and multiplayer scripts NOT loaded in standalone -->
+    <script src="js/game.js?v=1.0"></script>
+    <script src="js/main.js?v=1.0"></script>
+    <script src="js/enhancements.js?v=r14"></script>
+</body>
+</html>

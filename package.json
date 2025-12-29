@@ -1,0 +1,21 @@
+{
+  "name": "seagull-multiplayer-game",
+  "version": "1.1.0",
+  "description": "Multiplayer Seagull game with WebSocket server",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "nodemon server/index.js"
+  },
+  "keywords": ["game", "multiplayer", "websocket", "seagull"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "ws": "^8.16.0",
+    "express": "^4.18.2",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.3"
+  }
+}

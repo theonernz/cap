@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 游戏大厅 - 海鸥世界 v1.1</title>
+    <link rel="stylesheet" href="../general/css/dashboard.css?v=1.1">
+    <style>
+        /* 头部导航栏 */
+        .game-hall-header-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .game-hall-logo {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .game-hall-logo h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .game-hall-logo p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.85);
+        }
+        
+        .game-hall-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .game-hall-actions .back-btn {
+            position: static;
+            margin: 0;
+        }
+        
+        /* 游戏内容区 */
+        .dashboard-container {
+            padding-top: 100px;
+        }
+        
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 15px;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        /* Room List Styles */
+        .room-list-container {
+            max-width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .room-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .room-list-header h2 {
+            font-size: 1.3rem;
+            margin: 0;
+        }
+        
+        .create-room-btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+        
+        .create-room-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+        }
+        
+        .create-room-btn:disabled {
+            background: #999;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+        
+        .room-list {
+            display: block;
+            margin-bottom: 15px;
+        }
+        
+        .room-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .room-table thead {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .room-table th {
+            padding: 10px 12px;
+            text-align: left;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .room-table tbody tr {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.2s;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .room-table tbody tr:not(.full):hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .room-table tbody tr.full {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .room-table td {
+            padding: 10px 12px;
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 0.9rem;
+        }
+        
+        .room-name-cell {
+            font-weight: bold;
+            color: white;
+            font-size: 0.95rem;
+        }
+        
+        .room-players-cell {
+            font-weight: 500;
+            text-align: center;
+        }
+        
+        .room-status-cell {
+            text-align: center;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .room-status-cell .available {
+            color: #4CAF50;
+        }
+        
+        .room-status-cell .full {
+            color: #f44336;
+        }
+        
+        .room-icon {
+            opacity: 0.8;
+        }
+        
+        .refresh-btn {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+        
+        .refresh-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal.show {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+        
+        .modal-header {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: white;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #45a049;
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <header class="game-hall-header-nav">
+        <div class="game-hall-logo">
+            <h1>🦅 <span data-lang-key="gameHall">游戏大厅</span></h1>
+            <p data-lang-key="gameHallSubtitle">选择你喜欢的游戏，开始冒险！</p>
+        </div>
+        
+        <div class="game-hall-actions">
+            <button class="back-btn" onclick="window.location.href='../index.html'">
+                ← <span data-lang-key="backToHome">返回主页</span>
+            </button>
+            
+            <!-- 登录/注册按钮（游客模式） -->
+            <div id="guestActions" class="guest-actions" style="display: none;">
+                <button class="auth-btn login-btn" onclick="SeagullWorldUI.showAuthDialog('login')">
+                    🔓 <span data-lang-key="login">登录</span>
+                </button>
+                <button class="auth-btn register-btn" onclick="SeagullWorldUI.showAuthDialog('register')">
+                    ✨ <span data-lang-key="register">注册</span>
+                </button>
+            </div>
+            
+            <!-- 用户菜单（已登录） -->
+            <div id="userMenu" class="user-menu" style="display: none;">
+                <div class="user-info">
+                    <div class="user-name" id="userName">玩家</div>
+                    <div class="user-stats">
+                        <span class="user-level" id="userLevel">Lv.1</span>
+                        <span class="user-coins" id="userCoins">💰 100</span>
+                    </div>
+                </div>
+                <button class="logout-btn auth-btn" onclick="SeagullWorldUI.logout()">
+                    <span data-lang-key="logout">退出</span>
+                </button>
+            </div>
+            
+            <button class="lang-switch-btn" onclick="SeagullWorldUI.toggleLanguage()">
+                <span id="langIcon">🌐</span> <span id="langText">EN</span>
+            </button>
+        </div>
+    </header>
+    
+    <div class="dashboard-container">
+            <div class="games-grid">
+                <!-- 吃扇贝游戏 -->
+                <div class="game-card featured">
+                    <div class="game-badge">🔥 <span data-lang-key="hot">热门</span></div>
+                    <div class="game-icon">🦅</div>
+                    <h3 class="game-title" data-lang-key="seagullEatScallops">海鸥吃扇贝.io</h3>
+                    <p class="game-description" data-lang-key="scallopsDescription">
+                        控制你的海鸥在大海中吃扇贝，增强能力，与其他玩家竞争排行榜！
+                    </p>
+                    <div class="game-stats">
+                        <span>👥 <span data-lang-key="online">在线</span>: <strong id="onlinePlayers">0</strong></span>
+                        <span>⭐ <span data-lang-key="rating">评分</span>: <strong>4.8</strong></span>
+                    </div>
+                    
+                    <!-- Room List Section -->
+                    <div class="room-list-container" style="margin-top: 25px;">
+                        <div class="room-list-header">
+                            <h2 style="font-size: 1.3rem;">🏠 <span data-lang-key="availableRooms">可用房间</span></h2>
+                            <div style="display: flex; gap: 10px;">
+                                <button class="refresh-btn" onclick="refreshRoomList()" title="刷新房间列表">
+                                    🔄
+                                </button>
+                                <button class="create-room-btn" id="createRoomBtn" onclick="showCreateRoomModal()" disabled title="创建新房间">
+                                    ➕
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="room-list" id="roomList">
+                            <div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.7);">
+                                <p data-lang-key="loadingRooms">加载房间列表中...</p>
+                            </div>
+                        </div>
+                        
+                        <div style="text-align: center; margin-top: 15px;">
+                            <button class="play-btn secondary" onclick="enterGameAnonymous('scallopsIO')" style="display: inline-block;">
+                                👤 <span data-lang-key="anonymousTry">匿名试玩</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 即将推出的游戏 -->
+                <div class="game-card coming-soon">
+                    <div class="game-badge coming-soon-badge" data-lang-key="comingSoon">即将推出</div>
+                    <div class="game-icon">🏝️</div>
+                    <h3 class="game-title" data-lang-key="seagullIsland">海鸥岛屿冒险</h3>
+                    <p class="game-description" data-lang-key="islandDescription">
+                        探索神秘岛屿，收集资源，建造基地，与其他海鸥一起生存！
+                    </p>
+                    <div class="game-stats">
+                        <span>🗓️ <span data-lang-key="expected">预计</span>: <strong>2026 Q1</strong></span>
+                        <span>📢 <span data-lang-key="preorder">预约</span>: <strong>1,234</strong></span>
+                    </div>
+                    <div class="game-actions">
+                        <button class="play-btn primary" disabled>
+                            <span data-lang-key="inDev">开发中...</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 即将推出的游戏2 -->
+                <div class="game-card coming-soon">
+                    <div class="game-badge coming-soon-badge" data-lang-key="comingSoon">即将推出</div>
+                    <div class="game-icon">⚔️</div>
+                    <h3 class="game-title" data-lang-key="seagullBattle">海鸥大乱斗</h3>
+                    <p class="game-description" data-lang-key="battleDescription">
+                        实时对战，技能组合，团队协作，成为最强海鸥战士！
+                    </p>
+                    <div class="game-stats">
+                        <span>🗓️ <span data-lang-key="expected">预计</span>: <strong>2026 Q2</strong></span>
+                        <span>📢 <span data-lang-key="preorder">预约</span>: <strong>856</strong></span>
+                    </div>
+                    <div class="game-actions">
+                        <button class="play-btn primary" disabled>
+                            <span data-lang-key="inDev">开发中...</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer class="dashboard-footer">
+            <p><span data-lang-key="funGaming">© 2025 海鸥世界 Seagull World v1.1 - 让游戏更有趣</span></p>
+        </footer>
+    </div>
+    
+    <!-- Create Room Modal -->
+    <div class="modal" id="createRoomModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                ➕ <span data-lang-key="createNewRoom">创建新房间</span>
+            </div>
+            <form id="createRoomForm" onsubmit="createRoom(event)">
+                <div class="form-group">
+                    <label for="roomName" data-lang-key="roomName">房间名称</label>
+                    <input type="text" id="roomName" required maxlength="30" 
+                           data-lang-key-placeholder="roomNamePlaceholder"
+                           placeholder="输入房间名称...">
+                </div>
+                
+                <div class="form-group">
+                    <label for="maxPlayers" data-lang-key="maxPlayers">最大玩家数</label>
+                    <select id="maxPlayers">
+                        <option value="2">2</option>
+                        <option value="4">4</option>
+                        <option value="8" selected>8</option>
+                        <option value="12">12</option>
+                        <option value="16">16</option>
+                        <option value="20">20</option>
+                    </select>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeCreateRoomModal()">
+                        <span data-lang-key="cancel">取消</span>
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <span data-lang-key="create">创建</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- JavaScript -->
+    <script src="..enhancements.js?v=r14:446 Game enhancements loaded: Scallop King, Spoiled Scallops, Leaderboard Badges, Fireworks
+version.js?v=1.0:40 🎮 Game Version: SERVER (manually set)
+version.js?v=1.0:93 🎨 Initializing UI for server version...
+auth.js?v=1.0.11:599 [Seagull World Auth] Initializing authentication system...
+auth.js?v=1.0.11:604 [Seagull World Auth] User logged in: phonis
+ui.js?v=1.0.8:10 [Seagull World UI] Initializing UI...
+main.js?v=1.0:20 🦅 Seagull name: phonis
+main.js?v=1.0:21 💾 Save file username: phonis
+eneral/js/config.js?v=1.1"></script>
+    
+    <!-- File Storage System - Must load BEFORE auth.js -->
+    <script src="../general/js/file-storage-client.js?v=1.1"></script>
+    
+    <!-- Seagull World Platform Systems -->
+    <script src="../general/js/seagull-world/auth.js?v=1.1"></script>
+    <script src="../general/js/seagull-world/ui.js?v=1.1"></script>
+    <script src="../general/js/dashboard.js?v=1.1"></script>
+    
+    <script>
+        // Room management state
+        let currentUser = null;
+        let canCreateRoom = false;
+        let permissionCheckRetries = 0;
+        const MAX_RETRIES = 5;
+        
+        // 获取在线玩家数（示例）
+        async function updateOnlinePlayers() {
+            try {
+                const response = await fetch('/api/rooms/all');
+                const data = await response.json();
+                if (data.success && data.rooms) {
+                    // Count total players across all rooms
+                    const totalPlayers = data.rooms.reduce((sum, room) => sum + room.currentPlayers, 0);
+                    document.getElementById('onlinePlayers').textContent = totalPlayers;
+                }
+            } catch (error) {
+                console.log('Unable to fetch player count');
+                document.getElementById('onlinePlayers').textContent = '0';
+            }
+        }
+        
+        // Check if user can create rooms (first 20 users or >124 hours play time)
+        async function checkCreateRoomPermission() {
+            try {
+                // Get current user from auth (must use async method)
+                if (typeof SeagullWorldAuth !== 'undefined' && SeagullWorldAuth.isLoggedIn()) {
+                    const response = await SeagullWorldAuth.getCurrentUser();
+                    
+                    console.log('🔍 Loaded user from server:', response);
+                    
+                    // Extract user from response (getCurrentUser returns {success, user} format)
+                    currentUser = response?.user || response;
+                    
+                    // Verify currentUser has required data
+                    if (!currentUser || !currentUser.userId) {
+                        permissionCheckRetries++;
+                        if (permissionCheckRetries <= MAX_RETRIES) {
+                            console.warn(`⚠️ Failed to load user data (retry ${permissionCheckRetries}/${MAX_RETRIES}), retrying in 1 second...`);
+                            setTimeout(checkCreateRoomPermission, 1000);
+                        } else {
+                            console.error('❌ Max retries reached. User data unavailable.');
+                            // Enable button anyway for first user (fallback)
+                            canCreateRoom = true;
+                            const createBtn = document.getElementById('createRoomBtn');
+                            if (createBtn) {
+                                createBtn.disabled = false;
+                                createBtn.title = '创建新房间（降级模式）';
+                            }
+                        }
+                        return;
+                    }
+                    
+                    console.log('🔍 Checking permissions for user:', currentUser.userId, currentUser.username);
+                    
+                    // Get all users to check registration order
+                    const usersResponse = await fetch('/api/users');
+                    const data = await usersResponse.json();
+                    
+                    if (data.success && data.users) {
+                        const users = Object.values(data.users);
+                        console.log(`📊 Total users in system: ${users.length}`);
+                        
+                        // Sort by creation time
+                        users.sort((a, b) => a.profile.createdAt - b.profile.createdAt);
+                        
+                        // Debug: Show first 5 users
+                        console.log('👥 First 5 users:', users.slice(0, 5).map((u, i) => `${i+1}. ${u.username} (${u.userId})`));
+                        
+                        // Check if user is in first 20
+                        const userIndex = users.findIndex(u => u.userId === currentUser.userId);
+                        const isFirst20 = userIndex >= 0 && userIndex < 20;
+                        
+                        console.log(`📍 User position: ${userIndex + 1}/${users.length} (First 20: ${isFirst20})`);
+                        
+                        // Check play time (convert hours to milliseconds: 124 * 60 * 60 * 1000)
+                        const playTimeHours = (currentUser.world?.totalPlayTime || 0) / (1000 * 60 * 60);
+                        const hasEnoughPlayTime = playTimeHours >= 124;
+                        
+                        console.log(`⏱️ Play time: ${playTimeHours.toFixed(2)} hours (Required: 124h, Qualified: ${hasEnoughPlayTime})`);
+                        
+                        canCreateRoom = isFirst20 || hasEnoughPlayTime;
+                        
+                        // Update button state
+                        const createBtn = document.getElementById('createRoomBtn');
+                        if (createBtn) {
+                            createBtn.disabled = !canCreateRoom;
+                            if (!canCreateRoom) {
+                                createBtn.title = `需要：前20名注册用户或游戏时长≥124小时（当前：第${userIndex + 1}名，${playTimeHours.toFixed(1)}小时）`;
+                            } else {
+                                createBtn.title = '创建新房间';
+                            }
+                        }
+                        
+                        console.log(`✅ Create room permission: ${canCreateRoom ? 'GRANTED' : 'DENIED'}`);
+                    }
+                } else {
+                    // Guest user - cannot create rooms
+                    canCreateRoom = false;
+                    const createBtn = document.getElementById('createRoomBtn');
+                    if (createBtn) {
+                        createBtn.disabled = true;
+                        createBtn.title = '请先登录才能创建房间';
+                    }
+                    console.log('⚠️ User not logged in - cannot create rooms');
+                }
+            } catch (error) {
+                console.error('❌ Failed to check create room permission:', error);
+                canCreateRoom = false;
+            }
+        }
+        
+        // Load room list
+        async function loadRoomList() {
+            try {
+                console.log('🔄 Loading room list...');
+                const response = await fetch('/api/rooms/all');
+                console.log('✉️ Response status:', response.status);
+                const data = await response.json();
+                console.log('📦 Received data:', data);
+                
+                if (data.success && data.rooms) {
+                    console.log(`✅ Found ${data.rooms.length} rooms`);
+                    renderRoomList(data.rooms);
+                } else {
+                    throw new Error('Failed to load rooms');
+                }
+            } catch (error) {
+                console.error('❌ Failed to load room list:', error);
+                const getTranslation = (key) => {
+                    const lang = window.SeagullWorldUI?.currentLanguage || 'zh';
+                    return window.SeagullWorldUI?.translations?.[lang]?.[key] || key;
+                };
+                roomList.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.7);">
+                        <p>${getTranslation('loadRoomsFailed')}</p>
+                        <button class="refresh-btn" onclick="loadRoomList()">${getTranslation('retry')}</button>
+                    </div>
+                `;
+            }
+        }
+        
+        // Render room list
+        function renderRoomList(rooms) {
+            const roomList = document.getElementById('roomList');
+            
+            // 保存当前房间列表供语言切换使用
+            window.currentRooms = rooms;
+            
+            if (!rooms || rooms.length === 0) {
+                const getTranslation = (key) => {
+                    const lang = window.SeagullWorldUI?.currentLanguage || 'zh';
+                    return window.SeagullWorldUI?.translations?.[lang]?.[key] || key;
+                };
+                roomList.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.7);">
+                        <p>${getTranslation('noRoomsAvailable')}</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // 使用翻译系统获取文本
+            const getTranslation = (key) => {
+                const lang = window.SeagullWorldUI?.currentLanguage || 'zh';
+                return window.SeagullWorldUI?.translations?.[lang]?.[key] || key;
+            };
+            
+            const tableHeaders = `
+                <tr>
+                    <th>${getTranslation('roomName')}</th>
+                    <th>${getTranslation('online')}</th>
+                    <th>${getTranslation('roomStatus')}</th>
+                </tr>
+            `;
+            
+            const tableRows = rooms.map(room => {
+                const isFull = room.currentPlayers >= room.maxPlayers;
+                const statusClass = isFull ? 'full' : 'available';
+                const statusText = isFull ? getTranslation('roomFull') : getTranslation('doubleClickJoin');
+                
+                return `
+                    <tr class="${isFull ? 'full' : ''}" 
+                        ondblclick="${isFull ? '' : `joinRoom('${room.id}')`}">
+                        <td class="room-name-cell">${room.name}</td>
+                        <td class="room-players-cell">${room.currentPlayers}/${room.maxPlayers}</td>
+                        <td class="room-status-cell">
+                            <span class="${statusClass}">${statusText}</span>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+            
+            roomList.innerHTML = `
+                <table class="room-table">
+                    <thead>${tableHeaders}</thead>
+                    <tbody>${tableRows}</tbody>
+                </table>
+            `;
+        }
+        
+        // Refresh room list
+        function refreshRoomList() {
+            loadRoomList();
+        }
+        
+        // Join room
+        function joinRoom(roomId) {
+            // Save room selection
+            sessionStorage.setItem('selectedRoomId', roomId);
+            
+            // Enter game
+            if (typeof enterGame === 'function') {
+                enterGame('scallopsIO');
+            } else {
+                window.location.href = 'eatscallop/eatscallop-index.html';
+            }
+        }
+        
+        // Show create room modal
+        function showCreateRoomModal() {
+            console.log('🎯 showCreateRoomModal called');
+            console.log('🔒 canCreateRoom:', canCreateRoom);
+            
+            if (!canCreateRoom) {
+                console.log('❌ Permission denied - showing alert');
+                alert('您暂时无法创建房间。需要：前20名注册用户或游戏时长≥124小时');
+                return;
+            }
+            
+            const modal = document.getElementById('createRoomModal');
+            console.log('🖼️ Modal element:', modal);
+            
+            if (modal) {
+                modal.classList.add('show');
+                console.log('✅ Modal shown');
+                console.log('📋 Modal classes:', modal.className);
+            } else {
+                console.error('❌ Modal element not found!');
+            }
+        }
+        
+        // Close create room modal
+        function closeCreateRoomModal() {
+            document.getElementById('createRoomModal').classList.remove('show');
+            document.getElementById('createRoomForm').reset();
+        }
+        
+        // Create room
+        async function createRoom(event) {
+            event.preventDefault();
+            
+            console.log('🏠 Create room triggered');
+            console.log('🔒 Can create room:', canCreateRoom);
+            console.log('👤 Current user:', currentUser);
+            
+            if (!canCreateRoom) {
+                alert('您暂时无法创建房间');
+                console.log('❌ Permission denied');
+                return;
+            }
+            
+            const roomName = document.getElementById('roomName').value.trim();
+            const maxPlayers = parseInt(document.getElementById('maxPlayers').value);
+            
+            console.log('📝 Room name:', roomName);
+            console.log('👥 Max players:', maxPlayers);
+            
+            if (!roomName) {
+                alert('请输入房间名称');
+                console.log('❌ Room name is empty');
+                return;
+            }
+            
+            try {
+                const requestBody = {
+                    name: roomName,
+                    maxPlayers: maxPlayers,
+                    creatorId: currentUser?.userId || null,
+                    isPrivate: false,
+                    password: null
+                };
+                
+                console.log('📤 Sending create room request:', requestBody);
+                
+                const response = await fetch('/api/rooms/create', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(requestBody)
+                });
+                
+                console.log('📥 Response status:', response.status);
+                const data = await response.json();
+                console.log('📦 Response data:', data);
+                
+                if (data.success && data.room) {
+                    console.log('✅ Room created successfully:', data.room);
+                    closeCreateRoomModal();
+                    
+                    // Refresh room list
+                    await loadRoomList();
+                    
+                    // Join the newly created room
+                    setTimeout(() => {
+                        joinRoom(data.room.id);
+                    }, 500);
+                } else {
+                    throw new Error(data.error || 'Failed to create room');
+                }
+            } catch (error) {
+                console.error('❌ Failed to create room:', error);
+                alert('创建房间失败：' + error.message);
+            }
+        }
+        
+        // Close modal when clicking outside
+        document.addEventListener('click', (e) => {
+            const modal = document.getElementById('createRoomModal');
+            if (e.target === modal) {
+                closeCreateRoomModal();
+            }
+        });
+        
+        // Initialize
+        async function initializeGameHall() {
+            // Update online players
+            updateOnlinePlayers();
+            setInterval(updateOnlinePlayers, 30000);
+            
+            // Initialize UI and language system
+            if (typeof SeagullWorldUI !== 'undefined') {
+                SeagullWorldUI.init();
+            }
+            
+            // Wait for auth to initialize
+            setTimeout(async () => {
+                await checkCreateRoomPermission();
+                await loadRoomList();
+                
+                // Auto-refresh room list every 10 seconds
+                setInterval(loadRoomList, 10000);
+            }, 500);
+        }
+        
+        // Start initialization
+        initializeGameHall();
+    </script>
+</body>
+</html>

@@ -9,6 +9,26 @@ const GameServer = require('./GameServer');
 const { RoomManager } = require('./RoomManager');
 const config = require('./config');
 const fileStorageAPI = require('./FileStorageAPI');
+const ConfigParser = require('./ConfigParser');
+const Logger = require('./Logger');
+
+// ==================== Initialize Logger ====================
+const configPath = path.join(__dirname, '../game/eatscallop/config/game.ini');
+const configParser = new ConfigParser(configPath);
+const logConfig = configParser.getSection('log');
+
+// 构建日志文件路径
+const logDirectory = logConfig.logDirectory || 'game/eatscallop/data';
+const logFilePath = path.join(__dirname, '..', logDirectory, 'server.0.log');
+
+const logger = new Logger({
+    level: logConfig.level || 'INFO',
+    maxFileSize: logConfig.maxFileSize || 50,
+    maxFiles: logConfig.maxFiles || 5,
+    consoleOutput: logConfig.consoleOutput !== false,
+    timestampFormat: logConfig.timestampFormat || 'full',
+    logFilePath: logFilePath
+});
 
 // Create Express app and HTTP server
 const app = express();
@@ -30,12 +50,12 @@ app.use((req, res, next) => {
 // Serve static files (HTML, CSS, JS)
 app.use(express.static(path.join(__dirname, '..')));
 
-console.log('🚀 Server starting with NO CACHE headers for development...');
+logger.info('Server starting with NO CACHE headers for development');
 
 // ==================== Initialize Room Manager ====================
 
-// Create room manager instance
-const roomManager = new RoomManager();
+// Create room manager instance with logger
+const roomManager = new RoomManager(logger);
 
 // 异步初始化房间管理器
 (async () => {
@@ -47,17 +67,17 @@ const roomManager = new RoomManager();
         const hasDefaultRoom = Array.from(roomManager.rooms.values()).some(room => room.isDefault);
         if (!hasDefaultRoom) {
             const defaultRoom = roomManager.createRoom('默认大厅', 16, null, false, null, true);
-            console.log('✓ Created default lobby room');
+            logger.info('Created default lobby room', { roomId: defaultRoom.id });
         } else {
-            console.log('✓ Default lobby already exists');
+            logger.debug('Default lobby already exists');
         }
         
-        console.log('✓ Room Manager initialization complete');
+        logger.info('Room Manager initialization complete', { roomCount: roomManager.rooms.size });
     } catch (error) {
-        console.error('❌ Room Manager initialization failed:', error);
+        logger.error('Room Manager initialization failed', { error: error.message });
         // 创建默认大厅作为后备方案
         const defaultRoom = roomManager.createRoom('默认大厅', 16, null, false, null, true);
-        console.log('✓ Created fallback default lobby');
+        logger.info('Created fallback default lobby', { roomId: defaultRoom.id });
     }
 })();
 
@@ -309,7 +329,7 @@ const clientRooms = new Map(); // clientId -> roomId
 // WebSocket connection handler
 wss.on('connection', (ws, req) => {
     const clientId = uuidv4();
-    console.log(`New connection: ${clientId}`);
+    logger.debug('New WebSocket connection', { clientId });
     
     // Send client ID to client
     ws.send(JSON.stringify({
@@ -360,13 +380,18 @@ wss.on('connection', (ws, req) => {
                 
                 // Don't delete room immediately when empty
                 // Let RoomManager.cleanupEmptyRooms() handle it (24h grace period)
-                console.log(`👋 Player left room: ${room.name} (${room.getPlayerCount()} players remaining)`);
+                logger.info('Player left room', { 
+                    roomName: room.name, 
+                    roomId: room.id,
+                    playerId: playerId,
+                    remainingPlayers: room.getPlayerCount() 
+                });
             }
         }
     });
     
     ws.on('error', (error) => {
-        console.error('WebSocket error:', error);
+        logger.error('WebSocket error', { error: error.message, stack: error.stack });
     });
 });
 
@@ -606,27 +631,27 @@ server.listen(PORT, HOST, () => {
     const os = require('os');
     const networkInterfaces = os.networkInterfaces();
     
-    console.log(`Seagull Multiplayer Server running on port ${PORT}`);
-    console.log(`\n🌐 Server accessible at:`);
-    console.log(`   Local:    http://localhost:${PORT}`);
+    logger.info('Seagull Multiplayer Server running', { port: PORT, host: HOST });
+    logger.info('Server accessible at:', { local: `http://localhost:${PORT}` });
     
     // Find and display all network IP addresses
     Object.keys(networkInterfaces).forEach(interfaceName => {
         networkInterfaces[interfaceName].forEach(iface => {
             // Skip internal and non-IPv4 addresses
             if (iface.family === 'IPv4' && !iface.internal) {
-                console.log(`   Network:  http://${iface.address}:${PORT}`);
+                logger.info('Network address available', { 
+                    interface: interfaceName,
+                    url: `http://${iface.address}:${PORT}` 
+                });
             }
         });
     });
-    
-    console.log(`\n💡 Client machines should connect to the Network URL above`);
 });
 
 // Graceful shutdown
 process.on('SIGTERM', () => {
-    console.log('SIGTERM received, closing server...');
-    gameServer.stop();
+    logger.info('SIGTERM received, closing server...');
+    logger.close();
     server.close(() => {
         console.log('Server closed');
         process.exit(0);

@@ -693,8 +693,14 @@ const Game = {
         if (this.isMoving) {
             const dx = this.targetX - player.x;
             const dy = this.targetY - player.y;
-            const distance = Math.sqrt(dx * dx + dy * dy);            // 如果距离目标很近，停止移动
-            if (distance < 10) {
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            // 计算当前速度
+            const currentSpeed = Math.sqrt(player.velocityX ** 2 + player.velocityY ** 2);
+            
+            // 只有当距离很近且速度较慢时才停止
+            // 如果速度还很快，说明玩家刚吃完扇贝，应该继续移动
+            if (distance < 10 && currentSpeed < 2) {
                 this.isMoving = false;
                 this.isAccelerating = false;
                 player.velocityX = 0;
@@ -1058,11 +1064,16 @@ const Game = {
         
         if (entity.isControllable) this.scallopsEaten++;
         
+        // 移除被吃的扇贝
         EntityManager.scallops.splice(index, 1);
-        EntityManager.scallops.push(EntityManager.createScallop(
-            Math.random() * (CONFIG.worldWidth - 30) + 15,
-            Math.random() * (CONFIG.worldHeight - 30) + 15
-        ));
+        
+        // 只在单机模式下创建新扇贝（多人模式由服务器管理）
+        if (!MultiplayerGame.enabled) {
+            EntityManager.scallops.push(EntityManager.createScallop(
+                Math.random() * (CONFIG.worldWidth - 30) + 15,
+                Math.random() * (CONFIG.worldHeight - 30) + 15
+            ));
+        }
         
         if (CONFIG.showPowerTransfers && entity.isControllable) {
             // 使用新的效果创建函数

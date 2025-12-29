@@ -5,7 +5,7 @@ const fs = require('fs').promises;
 const path = require('path');
 
 class Room {
-    constructor(id, name, maxPlayers = 8, creatorId = null, isPrivate = false, password = null, isDefault = false) {
+    constructor(id, name, maxPlayers = 8, creatorId = null, isPrivate = false, password = null, isDefault = false, logger = null) {
         this.id = id;
         this.name = name;
         this.maxPlayers = maxPlayers;
@@ -14,9 +14,10 @@ class Room {
         this.password = password;
         this.isDefault = isDefault;  // Mark default room to prevent deletion
         this.createdAt = Date.now();
+        this.logger = logger;
         
-        // 创建独立的游戏服务器实例
-        this.gameServer = new GameServer();
+        // 创建独立的游戏服务器实例（传入logger）
+        this.gameServer = new GameServer(logger);
         this.clients = new Map(); // clientId -> ws connection
         
         // 启动游戏循环（即使没有玩家，AI也需要移动和吃扇贝）
@@ -28,7 +29,16 @@ class Room {
             });
         });
         
-        console.log(`✅ Room created: ${this.name} (${this.id}) - Max players: ${this.maxPlayers}`);
+        if (logger) {
+            logger.info('Room created', { 
+                name: this.name, 
+                id: this.id, 
+                maxPlayers: this.maxPlayers,
+                isDefault: this.isDefault
+            });
+        } else {
+            console.log(`✅ Room created: ${this.name} (${this.id}) - Max players: ${this.maxPlayers}`);
+        }
     }
     
     // 获取当前玩家数
@@ -82,29 +92,49 @@ class Room {
 }
 
 class RoomManager {
-    constructor() {
+    constructor(logger = null) {
+        this.logger = logger;
         this.rooms = new Map(); // roomId -> Room
         this.dataPath = path.join(__dirname, '../data/rooms.json');
         this.maxRooms = 50; // 最多保留50个房间
-        console.log('🏠 Room Manager initialized');
+        
+        if (logger) {
+            logger.info('Room Manager initialized', {});
+        } else {
+            console.log('🏠 Room Manager initialized');
+        }
     }
     
     // 创建新房间
     createRoom(name, maxPlayers = 8, creatorId = null, isPrivate = false, password = null, isDefault = false) {
         // 检查房间数量限制
         if (this.rooms.size >= this.maxRooms && !isDefault) {
-            console.warn(`⚠️ Room limit reached (${this.maxRooms}). Cannot create new room.`);
+            if (this.logger) {
+                this.logger.warn('Room limit reached', { maxRooms: this.maxRooms });
+            } else {
+                console.warn(`⚠️ Room limit reached (${this.maxRooms}). Cannot create new room.`);
+            }
             return null;
         }
         
         const roomId = uuidv4();
-        const room = new Room(roomId, name, maxPlayers, creatorId, isPrivate, password, isDefault);
+        const room = new Room(roomId, name, maxPlayers, creatorId, isPrivate, password, isDefault, this.logger);
         this.rooms.set(roomId, room);
         
-        console.log(`📊 Total rooms: ${this.rooms.size}`);
+        if (this.logger) {
+            this.logger.info('Total rooms', { count: this.rooms.size });
+        } else {
+            console.log(`📊 Total rooms: ${this.rooms.size}`);
+        }
         
         // 保存房间数据
-        this.saveRooms().catch(err => console.error('Failed to save rooms:', err));
+        this.saveRooms().catch(err => {
+            if (this.logger) {
+                this.logger.error('Failed to save rooms', { error: err.message });
+            } else {
+                console.error('Failed to save rooms:', err);
+            }
+        });
         
         return room;
     }
@@ -244,7 +274,8 @@ class RoomManager {
                     roomData.creatorId,
                     roomData.isPrivate,
                     roomData.password,
-                    roomData.isDefault
+                    roomData.isDefault,
+                    this.logger  // 传递logger给房间
                 );
                 room.createdAt = roomData.createdAt;
                 this.rooms.set(room.id, room);

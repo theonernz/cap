@@ -1,7 +1,10 @@
 // ==================== Game Server Logic ====================
 const config = require('./config');
 
-class GameServer {    constructor() {
+class GameServer {
+    constructor(logger = null) {
+        this.logger = logger;
+        
         // Game state
         this.players = new Map(); // playerId -> player object
         this.aiSeagulls = [];
@@ -16,6 +19,14 @@ class GameServer {    constructor() {
         
         // Initialize game world
         this.initializeWorld();
+    }
+    
+    log(level, message, data) {
+        if (this.logger) {
+            this.logger[level](message, data);
+        } else {
+            console.log(`[${level.toUpperCase()}] ${message}`, data || '');
+        }
     }
       initializeWorld() {
         // Create initial scallops - keep them away from edges
@@ -35,9 +46,12 @@ class GameServer {    constructor() {
             ));
         }
         
-        console.log(`World initialized: ${this.scallops.length} scallops, ${this.aiSeagulls.length} AI seagulls`);
+        this.log('info', 'World initialized', { 
+            scallops: this.scallops.length, 
+            aiSeagulls: this.aiSeagulls.length 
+        });
         if (this.scallops.length > 0) {
-            console.log(`First scallop: ${JSON.stringify(this.scallops[0])}`);
+            this.log('debug', 'First scallop created', { scallop: this.scallops[0] });
         }
     }    createScallop(x, y) {
         // 新扇贝不直接变质，而是随时间渐进变质
@@ -155,14 +169,14 @@ class GameServer {    constructor() {
         };
         
         this.players.set(playerId, player);
-        console.log(`Player joined: ${name} (${playerId})`);
+        this.log('info', 'Player joined', { name: name, playerId: playerId });
         return true;
     }
     
     removePlayer(playerId) {
         if (this.players.has(playerId)) {
             const player = this.players.get(playerId);
-            console.log(`Player left: ${player.name} (${playerId})`);
+            this.log('info', 'Player left', { name: player.name, playerId: playerId });
             this.players.delete(playerId);
         }
     }
@@ -270,7 +284,11 @@ class GameServer {    constructor() {
         
         // Log scallop count periodically
         if (Math.random() < 0.01) {
-            console.log(`Game state: ${this.scallops.length} scallops, ${this.aiSeagulls.length} AI seagulls, ${this.players.size} players`);
+            this.log('debug', 'Game state', { 
+                scallops: this.scallops.length, 
+                aiSeagulls: this.aiSeagulls.length, 
+                players: this.players.size 
+            });
         }
         
         return state;
@@ -505,7 +523,14 @@ class GameServer {    constructor() {
                         color: '#4CAF50' // Green for positive
                     });
                     
-                    console.log(`🐚 Player ${player.name} ate scallop! Power: ${oldPower} → ${player.power} (+${scallop.powerValue}), Scallops: ${player.scallopsEaten}, Remaining: ${this.scallops.length - 1}`);
+                    this.log('info', 'Player ate scallop', {
+                        playerName: player.name,
+                        oldPower: oldPower,
+                        newPower: player.power,
+                        powerGain: scallop.powerValue,
+                        scallopsEaten: player.scallopsEaten,
+                        remainingScallops: this.scallops.length - 1
+                    });
                     this.scallops.splice(i, 1);
                 }
             }
@@ -706,11 +731,14 @@ class GameServer {    constructor() {
         }
         
         if (removedCount > 0) {
-            console.log(`🗑️ Removed ${removedCount} decayed spoiled scallops (${lifetime/1000}s lifetime)`);
+            this.log('debug', 'Removed decayed spoiled scallops', { 
+                count: removedCount, 
+                lifetimeSeconds: lifetime/1000 
+            });
         }
         
         if (newlySpoiledCount > 0) {
-            console.log(`🦠 ${newlySpoiledCount} scallop(s) spoiled naturally (gradual spoiling)`);
+            this.log('debug', 'Scallops spoiled naturally', { count: newlySpoiledCount });
         }
         
         // Enforce maximum spoiled scallop percentage
@@ -730,7 +758,11 @@ class GameServer {    constructor() {
                 }
             }
             
-            console.log(`⚠️ Removed ${excessCount} excess spoiled scallops (max: ${maxSpoiled}/${totalScallops})`);
+            this.log('warn', 'Removed excess spoiled scallops', { 
+                removed: excessCount, 
+                max: maxSpoiled, 
+                total: totalScallops 
+            });
         }
         
         // Log spoiled scallop statistics periodically (every 100 cleanups)
@@ -739,11 +771,16 @@ class GameServer {    constructor() {
         if (this._cleanupCount % 100 === 0) {
             const currentSpoiled = this.scallops.filter(s => s.isSpoiled).length;
             const percentage = (currentSpoiled / this.scallops.length * 100).toFixed(1);
-            console.log(`📊 Spoiled scallops: ${currentSpoiled}/${this.scallops.length} (${percentage}%, max: ${(maxPercentage*100).toFixed(1)}%)`);
+            this.log('debug', 'Spoiled scallops statistics', {
+                spoiled: currentSpoiled,
+                total: this.scallops.length,
+                percentage: percentage,
+                maxPercentage: (maxPercentage*100).toFixed(1)
+            });
         }
         
         if (removedCount > 0) {
-            console.log(`Cleaned up ${removedCount} expired spoiled scallops`);
+            this.log('debug', 'Cleaned up expired spoiled scallops', { count: removedCount });
         }
     }
     
@@ -765,7 +802,7 @@ class GameServer {    constructor() {
         // Remove dead players and AI seagulls (power <= 0)
         for (const [playerId, player] of this.players) {
             if (player.power <= 0) {
-                console.log(`💀 Player ${player.name} died (power: ${player.power})`);
+                this.log('info', 'Player died', { name: player.name, power: player.power });
                 player.isDead = true;
                 // Note: Actual removal will be handled by disconnect logic
             }
@@ -775,7 +812,7 @@ class GameServer {    constructor() {
         const initialCount = this.aiSeagulls.length;
         this.aiSeagulls = this.aiSeagulls.filter(ai => {
             if (ai.power <= 0) {
-                console.log(`💀 AI Seagull ${ai.name} died (power: ${ai.power})`);
+                this.log('debug', 'AI Seagull died', { name: ai.name, power: ai.power });
                 return false;
             }
             return true;
@@ -790,7 +827,7 @@ class GameServer {    constructor() {
                     Math.random() * config.worldHeight
                 ));
             }
-            console.log(`Respawned ${deadCount} AI seagulls`);
+            this.log('debug', 'Respawned AI seagulls', { count: deadCount });
         }
     }
     
@@ -819,7 +856,10 @@ class GameServer {    constructor() {
             }
         }, stateInterval);
         
-        console.log(`Game server started (tick rate: ${config.tickRate}Hz, state updates: ${config.stateUpdateRate}Hz)`);
+        this.log('info', 'Game server started', { 
+            tickRate: config.tickRate, 
+            stateUpdateRate: config.stateUpdateRate 
+        });
     }
     
     stop() {
@@ -831,7 +871,7 @@ class GameServer {    constructor() {
             clearInterval(this.stateInterval);
             this.stateInterval = null;
         }
-        console.log('Game server stopped');
+        this.log('info', 'Game server stopped', {});
     }    updateScallopGrowth(deltaTime) {
         if (!config.scallopGrowth || !config.scallopGrowth.enabled) return;
         

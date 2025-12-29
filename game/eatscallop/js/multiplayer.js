@@ -246,8 +246,11 @@ const MultiplayerGame = {
                             (localPlayer.velocityY || 0) ** 2
                         );
                         
-                        // 检测玩家是否真正静止
-                        const isStationary = serverSpeed < 0.1 && clientSpeed < 0.1;
+                        // 检测玩家是否真正静止（速度低且没有移动指令）
+                        const isStationary = serverSpeed < 0.1 && 
+                                            clientSpeed < 0.1 && 
+                                            !Game.isMoving && 
+                                            !Game.isDragging;
                         
                         // 初始化静止计时器
                         if (!localPlayer._stationaryStartTime) {

@@ -61,7 +61,22 @@ class GameServer {    constructor() {
         
         const birthTime = Date.now();
         
-        return {
+        // Check if this scallop should be spoiled (if enabled)
+        const shouldBeSpoiled = config.spoiledScallop && 
+                                config.spoiledScallop.enabled && 
+                                Math.random() < config.spoiledScallop.probability;
+        
+        // Debug log on first scallop
+        if (this.scallops.length === 0) {
+            console.log(`🔍 Spoiled scallop config check:`, {
+                configExists: !!config.spoiledScallop,
+                enabled: config.spoiledScallop?.enabled,
+                probability: config.spoiledScallop?.probability,
+                shouldBeSpoiled
+            });
+        }
+        
+        const scallop = {
             id: `scallop_${birthTime}_${Math.random()}`,
             x, y,
             size: typeData.size,
@@ -77,9 +92,17 @@ class GameServer {    constructor() {
             growthProgress: 0,
             growthStage: typeData.type,
             isSpoiled: false,
+            spoiledTime: null,
             isKingCandidate: false,
             isKing: false
         };
+        
+        // Apply spoiled state if determined
+        if (shouldBeSpoiled) {
+            this.makeSpoiled(scallop);
+        }
+        
+        return scallop;
     }
     
     createAISeagull(x, y) {
@@ -272,6 +295,9 @@ class GameServer {    constructor() {
         
         // Update scallop growth (King/Spoiled system)
         this.updateScallopGrowth(deltaTime);
+        
+        // Update spoiled scallops (decay and cleanup)
+        this.updateSpoiledScallops();
         
         // Spawn new scallops if needed
         this.spawnScallops();
@@ -579,8 +605,17 @@ class GameServer {    constructor() {
     }
     
     cleanupDeadEntities() {
-        // Remove AI seagulls that are too weak (simplified for now)
+        // Remove AI seagulls that are too weak
         this.aiSeagulls = this.aiSeagulls.filter(ai => ai.power > 10);
+        
+        // Remove decayed spoiled scallops (marked for removal)
+        const beforeCount = this.scallops.length;
+        this.scallops = this.scallops.filter(s => !s.shouldRemove);
+        const removedCount = beforeCount - this.scallops.length;
+        
+        if (removedCount > 0) {
+            console.log(`🗑️ Removed ${removedCount} decayed spoiled scallops`);
+        }
     }
     
     getRandomColor() {
@@ -621,7 +656,80 @@ class GameServer {    constructor() {
             this.stateInterval = null;
         }
         console.log('Game server stopped');
-    }    updateScallopGrowth(deltaTime) {
+    }
+    
+    // Make a scallop spoiled
+    makeSpoiled(scallop) {
+        if (!scallop.isSpoiled) {
+            scallop.isSpoiled = true;
+            scallop.spoiledTime = Date.now();
+            // Change appearance to spoiled colors
+            if (config.spoiledScallop && config.spoiledScallop.colors) {
+                scallop.color = config.spoiledScallop.colors.outer;
+                scallop.innerColor = config.spoiledScallop.colors.inner;
+            }
+            // Adjust power value (negative for spoiled)
+            const multiplier = config.spoiledScallop?.powerMultiplier || -10;
+            scallop.powerValue = Math.abs(scallop.powerValue) * multiplier;
+            
+            console.log(`🦠 Scallop ${scallop.id.substr(-8)} spoiled! Power: ${scallop.powerValue}`);
+        }
+    }
+    
+    // Update spoiled scallops (decay and population control)
+    updateSpoiledScallops() {
+        if (!config.spoiledScallop || !config.spoiledScallop.enabled) return;
+        
+        const now = Date.now();
+        const lifetime = config.spoiledScallop.lifetime || 30000;
+        
+        // Mark decayed scallops for removal
+        this.scallops.forEach(scallop => {
+            if (scallop.isSpoiled && scallop.spoiledTime) {
+                const age = now - scallop.spoiledTime;
+                if (age >= lifetime) {
+                    scallop.shouldRemove = true;
+                }
+            }
+        });
+        
+        // Control spoiled scallop population (enforce maxPercentage)
+        const totalScallops = this.scallops.filter(s => !s.shouldRemove).length;
+        const spoiledScallops = this.scallops.filter(s => s.isSpoiled && !s.shouldRemove);
+        const maxSpoiled = Math.floor(totalScallops * (config.spoiledScallop.maxPercentage || 0.03));
+        
+        // If too many spoiled scallops, remove the oldest ones
+        if (spoiledScallops.length > maxSpoiled) {
+            // Sort by spoiledTime (oldest first)
+            spoiledScallops.sort((a, b) => (a.spoiledTime || 0) - (b.spoiledTime || 0));
+            
+            const excessCount = spoiledScallops.length - maxSpoiled;
+            for (let i = 0; i < excessCount; i++) {
+                spoiledScallops[i].shouldRemove = true;
+            }
+            
+            console.log(`⚠️ Removed ${excessCount} excess spoiled scallops (max: ${maxSpoiled}/${totalScallops})`);
+        }
+        
+        // Randomly spoil some normal scallops to maintain population
+        if (spoiledScallops.length < maxSpoiled) {
+            const normalScallops = this.scallops.filter(s => 
+                !s.isSpoiled && 
+                !s.isKing && 
+                !s.isKingCandidate && 
+                !s.shouldRemove
+            );
+            
+            // Small chance to spoil a normal scallop each update
+            if (normalScallops.length > 0 && Math.random() < 0.001) {
+                const randomScallop = normalScallops[Math.floor(Math.random() * normalScallops.length)];
+                this.makeSpoiled(randomScallop);
+                console.log(`🦠 A scallop has spoiled! (${spoiledScallops.length + 1}/${maxSpoiled})`);
+            }
+        }
+    }
+    
+    updateScallopGrowth(deltaTime) {
         if (!config.scallopGrowth || !config.scallopGrowth.enabled) return;
         
         const now = Date.now();

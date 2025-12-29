@@ -113,7 +113,7 @@ const GameVersion = {
         // Update title based on version
         const gameTitle = document.getElementById('gameTitle');
         if (gameTitle && this.isStandalone()) {
-            gameTitle.textContent = 'Seagull Eat Scallops.io - Standalone';
+            gameTitle.textContent = 'Seagull Eat Scallops - Standalone';
         }
         
         // Show version badge

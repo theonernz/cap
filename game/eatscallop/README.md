@@ -1,12 +1,23 @@
-# 🦅 海鸥吃扇贝.io - 独立游戏包
+# 🦅 海鸥吃扇贝 - 独立游戏包
 
-**游戏版本:** v4.1  
-**类型:** 多人在线 .io 游戏  
+**游戏版本:** v4.2  
+**类型:** 多人在线游戏  
 **状态:** ✅ 可独立运行
 
 ---
 
-## 🆕 最新更新 (2025-12-28)
+## 🆕 最新更新 (2025-12-29)
+
+### ✅ v4.3 - 变质扇贝系统完整实现
+- **🦠 新功能**: 完整的变质-腐烂系统
+  - 变质扇贝自动生成（2-3%概率）
+  - 30-40秒后自动腐烂消失
+  - 吃掉后扣除10倍能力值
+  - 骷髅标志☠️和红色虚线警告
+- **⚙️ 配置优化**: 单人/多人模式差异化参数
+- **📚 文档完善**: 新增详细技术文档和测试指南
+  - `SPOILED_SCALLOP_SYSTEM.md` - 完整技术文档
+  - `TESTING_SPOILED_SYSTEM.md` - 测试验证指南
 
 ### ✅ v4.2 - 页面刷新式模式切换（重大改进）
 - **🎯 全新方案**: 使用页面刷新方式切换游戏模式，彻底解决状态残留问题
@@ -26,20 +37,22 @@
 - **详细日志输出**: 便于调试和问题诊断
 
 ### 📚 新增文档
-- **`PAGE_RELOAD_SOLUTION.md`** - 页面刷新方案技术文档 ⭐
+- **`SPOILED_SCALLOP_SYSTEM.md`** - 变质扇贝系统技术文档 ⭐ NEW
+- **`TESTING_SPOILED_SYSTEM.md`** - 变质系统测试指南 ⭐ NEW
+- **`PAGE_RELOAD_SOLUTION.md`** - 页面刷新方案技术文档
 - **`test-mode-switch.html`** - 可视化测试页面
 - **`TESTING_GUIDE.md`** - 详细测试指南
 - **`VERIFICATION_CHECKLIST.md`** - 测试验证清单
 - **`FINAL_REPORT.md`** - 最终完成报告
 
 ### 🔧 技术改进
-- 新增 `checkAutoStartMode()` 函数 - URL参数自动启动
-- 优化 `startGame()` 和 `startMultiplayer()` - 页面刷新切换
-- 简化 `init()` 函数 - 移除不必要的清理逻辑
-- 新增 `NetworkClient.isConnected()` 方法
-- 新增 `MultiplayerGame.isConnected()` 和 `disconnect()` 方法
+- 新增 `makeSpoiled()` 方法 - 扇贝变质处理
+- 新增 `updateSpoiledScallops()` 方法 - 生命周期管理
+- 优化 `cleanupDeadEntities()` - 统一清理腐烂扇贝
+- 完善 `createScallop()` - 集成变质概率判断
+- 服务器端配置 - 多人模式专属参数
 
-**查看完整更新**: 见 [`PAGE_RELOAD_SOLUTION.md`](PAGE_RELOAD_SOLUTION.md) 和 [`CHANGELOG.md`](CHANGELOG.md)
+**查看完整更新**: 见 [`SPOILED_SCALLOP_SYSTEM.md`](SPOILED_SCALLOP_SYSTEM.md) 和 [`CHANGELOG.md`](CHANGELOG.md)
 
 ---
 

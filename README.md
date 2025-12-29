@@ -1,11 +1,11 @@
-# 🦅 Seagull Eat Scallops.io - 多人在线游戏
+# 🦅 Seagull Eat Scallops - 多人在线游戏
 
 一个基于 Node.js 和 WebSocket 的实时多人在线海鸥吃扇贝游戏。
 
-[![Status](https://img.shields.io/badge/status-stable-green.svg)](https://github.com)
-[![Version](https://img.shields.io/badge/version-1.0.8-blue.svg)](https://github.com)
-[![License](https://img.shields.io/badge/license-MIT-orange.svg)](https://github.com)
-[![Multiplayer](https://img.shields.io/badge/multiplayer-working-success.svg)](https://github.com)
+[![Status](https://img.shields/badge/status-stable-green.svg)](https://github.com)
+[![Version](https://img.shields/badge/version-1.0.8-blue.svg)](https://github.com)
+[![License](https://img.shields/badge/license-MIT-orange.svg)](https://github.com)
+[![Multiplayer](https://img.shields/badge/multiplayer-working-success.svg)](https://github.com)
 
 ---
 

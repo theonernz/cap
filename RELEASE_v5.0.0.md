@@ -116,7 +116,7 @@ const CONFIG = {
 
 ## 🎮 游戏功能 | Game Features
 
-### 海鸥吃扇贝.io | Seagull Eat Scallops.io
+### 海鸥吃扇贝 | Seagull Eat Scallops
 
 #### 单人模式 | Single Player Mode
 - 🦅 控制海鸥捕食扇贝

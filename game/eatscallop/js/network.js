@@ -241,19 +241,33 @@ const NetworkClient = {
         });
     },
     
-    // Send player movement
-    sendMove(targetX, targetY) {
-        this.sendInput('move', { targetX, targetY });
+    // Send player movement with current position for better collision detection
+    sendMove(targetX, targetY, currentX = null, currentY = null) {
+        const data = { targetX, targetY };
+        if (currentX !== null && currentY !== null) {
+            data.clientX = currentX;
+            data.clientY = currentY;
+        }
+        this.sendInput('move', data);
     },
     
     // Send stop command
-    sendStop() {
-        this.sendInput('stop');
+    sendStop(x, y) {
+        // 发送停止命令时附带精确位置
+        if (x !== undefined && y !== undefined) {
+            this.sendInput('stop', { x, y });
+        } else {
+            this.sendInput('stop');
+        }
     },
     
-    // Send quick stop
-    sendQuickStop() {
-        this.sendInput('quickStop');
+    // Send quick stop with exact position
+    sendQuickStop(x, y) {
+        if (x !== undefined && y !== undefined) {
+            this.sendInput('quickStop', { x, y });
+        } else {
+            this.sendInput('quickStop');
+        }
     },
     
     // Send boost command

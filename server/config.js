@@ -2,19 +2,19 @@
 module.exports = {    serverPort: 3000,
     
     // Game world settings - 更大的地图
-    worldWidth: 3000,  // 从2000增加到3000
-    worldHeight: 2250, // 从1500增加到2250 (保持3:2比例)
+    worldWidth: 5000,
+    worldHeight: 5000,
     
     // Timing
     tickRate: 60, // Server update rate (Hz)
-    stateUpdateRate: 20, // How often to send state to clients (Hz)
+    stateUpdateRate: 60, // How often to send state to clients (Hz) - 60Hz消除本地抖动
     
     // Player settings
     maxPlayers: 20,
     initialPlayerPower: 100,
-    playerBaseSpeed: 5,
-    playerMaxSpeed: 8,
-    playerAcceleration: 0.3,
+    playerBaseSpeed: 4,      // 从5降低到4，减少网络延迟影响
+    playerMaxSpeed: 6,       // 从8降低到6，提高碰撞检测精确度
+    playerAcceleration: 0.25, // 从0.3降低到0.25，更平滑的加速
     playerDeceleration: 0.15,    // Scallop settings - 超高密度扇贝
     initialScallopCount: 800, // 800个扇贝，大部分是小扇贝
     minScallopCount: 400,     // 最少保持400个
@@ -39,8 +39,25 @@ module.exports = {    serverPort: 3000,
         powerPercentOfTopSeagull: 0.5 // King worth 50% of top player's power
     },
     
-    // AI settings
-    aiSeagullCount: 10,
+    // Spoiled Scallop settings (Multiplayer Mode - Gradual Spoiling)
+    spoiledScallop: {
+        enabled: true,              // Enable spoiled scallop system
+        probability: 0.02,          // [Not used] Gradual spoiling instead of instant spawn
+        maxPercentage: 0.025,       // Max 2.5% of total scallops can be spoiled
+        lifetime: 40000,            // Spoiled scallops decay after 40 seconds
+        powerMultiplier: -10,       // Eating spoiled = lose 10x the scallop's normal power
+        colors: {
+            outer: '#696969',       // Dark gray outer shell
+            inner: '#2F4F2F'        // Dark green inner shell
+        },
+        warningDistance: 80,        // Show warning icon within 80 pixels
+        // Gradual spoiling settings:
+        // - Scallops aged 15-30s: 0.5% chance per 5s check (≈1.5% total in window)
+        // - More natural than instant spawn, avoids "spoiling waves"
+    },
+    
+    // AI settings - Increased for better scallop consumption
+    aiSeagullCount: 20,         // Increased from 10 to 20 for better ecosystem balance
     aiPlayerCount: 5,
     
     // Collision settings

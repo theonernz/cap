@@ -1,7 +1,7 @@
 {
   "name": "seagull-eat-scallops-io",
   "version": "4.0.0",
-  "description": "海鸥吃扇贝.io - 多人在线 .io 游戏",
+  "description": "海鸥吃扇贝 - 多人在线  游戏",
   "main": "server/index.js",
   "scripts": {
     "start": "node server/index.js",

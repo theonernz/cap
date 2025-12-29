@@ -87,6 +87,7 @@ const MultiplayerGame = {
         state.players.forEach(serverPlayer => {
             if (serverPlayer.id === playerId) {
                 // This is the local player
+                console.log(`👤 Creating local player: ${serverPlayer.name}`);
                 const player = this.createPlayerFromServerData(serverPlayer, true);
                 EntityManager.players.push(player);
                 
@@ -95,11 +96,15 @@ const MultiplayerGame = {
                 Game.playerSize = player.size;
             } else {
                 // Remote player
+                console.log(`👥 Creating remote player: ${serverPlayer.name} (${serverPlayer.id})`);
                 const player = this.createPlayerFromServerData(serverPlayer, false);
                 EntityManager.players.push(player);
                 this.remotePlayers.set(serverPlayer.id, player);
             }
         });
+        
+        console.log(`✅ Initial players loaded: ${EntityManager.players.length} total (${this.remotePlayers.size} remote)`);
+        console.log(`Player list:`, EntityManager.players.map(p => `${p.name}(${p.isControllable ? 'local' : 'remote'})`));
         
         // Load AI seagulls from server
         state.aiSeagulls.forEach(aiData => {
@@ -111,6 +116,25 @@ const MultiplayerGame = {
     },
     
     handleGameStateUpdate(state) {
+        // 诊断：检测更新频率
+        const now = Date.now();
+        if (!this._lastUpdateTime) this._lastUpdateTime = now;
+        const updateInterval = now - this._lastUpdateTime;
+        this._lastUpdateTime = now;
+        
+        if (!this._updateIntervals) this._updateIntervals = [];
+        this._updateIntervals.push(updateInterval);
+        if (this._updateIntervals.length > 60) this._updateIntervals.shift();
+        
+        // 每3秒打印一次统计
+        if (!this._lastStatsTime || now - this._lastStatsTime > 3000) {
+            const avg = this._updateIntervals.reduce((a, b) => a + b, 0) / this._updateIntervals.length;
+            const min = Math.min(...this._updateIntervals);
+            const max = Math.max(...this._updateIntervals);
+            console.log(`📊 Server update stats: Avg=${avg.toFixed(1)}ms (${(1000/avg).toFixed(1)}Hz), Min=${min}ms, Max=${max}ms`);
+            this._lastStatsTime = now;
+        }
+        
         // Update world dimensions from server if provided
         if (state.worldWidth && state.worldHeight) {
             CONFIG.worldWidth = state.worldWidth;
@@ -198,27 +222,106 @@ const MultiplayerGame = {
               if (localPlayer) {
                 // Update player data from server (but not position for local player)
                 if (serverPlayer.id === this.localPlayerId) {
-                    // For local player, check if we should ignore server updates (during save/load)
+                    // 本地玩家：完全信任客户端预测
                     const now = Date.now();
                     if (this.ignoreServerUpdatesUntil && now < this.ignoreServerUpdatesUntil) {
-                        // Skip server updates for power/size during save/load restoration
                         console.log('⏸️ Ignoring server update for local player (save/load in progress)');
                     } else {
-                        // Normal: update server-authoritative data
+                        // 更新状态数据
                         localPlayer.power = serverPlayer.power;
                         localPlayer.size = serverPlayer.size;
                         localPlayer.scallopsEaten = serverPlayer.scallopsEaten;
+                        
+                        // 位置：完全信任客户端，只做安全性校验和静止同步
+                        const dx = serverPlayer.x - localPlayer.x;
+                        const dy = serverPlayer.y - localPlayer.y;
+                        const drift = Math.sqrt(dx * dx + dy * dy);
+                        
+                        const serverSpeed = Math.sqrt(
+                            (serverPlayer.velocityX || 0) ** 2 + 
+                            (serverPlayer.velocityY || 0) ** 2
+                        );
+                        const clientSpeed = Math.sqrt(
+                            (localPlayer.velocityX || 0) ** 2 + 
+                            (localPlayer.velocityY || 0) ** 2
+                        );
+                        
+                        // 检测玩家是否真正静止
+                        const isStationary = serverSpeed < 0.1 && clientSpeed < 0.1;
+                        
+                        // 初始化静止计时器
+                        if (!localPlayer._stationaryStartTime) {
+                            localPlayer._stationaryStartTime = 0;
+                        }
+                        
+                        if (isStationary) {
+                            if (localPlayer._stationaryStartTime === 0) {
+                                localPlayer._stationaryStartTime = now;
+                            }
+                            
+                            // 静止超过500ms后，温和对齐位置
+                            const stationaryDuration = now - localPlayer._stationaryStartTime;
+                            if (stationaryDuration > 500 && drift > 1) {
+                                // 温和对齐，避免突然跳跃
+                                const alignFactor = Math.min(0.3, stationaryDuration / 2000);
+                                localPlayer.x += dx * alignFactor;
+                                localPlayer.y += dy * alignFactor;
+                            } else if (drift <= 1) {
+                                // 已经很接近了，直接对齐
+                                localPlayer.x = serverPlayer.x;
+                                localPlayer.y = serverPlayer.y;
+                            }
+                        } else {
+                            // 移动中：重置计时器，完全不校正位置
+                            localPlayer._stationaryStartTime = 0;
+                            
+                            // 只在异常大的偏差时才校正（防作弊/传送等）
+                            if (drift > 300) {
+                                console.warn(`⚠️ 检测到异常大的位置偏差: ${drift.toFixed(1)}px，强制同步`);
+                                localPlayer.x = serverPlayer.x;
+                                localPlayer.y = serverPlayer.y;
+                            }
+                        }
                     }
                 } else {
-                    // For remote players, update everything with interpolation
-                    this.interpolatePlayer(localPlayer, serverPlayer);
+                    // For remote players, always update position and stats
+                    // NOTE: This runs regardless of local player's state (moving or stationary)
+                    // Server continuously broadcasts all player states at 20Hz
+                    const wasMoving = localPlayer._lastServerSpeed && localPlayer._lastServerSpeed > 0.1;
+                    const serverSpeed = Math.sqrt((serverPlayer.velocityX || 0) ** 2 + (serverPlayer.velocityY || 0) ** 2);
+                    const isStopped = serverSpeed < 0.1;
+                    
+                    if (wasMoving && isStopped) {
+                        // Just stopped - force immediate sync to final position for pixel-perfect accuracy
+                        localPlayer.x = serverPlayer.x;
+                        localPlayer.y = serverPlayer.y;
+                        localPlayer.velocityX = 0;
+                        localPlayer.velocityY = 0;
+                    } else {
+                        // Always interpolate (even when stationary, to catch up any drift)
+                        this.interpolatePlayer(localPlayer, serverPlayer);
+                    }
+                    
+                    // Always update power, size, and stats from server (authoritative)
+                    localPlayer.power = serverPlayer.power;
+                    localPlayer.size = serverPlayer.size;
+                    localPlayer.scallopsEaten = serverPlayer.scallopsEaten || 0;
+                    
+                    // CRITICAL: Ensure remote player velocity is always zero
+                    localPlayer.velocityX = 0;
+                    localPlayer.velocityY = 0;
+                    
+                    // Store current speed for next frame comparison
+                    localPlayer._lastServerSpeed = serverSpeed;
                 }
             } else {
-                // New player joined
+                // New player joined - create remote player entity
+                console.log(`👤 Creating remote player: ${serverPlayer.name} (${serverPlayer.id})`);
                 const player = this.createPlayerFromServerData(serverPlayer, false);
                 EntityManager.players.push(player);
                 if (serverPlayer.id !== this.localPlayerId) {
                     this.remotePlayers.set(serverPlayer.id, player);
+                    console.log(`✅ Remote player added to map: ${serverPlayer.name}, Total remote: ${this.remotePlayers.size}`);
                 }
             }
         });
@@ -427,51 +530,45 @@ const MultiplayerGame = {
         };    },
     
     interpolatePlayer(localPlayer, serverPlayer) {
-        // Calculate if player is stationary based on server velocity
-        const serverSpeed = Math.sqrt((serverPlayer.velocityX || 0) ** 2 + (serverPlayer.velocityY || 0) ** 2);
+        // 新策略：逻辑层直接更新，渲染层做平滑（在drawing.js中）
         
-        // Update position - direct snap for stationary, interpolation for moving
-        if (serverSpeed < 0.1) {
-            // Stationary - snap to exact server position
+        // 初始化
+        if (!localPlayer._initialized) {
             localPlayer.x = serverPlayer.x;
             localPlayer.y = serverPlayer.y;
-            
-            // Reset velocity to zero
-            localPlayer.velocityX = 0;
-            localPlayer.velocityY = 0;
-            
-            // Reset direction to neutral (facing right)
-            localPlayer.directionX = 1;
-            localPlayer.directionY = 0;
-        } else {
-            // Moving - smooth interpolation
-            const dx = serverPlayer.x - localPlayer.x;
-            const dy = serverPlayer.y - localPlayer.y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-            
-            if (distance > 150) {
-                // Too far, teleport
-                localPlayer.x = serverPlayer.x;
-                localPlayer.y = serverPlayer.y;
-            } else if (distance > 2) {
-                // Interpolate smoothly
-                const lerpFactor = 0.3;
-                localPlayer.x += dx * lerpFactor;
-                localPlayer.y += dy * lerpFactor;
-            } else {
-                // Very close, snap
-                localPlayer.x = serverPlayer.x;
-                localPlayer.y = serverPlayer.y;
-            }
-            
-            // Set velocity to zero (interpolation handles movement)
-            localPlayer.velocityX = 0;
-            localPlayer.velocityY = 0;
-            
-            // Update direction for rendering
-            localPlayer.directionX = serverPlayer.directionX || 1;
-            localPlayer.directionY = 0;
+            localPlayer._initialized = true;
         }
+        
+        const dx = serverPlayer.x - localPlayer.x;
+        const dy = serverPlayer.y - localPlayer.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        const serverSpeed = Math.sqrt(
+            (serverPlayer.velocityX || 0) ** 2 + 
+            (serverPlayer.velocityY || 0) ** 2
+        );
+        
+        // 传送场景
+        if (distance > 100) {
+            localPlayer.x = serverPlayer.x;
+            localPlayer.y = serverPlayer.y;
+            // 强制渲染位置同步
+            if (localPlayer._renderX !== undefined) {
+                localPlayer._renderX = serverPlayer.x;
+                localPlayer._renderY = serverPlayer.y;
+            }
+        }
+        // 正常更新：直接设置服务器位置，渲染层会平滑
+        else {
+            localPlayer.x = serverPlayer.x;
+            localPlayer.y = serverPlayer.y;
+        }
+        
+        // 更新速度和方向
+        localPlayer.velocityX = serverPlayer.velocityX || 0;
+        localPlayer.velocityY = serverPlayer.velocityY || 0;
+        localPlayer.directionX = serverPlayer.directionX || 1;
+        localPlayer.directionY = 0;
         
         // Update other attributes
         localPlayer.power = serverPlayer.power;
@@ -483,22 +580,35 @@ const MultiplayerGame = {
         localPlayer._isRemotePlayer = true;
     },
     
-    // Send local player input to server
+    // Send local player input to server with current position
     sendMoveCommand(targetX, targetY) {
         if (this.enabled) {
-            NetworkClient.sendMove(targetX, targetY);
+            // Send current client position for accurate collision detection
+            const localPlayer = EntityManager.players.find(p => p.id === this.localPlayerId);
+            if (localPlayer) {
+                NetworkClient.sendMove(targetX, targetY, localPlayer.x, localPlayer.y);
+            } else {
+                NetworkClient.sendMove(targetX, targetY);
+            }
         }
     },
     
     sendStopCommand() {
         if (this.enabled) {
-            NetworkClient.sendStop();
+            // 发送停止命令时附带当前精确位置
+            const player = EntityManager.players.find(p => p.isControllable);
+            if (player) {
+                NetworkClient.sendStop(player.x, player.y);
+            } else {
+                NetworkClient.sendStop();
+            }
         }
     },
     
-    sendQuickStopCommand() {
+    sendQuickStopCommand(x, y) {
         if (this.enabled) {
-            NetworkClient.sendQuickStop();
+            // 急刹车时发送精确位置
+            NetworkClient.sendQuickStop(x, y);
         }
     },
     

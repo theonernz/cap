@@ -633,25 +633,8 @@ const Game = {
         // Find the local controllable player (important for multiplayer)
         const mainPlayer = EntityManager.players.find(p => p.isControllable) || EntityManager.players[0];
         
-        // CRITICAL FIX: In multiplayer, force remote players' velocity to ZERO before any updates
-        if (MultiplayerGame.enabled) {
-            EntityManager.players.forEach(player => {
-                if (!player.isControllable && player._isRemotePlayer) {
-                    // Guard: Ensure velocity is ALWAYS zero for remote players
-                    if (player.velocityX !== 0 || player.velocityY !== 0) {
-                        console.error(`🚨 VELOCITY LEAK DETECTED! Player ${player.id.substring(0, 8)}`);
-                        console.error(`   Position: (${player.x.toFixed(1)}, ${player.y.toFixed(1)})`);
-                        console.error(`   Velocity: (${player.velocityX.toFixed(4)}, ${player.velocityY.toFixed(4)})`);
-                        console.error(`   _isRemotePlayer: ${player._isRemotePlayer}`);
-                        console.error(`   isControllable: ${player.isControllable}`);
-                        console.error(`   Stack trace:`);
-                        console.trace();
-                        player.velocityX = 0;
-                        player.velocityY = 0;
-                    }
-                }
-            });
-        }
+        // 多人模式：远程玩家位置由服务器直接设置，渲染层做平滑
+        // 不需要客户端物理更新
         
         if (mainPlayer && mainPlayer.isControllable) {
             this.updateControllablePlayer(mainPlayer);
@@ -682,7 +665,7 @@ const Game = {
                     }
                 }
             }
-              // 更新物理和动画 - 但远程玩家跳过边界检查和翅膀动画
+              // 更新物理和动画
             if (!player.isDead) {
                 const isRemotePlayer = MultiplayerGame.enabled && 
                                        MultiplayerGame.remotePlayers && 
@@ -691,16 +674,11 @@ const Game = {
                 if (!isRemotePlayer) {
                     // 只对本地玩家和AI应用边界检查
                     CollisionSystem.keepInBounds(player, CONFIG.worldWidth, CONFIG.worldHeight);
-                    player.wingFlapSpeed += 0.1 * (Math.sqrt(player.velocityX * player.velocityX + player.velocityY * player.velocityY) + 1);
-                } else {
-                    // 远程玩家：使用服务器的移动状态来更新翅膀动画
-                    // 注意：player.velocityX/Y 在客户端始终为 0，所以我们用 isMoving 状态
-                    if (player.isMoving) {
-                        player.wingFlapSpeed += 0.1 * 8; // 假设移动时的平均速度
-                    } else {
-                        player.wingFlapSpeed += 0.1; // 静止时缓慢扇动
-                    }
                 }
+                
+                // 所有玩家更新翅膀动画
+                const speed = Math.sqrt(player.velocityX ** 2 + player.velocityY ** 2);
+                player.wingFlapSpeed += 0.1 * (speed + 1);
             }
         });
           if (mainPlayer && mainPlayer.isControllable) {
@@ -719,8 +697,10 @@ const Game = {
             if (distance < 10) {
                 this.isMoving = false;
                 this.isAccelerating = false;
+                player.velocityX = 0;
+                player.velocityY = 0;
                 
-                // Send stop command to server in multiplayer
+                // Send stop command with exact position to server
                 if (MultiplayerGame.enabled) {
                     MultiplayerGame.sendStopCommand();
                 }
@@ -732,18 +712,18 @@ const Game = {
             const dirX = dx / distance;
             const dirY = dy / distance;
             
-            // 应用加速度
-            let acceleration = player.acceleration * this.moveSpeed;
+            // 应用加速度 - 使用CONFIG中的参数与服务器完全一致
+            const baseAccel = CONFIG.playerAcceleration || player.acceleration || 0.25;
+            const accel = baseAccel * 2.5 * this.moveSpeed;
             if (this.isAccelerating) {
-                acceleration *= player.boostMultiplier;
                 player.isBoosting = true;
             } else {
                 player.isBoosting = false;
             }
             
             // 加速向目标移动
-            player.velocityX += dirX * acceleration;
-            player.velocityY += dirY * acceleration;
+            player.velocityX += dirX * accel;
+            player.velocityY += dirY * accel;
         }
         // 兼容旧的拖拽系统
         else if (this.isDragging) {
@@ -753,7 +733,8 @@ const Game = {
             this.dragForce = Math.min(1, dragLength / maxDragLength);
             
             // 计算目标速度
-            let targetAcceleration = player.acceleration * this.dragForce;
+            const baseAccel = CONFIG.playerAcceleration || player.acceleration || 0.25;
+            let targetAcceleration = baseAccel * this.dragForce;
             player.isBoosting = this.isRightMouseDown;
             if (this.isRightMouseDown) targetAcceleration *= player.boostMultiplier;
             
@@ -764,7 +745,9 @@ const Game = {
             }
         }
         
-        const maxSpeed = player.isBoosting ? player.maxSpeed * player.boostMultiplier : player.maxSpeed;
+        // 使用CONFIG中的最大速度参数
+        const baseMaxSpeed = CONFIG.playerMaxSpeed || player.maxSpeed || 6;
+        const maxSpeed = player.isBoosting ? baseMaxSpeed * (player.boostMultiplier || 1.5) : baseMaxSpeed;
         const currentSpeed = Math.sqrt(player.velocityX * player.velocityX + player.velocityY * player.velocityY);
         
         if (currentSpeed > maxSpeed) {
@@ -781,15 +764,16 @@ const Game = {
         }
         // 如果几乎静止，保持当前方向
         
-        // 减速逻辑
+        // 减速逻辑 - 使用与服务器相同的参数确保预测准确
         if (!this.isDragging && !this.isMoving) {
-            // 更平滑的减速
-            const deceleration = 0.12; // 降低减速率，让移动更流畅
+            // 使用与服务器相同的减速率
+            const deceleration = player.deceleration || CONFIG.playerDeceleration || 0.15;
             player.velocityX *= (1 - deceleration);
             player.velocityY *= (1 - deceleration);
             
-            if (Math.abs(player.velocityX) < 0.1) player.velocityX = 0;
-            if (Math.abs(player.velocityY) < 0.1) player.velocityY = 0;
+            // 与服务器相同的停止阈值
+            if (Math.abs(player.velocityX) < 0.01) player.velocityX = 0;
+            if (Math.abs(player.velocityY) < 0.01) player.velocityY = 0;
             player.isBoosting = false;
         }
         

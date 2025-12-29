@@ -39,6 +39,20 @@ module.exports = {    serverPort: 3000,
         powerPercentOfTopSeagull: 0.5 // King worth 50% of top player's power
     },
     
+    // Spoiled Scallop settings (Multiplayer Mode)
+    spoiledScallop: {
+        enabled: true,              // Enable spoiled scallop system
+        probability: 0.02,          // 2% chance for new scallops to spawn spoiled (lower in multiplayer)
+        maxPercentage: 0.025,       // Max 2.5% of total scallops can be spoiled (lower than single player)
+        lifetime: 40000,            // Spoiled scallops decay after 40 seconds (longer than single player)
+        powerMultiplier: -10,       // Eating spoiled = lose 10x the scallop's normal power
+        colors: {
+            outer: '#696969',       // Dark gray outer shell
+            inner: '#2F4F2F'        // Dark green inner shell
+        },
+        warningDistance: 80         // Show warning icon within 80 pixels
+    },
+    
     // AI settings
     aiSeagullCount: 10,
     aiPlayerCount: 5,

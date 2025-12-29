@@ -3,8 +3,8 @@ const CONFIG = {
     // 海鸥世界游戏ID（用于统一认证系统）
     gameId: 'scallopsIO',
     gameName: {
-        en: 'Seagull Eat Scallops.io',
-        zh: '海鸥吃扇贝.io'
+        en: 'Seagull Eat Scallops',
+        zh: '海鸥吃扇贝'
     },
     
     language: 'en',
@@ -112,7 +112,7 @@ const CONFIG = {
 // ==================== 多语言支持 ====================
 const TRANSLATIONS = {
     zh: {
-        gameTitle: "海鸥吃扇贝.io",
+        gameTitle: "海鸥吃扇贝",
         gameSubtitle: "唯一出品：特别为洧麟，雨荷，宇松和语丹制作。",
         statValue: "玩家海鸥",
         defaultPlayerName: "海鸥玩家",
@@ -207,7 +207,7 @@ const TRANSLATIONS = {
         pauseWarning: "⚠️ 多人游戏中，游戏世界仍在继续！"
     },
     en: {
-        gameTitle: "Seagull Eat Scallops.io",
+        gameTitle: "Seagull Eat Scallops",
         gameSubtitle: "TheOner Product: special for Weilin, Elaine, Jason and Maymay!",
         statValue: "Player Seagull",
         defaultPlayerName: "Player Seagull",

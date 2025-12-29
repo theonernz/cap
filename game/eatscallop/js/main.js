@@ -84,9 +84,9 @@ function setupEventListeners() {
                 mainPlayer.speed = 0;
                 game.lastLeftClickTime = 0; // 重置，避免三连击误判
                 
-                // Send quick stop to server in multiplayer
+                // Send quick stop with exact position to server
                 if (MultiplayerGame.enabled) {
-                    MultiplayerGame.sendQuickStopCommand();
+                    MultiplayerGame.sendQuickStopCommand(mainPlayer.x, mainPlayer.y);
                 }
             } else {
                 // 单击左键 - 立即开始移动（不再切换）

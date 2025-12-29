@@ -40,9 +40,7 @@ class GameServer {    constructor() {
             console.log(`First scallop: ${JSON.stringify(this.scallops[0])}`);
         }
     }    createScallop(x, y) {
-        // 首先检查是否生成变质扇贝（3%概率）
-        const isSpoiled = Math.random() < 0.03;
-        
+        // 新扇贝不直接变质，而是随时间渐进变质
         const types = [
             { size: 6, powerValue: 5, type: 'small', color: '#FFFACD', innerColor: '#FFE4B5', weight: 80 },
             { size: 10, powerValue: 10, type: 'medium', color: '#FFFFFF', innerColor: '#FFB74D', weight: 15 },
@@ -64,32 +62,35 @@ class GameServer {    constructor() {
         
         const birthTime = Date.now();
         
-        return {
+        const scallop = {
             id: `scallop_${birthTime}_${Math.random()}`,
             x, y,
             size: typeData.size,
-            powerValue: isSpoiled ? typeData.powerValue * -10 : typeData.powerValue,  // 变质扇贝为负值
+            powerValue: typeData.powerValue,
             type: typeData.type,
-            color: isSpoiled ? '#696969' : typeData.color,  // 变质扇贝为深灰色
-            innerColor: isSpoiled ? '#2F4F2F' : typeData.innerColor,  // 变质扇贝为暗绿色
+            color: typeData.color,
+            innerColor: typeData.innerColor,
             birthTime: birthTime,
-            spawnTime: birthTime,  // 用于追踪变质扇贝的生命周期
             // Explicitly set to prevent client-side growth effects
             currentSize: typeData.size,
             targetSize: typeData.size,
             isGrowing: false,
             growthProgress: 0,
             growthStage: typeData.type,
-            isSpoiled: isSpoiled,
+            isSpoiled: false,
+            spoiledTime: null,
+            spoilCheckTime: null, // 记录上次变质检查时间
             isKingCandidate: false,
             isKing: false
         };
+        
+        return scallop;
     }
     
     createAISeagull(x, y) {
         const colors = ['#4CAF50', '#2196F3', '#9C27B0', '#FF9800'];
         const size = Math.random() * 0.8 + 0.5;
-        const power = Math.floor(Math.random() * 30) + 30;
+        const power = Math.floor(Math.random() * 50) + 50; // Increased from 30+30 to 50+50
         
         return {
             id: `ai_${Date.now()}_${Math.random()}`,
@@ -102,7 +103,7 @@ class GameServer {    constructor() {
             directionY: Math.random() > 0.5 ? 1 : -1,
             color: colors[Math.floor(Math.random() * colors.length)],
             name: `AI-${Math.floor(Math.random() * 1000)}`,
-            baseSpeed: Math.random() * 2 + 2,
+            baseSpeed: Math.random() * 2 + 3, // Increased from +2 to +3 for faster movement
             aiState: 'wandering',
             aiTimer: Math.random() * 3
         };
@@ -178,16 +179,34 @@ class GameServer {    constructor() {
                 player.isMoving = true;
                 player.targetX = input.targetX;
                 player.targetY = input.targetY;
+                
+                // Use client-reported position for more accurate collision detection
+                // This helps compensate for network latency in multiplayer
+                if (input.clientX !== undefined && input.clientY !== undefined) {
+                    player.clientX = input.clientX;
+                    player.clientY = input.clientY;
+                    player.lastClientUpdate = Date.now();
+                }
                 break;            case 'stop':
                 player.isMoving = false;
                 player.velocityX = 0;
                 player.velocityY = 0;
+                // 接受客户端停止时的精确位置
+                if (input.x !== undefined && input.y !== undefined) {
+                    player.x = input.x;
+                    player.y = input.y;
+                }
                 break;
                 
             case 'quickStop':
-                player.velocityX *= 0.3;
-                player.velocityY *= 0.3;
+                player.velocityX = 0;
+                player.velocityY = 0;
                 player.isMoving = false;
+                // 接受客户端急刹车时的精确位置
+                if (input.x !== undefined && input.y !== undefined) {
+                    player.x = input.x;
+                    player.y = input.y;
+                }
                 break;
                 
             case 'boost':
@@ -202,7 +221,9 @@ class GameServer {    constructor() {
         }
     }
     
-    getGameState() {        const players = Array.from(this.players.values()).map(p => ({
+    getGameState() {        
+        const timestamp = Date.now();
+        const players = Array.from(this.players.values()).map(p => ({
             id: p.id,
             name: p.name,
             color: p.color,
@@ -215,16 +236,11 @@ class GameServer {    constructor() {
             directionX: p.directionX,
             directionY: p.directionY,
             isMoving: p.isMoving,
-            scallopsEaten: p.scallopsEaten
+            scallopsEaten: p.scallopsEaten,
+            timestamp: timestamp
         }));
         
-        // Debug: Log player states periodically
-        if (Math.random() < 0.005) {
-            players.forEach(p => {
-                const speed = Math.sqrt(p.velocityX ** 2 + p.velocityY ** 2);
-                console.log(`SERVER: Player ${p.id.substring(0, 8)} - isMoving=${p.isMoving}, speed=${speed.toFixed(2)}, vel=(${p.velocityX.toFixed(2)},${p.velocityY.toFixed(2)}), pos=(${p.x.toFixed(1)},${p.y.toFixed(1)})`);
-            });
-        }        const state = {
+        const state = {
             worldWidth: config.worldWidth,
             worldHeight: config.worldHeight,
             players,
@@ -359,21 +375,61 @@ class GameServer {    constructor() {
     }
     
     updateAISeagull(ai, deltaTime) {
-        // Simple AI movement (wandering)
-        ai.aiTimer -= deltaTime;
+        // 智能觅食AI：优先寻找大扇贝
+        const searchRadius = 300; // 搜索半径
+        let targetScallop = null;
+        let bestValue = 0;
         
-        if (ai.aiTimer <= 0) {
-            ai.directionX = (Math.random() - 0.5) * 2;
-            ai.directionY = (Math.random() - 0.5) * 2;
+        // 寻找视野内价值最高的扇贝（优先大扇贝）
+        for (const scallop of this.scallops) {
+            if (scallop.isKing || scallop.isSpoiled) continue; // 跳过King和变质扇贝
             
-            const mag = Math.sqrt(ai.directionX ** 2 + ai.directionY ** 2);
-            if (mag > 0) {
-                ai.directionX /= mag;
-                ai.directionY /= mag;
+            const dx = scallop.x - ai.x;
+            const dy = scallop.y - ai.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            if (distance < searchRadius) {
+                // 价值评估：能力值 / 距离（距离越近、能力值越高，优先级越高）
+                const value = scallop.powerValue / Math.max(distance, 1);
+                if (value > bestValue) {
+                    bestValue = value;
+                    targetScallop = scallop;
+                }
             }
+        }
+        
+        // 如果找到目标扇贝，追逐它
+        if (targetScallop) {
+            const dx = targetScallop.x - ai.x;
+            const dy = targetScallop.y - ai.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
             
-            ai.aiTimer = Math.random() * 3 + 1;        }
-          // Update velocity and position
+            if (distance > 0) {
+                ai.directionX = dx / distance;
+                ai.directionY = dy / distance;
+                ai.aiState = 'chasing';
+                ai.aiTimer = 1; // 持续追逐1秒
+            }
+        } else {
+            // 没有目标时随机游走
+            ai.aiTimer -= deltaTime;
+            
+            if (ai.aiTimer <= 0) {
+                ai.directionX = (Math.random() - 0.5) * 2;
+                ai.directionY = (Math.random() - 0.5) * 2;
+                
+                const mag = Math.sqrt(ai.directionX ** 2 + ai.directionY ** 2);
+                if (mag > 0) {
+                    ai.directionX /= mag;
+                    ai.directionY /= mag;
+                }
+                
+                ai.aiState = 'wandering';
+                ai.aiTimer = Math.random() * 3 + 1;
+            }
+        }
+        
+        // Update velocity and position
         ai.velocityX = ai.directionX * ai.baseSpeed;
         ai.velocityY = ai.directionY * ai.baseSpeed;
         ai.x += ai.velocityX;
@@ -413,20 +469,26 @@ class GameServer {    constructor() {
         // Players eating scallops
         for (const [playerId, player] of this.players) {            for (let i = this.scallops.length - 1; i >= 0; i--) {
                 const scallop = this.scallops[i];
-                const dx = player.x - scallop.x;
-                const dy = player.y - scallop.y;
+                
+                // Use client-reported position if available and recent (within 200ms)
+                // This significantly improves collision accuracy in multiplayer
+                let playerX = player.x;
+                let playerY = player.y;
+                if (player.clientX !== undefined && player.lastClientUpdate && 
+                    (Date.now() - player.lastClientUpdate) < 200) {
+                    playerX = player.clientX;
+                    playerY = player.clientY;
+                }
+                
+                const dx = playerX - scallop.x;
+                const dy = playerY - scallop.y;
                 const distance = Math.sqrt(dx * dx + dy * dy);
                 
-                // Collision detection: seagull must get close to scallop to eat it
-                // Seagull body radius = player.size * 10 (from drawing.js)
-                // Use the visual size (currentSize) to match what player sees on screen
-                const seagullRadius = player.size * 10;
-                
-                // Use currentSize if available (for growth animations), otherwise use size
+                // Collision detection with generous radius for network play
+                const seagullRadius = player.size * 15;
                 const visualSize = scallop.currentSize || scallop.size;
-                
-                // Collision happens when seagull center is within (radius + half scallop size)
-                const collisionRadius = seagullRadius + (visualSize * 0.5);
+                const speedBuffer = player.speed * 2;
+                const collisionRadius = seagullRadius + visualSize + speedBuffer;
                 
                 if (distance < collisionRadius) {
                     const oldPower = player.power;
@@ -450,18 +512,24 @@ class GameServer {    constructor() {
         }
         
         // AI seagulls eating scallops
-        for (const ai of this.aiSeagulls) {            for (let i = this.scallops.length - 1; i >= 0; i--) {
+        for (const ai of this.aiSeagulls) {
+            for (let i = this.scallops.length - 1; i >= 0; i--) {
                 const scallop = this.scallops[i];
+                
+                // Skip spoiled and King scallops for AI
+                if (scallop.isSpoiled || scallop.isKing) continue;
+                
                 const dx = ai.x - scallop.x;
                 const dy = ai.y - scallop.y;
                 const distance = Math.sqrt(dx * dx + dy * dy);
                 
-                // Use same collision logic as player seagulls
-                const seagullRadius = ai.size * 10;
+                // Use same expanded collision logic as player seagulls
+                const seagullRadius = ai.size * 15; // 从 *10 增加到 *15
                 const visualSize = scallop.currentSize || scallop.size;
-                const collisionRadius = seagullRadius + (visualSize * 0.5);
+                const collisionRadius = seagullRadius + visualSize; // 从 *0.5 改为 *1.0
                   
                 if (distance < collisionRadius) {
+                    const oldPower = ai.power;
                     ai.power += scallop.powerValue;
                     ai.size = Math.pow(ai.power / 100, 0.3);
                     
@@ -582,20 +650,30 @@ class GameServer {    constructor() {
                     Math.random() * (config.worldHeight - 2 * edgeMargin) + edgeMargin
                 ));
             }
-            console.log(`Spawned ${spawnCount} scallops, total: ${this.scallops.length}`);
         }
     }
     
     cleanupSpoiledScallops() {
-        // Remove spoiled scallops that have exceeded their 30-second lifetime
-        const now = Date.now();
-        const lifetime = 30000; // 30 seconds
-        let removedCount = 0;
+        if (!config.spoiledScallop || !config.spoiledScallop.enabled) return;
         
+        const now = Date.now();
+        const lifetime = config.spoiledScallop.lifetime || 40000;
+        const maxPercentage = config.spoiledScallop.maxPercentage || 0.025;
+        let removedCount = 0;
+        let newlySpoiledCount = 0;
+        
+        // 渐进式变质检查：扇贝存活15-30秒后开始有变质风险
+        const minAgeForSpoiling = 15000;  // 15秒
+        const maxAgeForSpoiling = 30000;  // 30秒
+        const spoilCheckInterval = 5000;  // 每5秒检查一次
+        
+        // Remove expired spoiled scallops
         for (let i = this.scallops.length - 1; i >= 0; i--) {
             const scallop = this.scallops[i];
-            if (scallop.isSpoiled && scallop.spawnTime) {
-                const age = now - scallop.spawnTime;
+            
+            // 清理过期的变质扇贝
+            if (scallop.isSpoiled && scallop.spoiledTime) {
+                const age = now - scallop.spoiledTime;
                 if (age >= lifetime) {
                     this.scallops.splice(i, 1);
                     removedCount++;
@@ -605,13 +683,82 @@ class GameServer {    constructor() {
                         Math.random() * (config.worldWidth - 2 * edgeMargin) + edgeMargin,
                         Math.random() * (config.worldHeight - 2 * edgeMargin) + edgeMargin
                     ));
+                    continue;
+                }
+            }
+            
+            // 渐进式变质：检查正常扇贝是否应该变质
+            if (!scallop.isSpoiled && !scallop.isKing && !scallop.isKingCandidate) {
+                const age = now - scallop.birthTime;
+                const timeSinceLastCheck = scallop.spoilCheckTime ? (now - scallop.spoilCheckTime) : spoilCheckInterval + 1;
+                
+                // 扇贝年龄在15-30秒之间，且距离上次检查超过5秒
+                if (age >= minAgeForSpoiling && age <= maxAgeForSpoiling && timeSinceLastCheck >= spoilCheckInterval) {
+                    scallop.spoilCheckTime = now;
+                    
+                    // 每次检查有0.5%的概率变质（5秒检查一次，15秒内约有1.5%概率变质）
+                    if (Math.random() < 0.005) {
+                        this.makeSpoiled(scallop);
+                        newlySpoiledCount++;
+                    }
                 }
             }
         }
         
         if (removedCount > 0) {
+            console.log(`🗑️ Removed ${removedCount} decayed spoiled scallops (${lifetime/1000}s lifetime)`);
+        }
+        
+        if (newlySpoiledCount > 0) {
+            console.log(`🦠 ${newlySpoiledCount} scallop(s) spoiled naturally (gradual spoiling)`);
+        }
+        
+        // Enforce maximum spoiled scallop percentage
+        const totalScallops = this.scallops.length;
+        const spoiledScallops = this.scallops.filter(s => s.isSpoiled);
+        const maxSpoiled = Math.floor(totalScallops * maxPercentage);
+        
+        if (spoiledScallops.length > maxSpoiled) {
+            // Sort by age (oldest first) and remove excess
+            spoiledScallops.sort((a, b) => (a.spoiledTime || 0) - (b.spoiledTime || 0));
+            const excessCount = spoiledScallops.length - maxSpoiled;
+            
+            for (let i = 0; i < excessCount; i++) {
+                const index = this.scallops.indexOf(spoiledScallops[i]);
+                if (index !== -1) {
+                    this.scallops.splice(index, 1);
+                }
+            }
+            
+            console.log(`⚠️ Removed ${excessCount} excess spoiled scallops (max: ${maxSpoiled}/${totalScallops})`);
+        }
+        
+        // Log spoiled scallop statistics periodically (every 100 cleanups)
+        if (!this._cleanupCount) this._cleanupCount = 0;
+        this._cleanupCount++;
+        if (this._cleanupCount % 100 === 0) {
+            const currentSpoiled = this.scallops.filter(s => s.isSpoiled).length;
+            const percentage = (currentSpoiled / this.scallops.length * 100).toFixed(1);
+            console.log(`📊 Spoiled scallops: ${currentSpoiled}/${this.scallops.length} (${percentage}%, max: ${(maxPercentage*100).toFixed(1)}%)`);
+        }
+        
+        if (removedCount > 0) {
             console.log(`Cleaned up ${removedCount} expired spoiled scallops`);
         }
+    }
+    
+    makeSpoiled(scallop) {
+        const spoiledConfig = config.spoiledScallop;
+        if (!spoiledConfig || scallop.isSpoiled) return;
+        
+        scallop.isSpoiled = true;
+        scallop.spoiledTime = Date.now();
+        scallop.color = spoiledConfig.colors?.outer || '#696969';
+        scallop.innerColor = spoiledConfig.colors?.inner || '#2F4F2F';
+        
+        // 调整能力值为负数
+        const powerMultiplier = spoiledConfig.powerMultiplier || -10;
+        scallop.powerValue = Math.abs(scallop.powerValue) * powerMultiplier;
     }
     
     cleanupDeadEntities() {

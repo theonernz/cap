@@ -3,8 +3,8 @@ const CONFIG = {
     // 海鸥世界游戏ID（用于统一认证系统）
     gameId: 'scallopsIO',
     gameName: {
-        en: 'Seagull Eat Scallops.io',
-        zh: '海鸥吃扇贝.io'
+        en: 'Seagull Eat Scallops',
+        zh: '海鸥吃扇贝'
     },
     
     language: 'en',
@@ -19,6 +19,13 @@ const CONFIG = {
     maxZoom: 3.0,
     initialPlayerPower: 100,
     maxSeagullSize: 5.0,  // 海鸥的最大显示大小（防止能力值很高时海鸥占满屏幕）
+    
+    // 玩家移动参数 - 必须与服务器(server/config.js)保持一致以确保客户端预测准确
+    playerBaseSpeed: 4,          // 基础速度（与服务器同步）
+    playerMaxSpeed: 6,           // 最大速度（与服务器同步）
+    playerAcceleration: 0.25,    // 加速率（与服务器同步）
+    playerDeceleration: 0.15,    // 减速率（与服务器同步）
+    
     scallopPowerValue: 10,  // 默认值，会被不同大小的扇贝覆盖
     scallopSizeIncrease: 0.1,
     showPowerTransfers: true,
@@ -113,7 +120,7 @@ const CONFIG = {
 // ==================== 多语言支持 ====================
 const TRANSLATIONS = {
     zh: {
-        gameTitle: "海鸥吃扇贝.io",
+        gameTitle: "海鸥吃扇贝",
         gameSubtitle: "唯一出品：特别为洧麟，雨荷，宇松和语丹制作。",
         statValue: "玩家海鸥",
         defaultPlayerName: "海鸥玩家",
@@ -214,7 +221,7 @@ const TRANSLATIONS = {
         singlePlayerButton: "开始游戏（单人模式）"
     },
     en: {
-        gameTitle: "Seagull Eat Scallops.io",
+        gameTitle: "Seagull Eat Scallops",
         gameSubtitle: "TheOner Product: special for Weilin, Elaine, Jason and Maymay!",
         statValue: "Player Seagull",
         defaultPlayerName: "Player Seagull",

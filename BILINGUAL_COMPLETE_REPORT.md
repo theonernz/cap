@@ -109,7 +109,7 @@ SeagullWorldUI.updateAllTranslations();
 
 ✅ **游戏卡片**
 - 热门标签
-- 游戏标题（海鸥吃扇贝.io）
+- 游戏标题（海鸥吃扇贝）
 - 在线人数
 - 评分
 - 立即开始按钮
@@ -128,7 +128,7 @@ SeagullWorldUI.updateAllTranslations();
 **已覆盖元素**：
 
 ✅ **页面标题**
-- 海鸥吃扇贝.io
+- 海鸥吃扇贝
 - 海鸥世界标识
 - 游戏标签
 

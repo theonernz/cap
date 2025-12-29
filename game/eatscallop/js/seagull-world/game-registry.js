@@ -14,8 +14,8 @@ const SeagullWorldGameRegistry = {
         scallopsIO: {
             id: 'scallopsIO',
             name: {
-                en: 'Seagull Eat Scallops.io',
-                zh: '海鸥吃扇贝.io'
+                en: 'Seagull Eat Scallops',
+                zh: '海鸥吃扇贝'
             },
             version: '1.0.8',
             category: 'action',

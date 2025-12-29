@@ -19,6 +19,15 @@ class Room {
         this.gameServer = new GameServer();
         this.clients = new Map(); // clientId -> ws connection
         
+        // 启动游戏循环（即使没有玩家，AI也需要移动和吃扇贝）
+        this.gameServer.start((state) => {
+            // 广播游戏状态给所有客户端
+            this.broadcast({
+                type: 'gameState',
+                state: state
+            });
+        });
+        
         console.log(`✅ Room created: ${this.name} (${this.id}) - Max players: ${this.maxPlayers}`);
     }
     

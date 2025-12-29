@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>变质扇贝系统测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .test-section {
+            background: #2a2a2a;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 8px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .stats {
+            margin: 10px 0;
+            padding: 10px;
+            background: #333;
+            border-radius: 4px;
+        }
+        .log {
+            background: #000;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .log-entry {
+            margin: 5px 0;
+        }
+        .log-spoiled {
+            color: #ff6b6b;
+        }
+        .log-cleanup {
+            color: #ffd93d;
+        }
+        .log-stats {
+            color: #6bcf7f;
+        }
+    </style>
+</head>
+<body>
+    <h1>🦠 变质扇贝系统测试</h1>
+    
+    <div class="test-section">
+        <h2>连接状态</h2>
+        <div id="connection-status">未连接</div>
+        <button onclick="connect()">连接到服务器</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>扇贝统计</h2>
+        <div class="stats">
+            <div>总扇贝数: <span id="total-scallops">0</span></div>
+            <div>变质扇贝: <span id="spoiled-count">0</span> (<span id="spoiled-percentage">0</span>%)</div>
+            <div>配置最大占比: <span id="max-percentage">2.5</span>%</div>
+            <div>生命周期: <span id="lifetime">40</span> 秒</div>
+        </div>
+        <button onclick="requestStats()">刷新统计</button>
+        <button onclick="testCreateSpoiled()">强制创建变质扇贝</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>实时日志</h2>
+        <div class="log" id="log"></div>
+        <button onclick="clearLog()">清空日志</button>
+    </div>
+
+    <script>
+        let ws = null;
+        
+        function addLog(message, className = '') {
+            const log = document.getElementById('log');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry ' + className;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            log.appendChild(entry);
+            log.scrollTop = log.scrollHeight;
+        }
+        
+        function clearLog() {
+            document.getElementById('log').innerHTML = '';
+        }
+        
+        function connect() {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                addLog('已经连接到服务器');
+                return;
+            }
+            
+            ws = new WebSocket('ws://localhost:3000');
+            
+            ws.onopen = () => {
+                document.getElementById('connection-status').textContent = '✅ 已连接';
+                document.getElementById('connection-status').style.color = '#6bcf7f';
+                addLog('✅ WebSocket连接成功');
+                
+                // 自动加入房间
+                ws.send(JSON.stringify({
+                    type: 'join',
+                    roomId: 'default',
+                    playerName: 'Test Observer',
+                    playerColor: '#00FF00'
+                }));
+            };
+            
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                
+                if (data.type === 'gameState') {
+                    updateStats(data);
+                } else if (data.type === 'joined') {
+                    addLog(`✅ 加入房间: ${data.roomId}`);
+                    requestStats();
+                }
+            };
+            
+            ws.onerror = (error) => {
+                addLog('❌ WebSocket错误: ' + error, 'log-error');
+            };
+            
+            ws.onclose = () => {
+                document.getElementById('connection-status').textContent = '❌ 未连接';
+                document.getElementById('connection-status').style.color = '#ff6b6b';
+                addLog('❌ WebSocket连接关闭');
+            };
+        }
+        
+        function updateStats(data) {
+            if (!data.scallops) return;
+            
+            const totalScallops = data.scallops.length;
+            const spoiledScallops = data.scallops.filter(s => s.isSpoiled);
+            const spoiledCount = spoiledScallops.length;
+            const percentage = ((spoiledCount / totalScallops) * 100).toFixed(2);
+            
+            document.getElementById('total-scallops').textContent = totalScallops;
+            document.getElementById('spoiled-count').textContent = spoiledCount;
+            document.getElementById('spoiled-percentage').textContent = percentage;
+            
+            // 检查是否有新的变质扇贝
+            if (spoiledScallops.length > 0 && !window.lastSpoiledCount) {
+                spoiledScallops.forEach(s => {
+                    addLog(`🦠 发现变质扇贝! ID: ${s.id.substr(-8)}, Power: ${s.powerValue}`, 'log-spoiled');
+                });
+            }
+            
+            window.lastSpoiledCount = spoiledCount;
+        }
+        
+        function requestStats() {
+            if (!ws || ws.readyState !== WebSocket.OPEN) {
+                addLog('❌ 未连接到服务器');
+                return;
+            }
+            addLog('📊 请求统计数据...');
+        }
+        
+        function testCreateSpoiled() {
+            addLog('⚠️ 注意：需要在服务器端实现测试接口来强制创建变质扇贝');
+            addLog('当前可以通过等待观察自然生成的变质扇贝（2%概率）');
+        }
+        
+        // 自动连接
+        setTimeout(connect, 500);
+        
+        // 定期刷新统计
+        setInterval(() => {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                requestStats();
+            }
+        }, 5000);
+    </script>
+</body>
+</html>

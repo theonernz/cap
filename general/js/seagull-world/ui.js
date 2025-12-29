@@ -89,7 +89,7 @@ const SeagullWorldUI = {
             'preorder': '预约',
             
             // 游戏页面 - 海鸥吃扇贝
-            'seagullEatScallops': '海鸥吃扇贝.io',
+            'seagullEatScallops': '海鸥吃扇贝',
             'seagullWorld': '🦅 海鸥世界',
             'gameLabel': '游戏',
             'startGameSingle': '开始游戏 (单人模式)',
@@ -287,7 +287,7 @@ const SeagullWorldUI = {
             'preorder': 'Pre-orders',
             
             // Game Page - Seagull Eat Scallops
-            'seagullEatScallops': 'Seagull Eat Scallops.io',
+            'seagullEatScallops': 'Seagull Eat Scallops',
             'seagullWorld': '🦅 Seagull World',
             'gameLabel': 'Game',
             'startGameSingle': 'Start Game (Single Player)',

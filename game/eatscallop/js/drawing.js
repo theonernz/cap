@@ -82,6 +82,8 @@ const DrawingSystem = {
                 }
             });
             
+
+            
             
             // this.drawPowerTransferEffectsWorld(powerTransferEffects, zoomLevel, mainPlayer);
             
@@ -115,9 +117,46 @@ const DrawingSystem = {
         // 防止负数或过小的size导致Canvas错误
         const safeEntitySize = Math.max(0.1, entity.size || 1.0);
         const baseSize = safeEntitySize * 10;            
-        const size = Math.max(1, baseSize); // 确保至少1像素
-        const x = entity.x;
-        const y = entity.y;        const wingFlapOffset = Math.sin(entity.wingFlapSpeed) * 5;
+        const size = Math.max(1, baseSize);
+        
+        // 渲染平滑：对于远程玩家，在渲染时插值到目标位置
+        let x = entity.x;
+        let y = entity.y;
+        
+        if (!isControllable && entity._isRemotePlayer) {
+            // 初始化渲染位置
+            if (entity._renderX === undefined) {
+                entity._renderX = entity.x;
+                entity._renderY = entity.y;
+            }
+            
+            // 渲染平滑：每帧向目标位置插值
+            const dx = entity.x - entity._renderX;
+            const dy = entity.y - entity._renderY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            // 根据距离调整平滑系数
+            let smoothFactor;
+            if (distance > 50) {
+                // 距离太远，快速追上
+                smoothFactor = 0.5;
+            } else if (distance > 2) {
+                // 正常平滑
+                smoothFactor = 0.25;
+            } else {
+                // 很接近，直接对齐
+                smoothFactor = 1.0;
+            }
+            
+            entity._renderX += dx * smoothFactor;
+            entity._renderY += dy * smoothFactor;
+            
+            // 使用渲染位置而非逻辑位置
+            x = entity._renderX;
+            y = entity._renderY;
+        }
+        
+        const wingFlapOffset = Math.sin(entity.wingFlapSpeed) * 5;
         
         // Calculate rotation angle from direction
         let angle = 0;

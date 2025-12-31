@@ -417,7 +417,12 @@ const SeagullWorldAuth = {
             
             if (!result.success) {
                 console.log('[Auth] ⚠️ Token verification failed:', result.error);
-                this.logout();
+                // 清除本地会话状态
+                await this.logout();
+                // 触发UI更新（如果UI已加载）
+                if (window.SeagullWorldUI && typeof window.SeagullWorldUI.updateUserInterface === 'function') {
+                    await window.SeagullWorldUI.updateUserInterface();
+                }
                 return false;
             }
             
@@ -425,7 +430,14 @@ const SeagullWorldAuth = {
             return true;
         } catch (error) {
             console.error('[Auth] Token verification error:', error);
-            // 网络错误时不强制登出，但返回false
+            // 服务器无响应可能是重启了，清除本地token
+            if (error.message && (error.message.includes('Failed to fetch') || error.message.includes('NetworkError'))) {
+                console.log('[Auth] ⚠️ Server unreachable, clearing local session');
+                await this.logout();
+                if (window.SeagullWorldUI && typeof window.SeagullWorldUI.updateUserInterface === 'function') {
+                    await window.SeagullWorldUI.updateUserInterface();
+                }
+            }
             return false;
         }
     },
@@ -501,8 +513,21 @@ const SeagullWorldAuth = {
         
         try {
             // 从服务器获取最新用户信息
-            const user = await FileStorageService.getUserById(session.userId);
-            return user ? this.sanitizeUser(user) : null;
+            const result = await FileStorageService.getUserById(session.userId);
+            
+            // 检查是否成功
+            if (!result || result.success === false) {
+                console.warn('[Auth] Failed to get user data:', result?.error || 'Unknown error');
+                // 如果是认证错误，清除无效的session
+                if (result?.error && result.error.includes('Authentication')) {
+                    console.log('[Auth] Invalid token, clearing session...');
+                    await this.logout();
+                }
+                return null;
+            }
+            
+            // result 是 { success: true, user: {...} }，需要返回 user 对象
+            return result.user ? this.sanitizeUser(result.user) : null;
         } catch (error) {
             console.error('[Auth] Failed to get current user:', error);
             return null;

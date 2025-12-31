@@ -393,8 +393,21 @@ const SeagullWorldAuth = {
         
         try {
             // 从服务器获取最新用户信息
-            const user = await FileStorageService.getUserById(session.userId);
-            return user ? this.sanitizeUser(user) : null;
+            const result = await FileStorageService.getUserById(session.userId);
+            
+            // 检查是否成功
+            if (!result || result.success === false) {
+                console.warn('[Auth] Failed to get user data:', result?.error || 'Unknown error');
+                // 如果是认证错误，清除无效的session
+                if (result?.error && (result.error.includes('Authentication') || result.error.includes('Unauthorized'))) {
+                    console.log('[Auth] Invalid token, clearing session...');
+                    this.logout();
+                }
+                return null;
+            }
+            
+            // result 是 { success: true, user: {...} }，需要返回 user 对象
+            return result.user ? this.sanitizeUser(result.user) : null;
         } catch (error) {
             console.error('[Auth] Failed to get current user:', error);
             return null;

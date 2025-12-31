@@ -53,17 +53,9 @@ function enterGame(gameId) {
         return;
     }
     
-    // 跳转到游戏页面
-    if (gameId === 'scallopsIO') {
-        // 检测当前页面位置，使用正确的相对路径
-        const currentPath = window.location.pathname;
-        if (currentPath.includes('/game/game-index.html')) {
-            // 从游戏大厅进入
-            window.location.href = 'eatscallop/eatscallop-index.html';
-        } else {
-            // 从主页进入
-            window.location.href = 'game/eatscallop/eatscallop-index.html';
-        }
+    // 跳转到游戏页面（使用简洁URL）
+    if (gameId === 'scallopsIO' || gameId === 'eatscallop') {
+        window.location.href = '/game/eatscallop';
     }
 }
 
@@ -84,7 +76,7 @@ function enterGameAnonymous(gameId) {
         return;
     }
     
-    if (gameId === 'scallopsIO') {
+    if (gameId === 'scallopsIO' || gameId === 'eatscallop') {
         // 设置匿名模式标记
         sessionStorage.setItem('anonymousMode', 'true');
         
@@ -118,15 +110,8 @@ function enterGameAnonymous(gameId) {
         
         // 延迟跳转，让用户看到提示
         setTimeout(() => {
-            // 检测当前页面位置，使用正确的相对路径
-            const currentPath = window.location.pathname;
-            if (currentPath.includes('/game/game-index.html')) {
-                // 从游戏大厅进入
-                window.location.href = 'eatscallop/eatscallop-index.html';
-            } else {
-                // 从主页进入
-                window.location.href = 'game/eatscallop/eatscallop-index.html';
-            }
+            // 使用简洁URL跳转
+            window.location.href = '/game/eatscallop';
         }, 500);
     }
 }

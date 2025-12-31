@@ -1,5 +1,5 @@
 // ==================== 主程序入口 ====================
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     // 初始化海鸥世界统一平台系统
     if (typeof SeagullWorldAuth !== 'undefined') {
         SeagullWorldAuth.init();
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log(`💾 Save file username: ${PlayerIdentity.getUsername()}`);
     
     // 初始化整合用户面板
-    initIntegratedUserPanel();
+    await initIntegratedUserPanel();
     
     // 应用初始语言设置
     UISystem.applyLanguage();
@@ -244,7 +244,7 @@ function setupEventListeners() {
 }
 
 // 初始化整合用户面板
-function initIntegratedUserPanel() {
+async function initIntegratedUserPanel() {
     const integratedPanel = document.getElementById('integratedUserPanel');
     if (!integratedPanel) return;
     
@@ -252,8 +252,29 @@ function initIntegratedUserPanel() {
     const isLoggedIn = typeof SeagullWorldAuth !== 'undefined' && SeagullWorldAuth.isLoggedIn();
     
     if (isLoggedIn) {
-        // 已登录用户 - updateDashboardUI 会处理
+        // 已登录用户 - 获取并显示用户信息
         integratedPanel.style.display = 'flex';
+        
+        console.log('[Main] Getting current user...');
+        const user = await SeagullWorldAuth.getCurrentUser();
+        console.log('[Main] User data:', user);
+        
+        if (user) {
+            const userName = document.getElementById('userName');
+            const userAvatar = document.getElementById('userAvatar');
+            const userLevel = document.getElementById('userLevel');
+            const userCoins = document.getElementById('userCoins');
+            
+            console.log('[Main] userName element:', userName);
+            console.log('[Main] Setting displayName:', user.profile?.displayName, 'or username:', user.username);
+            
+            if (userName) userName.textContent = user.profile?.displayName || user.username;
+            if (userAvatar) userAvatar.textContent = user.profile?.avatar || '🦅';
+            if (userLevel) userLevel.textContent = `Lv.${user.world?.worldLevel || 1}`;
+            if (userCoins) userCoins.textContent = `💰 ${user.world?.seagullCoins || 100}`;
+        } else {
+            console.warn('[Main] User is null - failed to get user data');
+        }
     } else {
         // 游客模式 - 显示游客信息
         const seagullName = PlayerIdentity.getSeagullName();
@@ -273,7 +294,7 @@ function initIntegratedUserPanel() {
     }
     
     // 检查是否有选择的房间并显示房间信息
-    checkAndDisplayRoomInfo();
+    await checkAndDisplayRoomInfo();
 }
 
 // 检查并显示房间信息

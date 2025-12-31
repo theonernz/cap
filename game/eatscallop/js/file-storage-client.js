@@ -7,6 +7,36 @@
 const FileStorageService = {
     API_BASE: window.location.origin,
     
+    /**
+     * 获取当前会话的 token
+     */
+    getAuthToken() {
+        try {
+            const sessionData = localStorage.getItem('seagullWorld_currentSession');
+            if (!sessionData) return null;
+            
+            const session = JSON.parse(sessionData);
+            return session.token || null;
+        } catch (error) {
+            console.error('[FileStorage] Failed to get auth token:', error);
+            return null;
+        }
+    },
+    
+    /**
+     * 创建带认证的请求头
+     */
+    getAuthHeaders() {
+        const token = this.getAuthToken();
+        const headers = { 'Content-Type': 'application/json' };
+        
+        if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+        }
+        
+        return headers;
+    },
+    
     // ==================== User Methods ====================
       /**
      * Register new user
@@ -58,7 +88,9 @@ const FileStorageService = {
      */
     async getUserById(userId) {
         try {
-            const response = await fetch(`${this.API_BASE}/api/users/${userId}`);
+            const response = await fetch(`${this.API_BASE}/api/users/${userId}`, {
+                headers: this.getAuthHeaders()
+            });
             return await response.json();
         } catch (error) {
             console.error('Get user failed:', error);

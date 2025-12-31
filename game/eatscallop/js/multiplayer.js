@@ -122,6 +122,9 @@ const MultiplayerGame = {
         const updateInterval = now - this._lastUpdateTime;
         this._lastUpdateTime = now;
         
+        // Track latency for adaptive correction
+        this.lastUpdateLatency = updateInterval;
+        
         if (!this._updateIntervals) this._updateIntervals = [];
         this._updateIntervals.push(updateInterval);
         if (this._updateIntervals.length > 60) this._updateIntervals.shift();
@@ -275,15 +278,31 @@ const MultiplayerGame = {
                                 localPlayer.y = serverPlayer.y;
                             }
                         } else {
-                            // 移动中：重置计时器，完全不校正位置
+                            // 移动中：使用极温和的平滑插值
                             localPlayer._stationaryStartTime = 0;
                             
-                            // 只在异常大的偏差时才校正（防作弊/传送等）
-                            if (drift > 300) {
-                                console.warn(`⚠️ 检测到异常大的位置偏差: ${drift.toFixed(1)}px，强制同步`);
-                                localPlayer.x = serverPlayer.x;
-                                localPlayer.y = serverPlayer.y;
+                            // 每帧都进行微小的平滑插值（但只在偏差较大时）
+                            if (drift > 150) {
+                                // 更温和的插值速度
+                                let lerpFactor;
+                                if (drift > 400) {
+                                    lerpFactor = 0.02; // 极大偏差：2%/帧
+                                } else if (drift > 250) {
+                                    lerpFactor = 0.01; // 大偏差：1%/帧
+                                } else {
+                                    lerpFactor = 0.005; // 中偏差：0.5%/帧
+                                }
+                                
+                                // 平滑插值（Lerp）
+                                localPlayer.x += dx * lerpFactor;
+                                localPlayer.y += dy * lerpFactor;
+                                
+                                // 极大偏差时偶尔记录
+                                if (drift > 400 && Math.random() < 0.01) {
+                                    console.log(`🌊 插值: ${drift.toFixed(0)}px, 速度${(lerpFactor * 100).toFixed(2)}%/帧`);
+                                }
                             }
+                            // 偏差<150px：完全信任客户端预测
                         }
                     }
                 } else {
@@ -586,10 +605,13 @@ const MultiplayerGame = {
     // Send local player input to server with current position
     sendMoveCommand(targetX, targetY) {
         if (this.enabled) {
-            // Send current client position for accurate collision detection
+            // Send PREDICTED client position (not interpolated) for accurate collision detection
             const localPlayer = EntityManager.players.find(p => p.id === this.localPlayerId);
             if (localPlayer) {
-                NetworkClient.sendMove(targetX, targetY, localPlayer.x, localPlayer.y);
+                // 使用未经插值修改的预测位置
+                const sendX = localPlayer._predictedX || localPlayer.x;
+                const sendY = localPlayer._predictedY || localPlayer.y;
+                NetworkClient.sendMove(targetX, targetY, sendX, sendY);
             } else {
                 NetworkClient.sendMove(targetX, targetY);
             }

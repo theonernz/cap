@@ -25,7 +25,7 @@ function enterGameAnonymous(gameId) {
 }
 
 // 初始化Dashboard
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     console.log('[Dashboard] Initializing...');
     
     // 初始化海鸥世界系统
@@ -37,13 +37,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // 更新用户界面
-    updateDashboardUI();
+    await updateDashboardUI();
 });
 
 // 更新Dashboard用户界面
-function updateDashboardUI() {
+async function updateDashboardUI() {
     const session = SeagullWorldAuth.getCurrentSession();
-    const user = SeagullWorldAuth.getCurrentUser();
+    const user = await SeagullWorldAuth.getCurrentUser();
     
     const integratedUserPanel = document.getElementById('integratedUserPanel');
     const guestActions = document.getElementById('guestActions');

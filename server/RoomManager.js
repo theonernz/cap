@@ -5,9 +5,11 @@ const fs = require('fs').promises;
 const path = require('path');
 
 class Room {
-    constructor(id, name, maxPlayers = 8, creatorId = null, isPrivate = false, password = null, isDefault = false, logger = null) {
+    constructor(id, nameEn, nameZh, maxPlayers = 8, creatorId = null, isPrivate = false, password = null, isDefault = false, logger = null, configParser = null) {
         this.id = id;
-        this.name = name;
+        this.nameEn = nameEn || nameZh || 'Room';  // 英文名称
+        this.nameZh = nameZh || nameEn || '房间';  // 中文名称
+        this.name = nameEn;  // 保留name字段以兼容旧代码
         this.maxPlayers = maxPlayers;
         this.creatorId = creatorId;
         this.isPrivate = isPrivate;
@@ -16,8 +18,8 @@ class Room {
         this.createdAt = Date.now();
         this.logger = logger;
         
-        // 创建独立的游戏服务器实例（传入logger）
-        this.gameServer = new GameServer(logger);
+        // 创建独立的游戏服务器实例（传入logger和configParser）
+        this.gameServer = new GameServer(logger, configParser);
         this.clients = new Map(); // clientId -> ws connection
         
         // 启动游戏循环（即使没有玩家，AI也需要移动和吃扇贝）
@@ -31,7 +33,8 @@ class Room {
         
         if (logger) {
             logger.info('Room created', { 
-                name: this.name, 
+                nameEn: this.nameEn,
+                nameZh: this.nameZh,
                 id: this.id, 
                 maxPlayers: this.maxPlayers,
                 isDefault: this.isDefault
@@ -81,19 +84,23 @@ class Room {
     getInfo() {
         return {
             id: this.id,
-            name: this.name,
+            nameEn: this.nameEn,
+            nameZh: this.nameZh,
+            name: this.name,  // 兼容旧代码
             maxPlayers: this.maxPlayers,
             currentPlayers: this.getPlayerCount(),
             isFull: this.isFull(),
             isPrivate: this.isPrivate,
+            isDefault: this.isDefault,
             createdAt: this.createdAt
         };
     }
 }
 
 class RoomManager {
-    constructor(logger = null) {
+    constructor(logger = null, configParser = null) {
         this.logger = logger;
+        this.configParser = configParser;
         this.rooms = new Map(); // roomId -> Room
         this.dataPath = path.join(__dirname, '../data/rooms.json');
         this.maxRooms = 50; // 最多保留50个房间
@@ -106,7 +113,7 @@ class RoomManager {
     }
     
     // 创建新房间
-    createRoom(name, maxPlayers = 8, creatorId = null, isPrivate = false, password = null, isDefault = false) {
+    createRoom(nameEn, nameZh, maxPlayers = 8, creatorId = null, isPrivate = false, password = null, isDefault = false) {
         // 检查房间数量限制
         if (this.rooms.size >= this.maxRooms && !isDefault) {
             if (this.logger) {
@@ -118,7 +125,7 @@ class RoomManager {
         }
         
         const roomId = uuidv4();
-        const room = new Room(roomId, name, maxPlayers, creatorId, isPrivate, password, isDefault, this.logger);
+        const room = new Room(roomId, nameEn, nameZh, maxPlayers, creatorId, isPrivate, password, isDefault, this.logger, this.configParser);
         this.rooms.set(roomId, room);
         
         if (this.logger) {
@@ -235,7 +242,9 @@ class RoomManager {
             for (const [roomId, room] of this.rooms) {
                 roomsData.push({
                     id: room.id,
-                    name: room.name,
+                    nameEn: room.nameEn,
+                    nameZh: room.nameZh,
+                    name: room.name,  // 兼容旧数据
                     maxPlayers: room.maxPlayers,
                     creatorId: room.creatorId,
                     isPrivate: room.isPrivate,
@@ -267,15 +276,18 @@ class RoomManager {
             
             for (const roomData of rooms) {
                 // 重新创建房间对象
+                // 兼容旧数据：如果没有nameEn/nameZh，使用name字段
                 const room = new Room(
                     roomData.id,
-                    roomData.name,
+                    roomData.nameEn || roomData.name || 'Room',
+                    roomData.nameZh || roomData.name || '房间',
                     roomData.maxPlayers,
                     roomData.creatorId,
                     roomData.isPrivate,
                     roomData.password,
                     roomData.isDefault,
-                    this.logger  // 传递logger给房间
+                    this.logger,  // 传递logger给房间
+                    this.configParser  // 传递configParser
                 );
                 room.createdAt = roomData.createdAt;
                 this.rooms.set(room.id, room);

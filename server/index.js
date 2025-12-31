@@ -7,15 +7,21 @@ const { v4: uuidv4 } = require('uuid');
 
 const GameServer = require('./GameServer');
 const { RoomManager } = require('./RoomManager');
-const config = require('./config');
 const fileStorageAPI = require('./FileStorageAPI');
 const ConfigParser = require('./ConfigParser');
 const Logger = require('./Logger');
 const SessionManager = require('./SessionManager');
 
+// ==================== Initialize Configuration ====================
+// 加载配置：server.ini 继承自 game.ini
+const gameConfigPath = path.join(__dirname, '../game/eatscallop/config/game.ini');
+const serverConfigPath = path.join(__dirname, '../game/eatscallop/config/server.ini');
+const configParser = new ConfigParser(serverConfigPath, gameConfigPath);
+
+// 启用配置热重载
+configParser.watchConfig();
+
 // ==================== Initialize Logger ====================
-const configPath = path.join(__dirname, '../game/eatscallop/config/game.ini');
-const configParser = new ConfigParser(configPath);
 const logConfig = configParser.getSection('log');
 
 // 构建日志文件路径
@@ -42,6 +48,32 @@ const wss = new WebSocket.Server({ server });
 // Middleware
 app.use(express.json({ limit: '50mb' })); // Parse JSON bodies with 50MB limit for game saves
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
+
+// CORS middleware - 允许跨域访问
+app.use((req, res, next) => {
+    const allowedOrigins = configParser.get('server', 'allowedOrigins', '*');
+    
+    if (allowedOrigins === '*') {
+        res.header('Access-Control-Allow-Origin', '*');
+    } else {
+        const origins = allowedOrigins.split(',').map(o => o.trim());
+        const origin = req.headers.origin;
+        if (origins.includes(origin)) {
+            res.header('Access-Control-Allow-Origin', origin);
+        }
+    }
+    
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    
+    // 处理 OPTIONS 预检请求
+    if (req.method === 'OPTIONS') {
+        return res.sendStatus(200);
+    }
+    
+    next();
+});
 
 // Disable caching for development - force browsers to reload files
 app.use((req, res, next) => {
@@ -97,8 +129,8 @@ app.get('/test/:testName', (req, res) => {
 
 // ==================== Initialize Room Manager ====================
 
-// Create room manager instance with logger
-const roomManager = new RoomManager(logger);
+// Create room manager instance with logger and configParser
+const roomManager = new RoomManager(logger, configParser);
 
 // 异步初始化房间管理器
 (async () => {
@@ -106,21 +138,78 @@ const roomManager = new RoomManager(logger);
         // 从文件加载保存的房间
         await roomManager.loadRooms();
         
-        // 如果没有默认大厅，创建一个
-        const hasDefaultRoom = Array.from(roomManager.rooms.values()).some(room => room.isDefault);
-        if (!hasDefaultRoom) {
-            const defaultRoom = roomManager.createRoom('默认大厅', 16, null, false, null, true);
-            logger.info('Created default lobby room', { roomId: defaultRoom.id });
+        // 从配置文件读取默认房间设置
+        const defaultRoomCount = configParser.get('rooms', 'defaultRoomCount', 5);
+        const defaultRooms = [];
+        
+        // 读取配置中的默认房间
+        for (let i = 1; i <= defaultRoomCount; i++) {
+            const roomConfig = configParser.get('rooms', `defaultRoom${i}`, null);
+            if (roomConfig) {
+                // 解析格式：name_en|name_zh|maxPlayers
+                const parts = roomConfig.split('|');
+                if (parts.length >= 3) {
+                    defaultRooms.push({
+                        nameEn: parts[0].trim(),
+                        nameZh: parts[1].trim(),
+                        maxPlayers: parseInt(parts[2]) || 16
+                    });
+                }
+            }
+        }
+        
+        // 如果配置中没有房间，使用默认配置
+        if (defaultRooms.length === 0) {
+            defaultRooms.push(
+                { nameEn: 'Default Room', nameZh: '默认房间', maxPlayers: 16 },
+                { nameEn: 'Muriwai Beach', nameZh: '穆里怀', maxPlayers: 16 },
+                { nameEn: 'Sanya Island', nameZh: '三亚岛', maxPlayers: 16 },
+                { nameEn: 'Kulangsu', nameZh: '鼓浪屿', maxPlayers: 16 },
+                { nameEn: 'Red Beach', nameZh: '红海滩', maxPlayers: 16 }
+            );
+        }
+        
+        // 检查并创建缺失的默认房间
+        const existingDefaultRooms = Array.from(roomManager.rooms.values()).filter(room => room.isDefault);
+        const existingRoomIds = new Set(existingDefaultRooms.map(room => `${room.nameEn}|${room.nameZh}`));
+        
+        let createdCount = 0;
+        for (const roomConfig of defaultRooms) {
+            const roomId = `${roomConfig.nameEn}|${roomConfig.nameZh}`;
+            if (!existingRoomIds.has(roomId)) {
+                const room = roomManager.createRoom(
+                    roomConfig.nameEn,
+                    roomConfig.nameZh,
+                    roomConfig.maxPlayers, 
+                    null,  // creatorId
+                    false, // isPrivate
+                    null,  // password
+                    true   // isDefault - 标记为默认房间，永久保留
+                );
+                logger.info('Created default room', { 
+                    nameEn: roomConfig.nameEn,
+                    nameZh: roomConfig.nameZh,
+                    roomId: room.id 
+                });
+                createdCount++;
+            }
+        }
+        
+        if (createdCount === 0) {
+            logger.debug('All default rooms already exist');
         } else {
-            logger.debug('Default lobby already exists');
+            logger.info('Default rooms initialization complete', { 
+                created: createdCount, 
+                total: defaultRooms.length 
+            });
         }
         
         logger.info('Room Manager initialization complete', { roomCount: roomManager.rooms.size });
     } catch (error) {
         logger.error('Room Manager initialization failed', { error: error.message });
-        // 创建默认大厅作为后备方案
-        const defaultRoom = roomManager.createRoom('默认大厅', 16, null, false, null, true);
-        logger.info('Created fallback default lobby', { roomId: defaultRoom.id });
+        // 创建基础默认房间作为后备方案
+        const defaultRoom = roomManager.createRoom('Default Room', '默认房间', 16, null, false, null, true);
+        logger.info('Created fallback default room', { roomId: defaultRoom.id });
     }
 })();
 
@@ -845,7 +934,7 @@ setInterval(() => {
 }, 5 * 60 * 1000); // 每5分钟清理一次
 
 // Start HTTP server
-const PORT = process.env.PORT || config.serverPort;
+const PORT = process.env.PORT || configParser.get('server', 'port', 3000);
 const HOST = '0.0.0.0'; // Listen on all network interfaces
 
 server.listen(PORT, HOST, () => {

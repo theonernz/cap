@@ -1,9 +1,24 @@
 // ==================== Game Server Logic ====================
-const config = require('./config');
+const { loadConfigFromINI } = require('./configLoader');
 
 class GameServer {
-    constructor(logger = null) {
+    constructor(logger = null, configParser = null) {
         this.logger = logger;
+        
+        // Load configuration from INI or use defaults
+        this.config = configParser ? loadConfigFromINI(configParser) : this.getDefaultConfig();
+        
+        // Log loaded config
+        this.log('info', '🎮 Server configuration loaded', { 
+            mode: configParser ? 'INI-based' : 'default',
+            worldSize: `${this.config.worldWidth}x${this.config.worldHeight}`,
+            maxPlayers: this.config.maxPlayers,
+            aiCount: this.config.aiSeagullCount,
+            scallops: this.config.initialScallopCount
+        });
+        
+        // Game state
+        this.players = new Map(); // playerId -> player object
         
         // Game state
         this.players = new Map(); // playerId -> player object
@@ -21,6 +36,63 @@ class GameServer {
         this.initializeWorld();
     }
     
+    // Get default configuration if no INI parser provided
+    getDefaultConfig() {
+        return {
+            serverPort: 3000,
+            maxPlayers: 20,
+            worldWidth: 5000,
+            worldHeight: 5000,
+            tickRate: 60,
+            stateUpdateRate: 60,
+            collisionDetectionRange: 200,
+            initialPlayerPower: 100,
+            playerBaseSpeed: 4,
+            playerMaxSpeed: 6,
+            playerAcceleration: 0.25,
+            playerDeceleration: 0.15,
+            playerSpawnRadius: 200,
+            aiSeagullCount: 20,
+            aiPlayerCount: 5,
+            initialScallopCount: 800,
+            minScallopCount: 400,
+            scallopSpawnRate: 0.5,
+            scallopGrowth: {
+                enabled: true,
+                smallToMediumTime: 20000,
+                mediumToLargeTime: 40000,
+                growthSpeed: 1.0,
+                smallToMediumChance: 0.95,
+                mediumToLargeChance: 0.50
+            },
+            scallopKing: {
+                enabled: true,
+                maxKingScallops: 1,
+                kingCandidateChance: 0.15,
+                largeToKingCandidateTime: 45000,
+                growthTime: 60000,
+                minPowerValue: 50,
+                powerPercentOfTopSeagull: 0.5
+            },
+            spoiledScallop: {
+                enabled: true,
+                probability: 0.02,
+                maxPercentage: 0.025,
+                lifetime: 40000,
+                powerMultiplier: -10,
+                colors: {
+                    outer: '#696969',
+                    inner: '#2F4F2F'
+                },
+                warningDistance: 80,
+                gradualSpoilingEnabled: true
+            },
+            enableServerSidePrediction: true,
+            interpolationDelay: 100,
+            logLevel: 'info'
+        };
+    }
+    
     log(level, message, data) {
         if (this.logger) {
             this.logger[level](message, data);
@@ -31,18 +103,18 @@ class GameServer {
       initializeWorld() {
         // Create initial scallops - keep them away from edges
         const edgeMargin = 80; // Keep scallops away from edges
-        for (let i = 0; i < config.initialScallopCount; i++) {
+        for (let i = 0; i < this.config.initialScallopCount; i++) {
             this.scallops.push(this.createScallop(
-                edgeMargin + Math.random() * (config.worldWidth - edgeMargin * 2),
-                edgeMargin + Math.random() * (config.worldHeight - edgeMargin * 2)
+                edgeMargin + Math.random() * (this.config.worldWidth - edgeMargin * 2),
+                edgeMargin + Math.random() * (this.config.worldHeight - edgeMargin * 2)
             ));
         }
         
         // Create AI seagulls
-        for (let i = 0; i < config.aiSeagullCount; i++) {
+        for (let i = 0; i < this.config.aiSeagullCount; i++) {
             this.aiSeagulls.push(this.createAISeagull(
-                Math.random() * config.worldWidth,
-                Math.random() * config.worldHeight
+                Math.random() * this.config.worldWidth,
+                Math.random() * this.config.worldHeight
             ));
         }
         
@@ -124,7 +196,7 @@ class GameServer {
     }
     
     addPlayer(playerId, name, color, ws, clientId = null) {
-        if (this.players.size >= config.maxPlayers) {
+        if (this.players.size >= this.config.maxPlayers) {
             ws.send(JSON.stringify({
                 type: 'error',
                 message: 'Server is full'
@@ -133,8 +205,8 @@ class GameServer {
         }
           // Spawn players near the center for easier multiplayer interaction
         const spawnRadius = 200; // Players spawn within 200 units of center
-        const centerX = config.worldWidth / 2;
-        const centerY = config.worldHeight / 2;
+        const centerX = this.config.worldWidth / 2;
+        const centerY = this.config.worldHeight / 2;
         const angle = Math.random() * Math.PI * 2;
         const distance = Math.random() * spawnRadius;
         
@@ -146,7 +218,7 @@ class GameServer {
             x: centerX + Math.cos(angle) * distance,
             y: centerY + Math.sin(angle) * distance,
             size: 1.0,
-            power: config.initialPlayerPower,
+            power: this.config.initialPlayerPower,
             maxPower: 999999,
             velocityX: 0,
             velocityY: 0,
@@ -155,10 +227,10 @@ class GameServer {
             accelDirectionX: 1,
             accelDirectionY: 0,
             speed: 0,
-            baseSpeed: config.playerBaseSpeed,
-            maxSpeed: config.playerMaxSpeed,
-            acceleration: config.playerAcceleration,
-            deceleration: config.playerDeceleration,
+            baseSpeed: this.config.playerBaseSpeed,
+            maxSpeed: this.config.playerMaxSpeed,
+            acceleration: this.config.playerAcceleration,
+            deceleration: this.config.playerDeceleration,
             isMoving: false,
             targetX: 0,
             targetY: 0,
@@ -255,8 +327,8 @@ class GameServer {
         }));
         
         const state = {
-            worldWidth: config.worldWidth,
-            worldHeight: config.worldHeight,
+            worldWidth: this.config.worldWidth,
+            worldHeight: this.config.worldHeight,
             players,
             aiSeagulls: this.aiSeagulls.map(ai => ({
                 id: ai.id,
@@ -387,9 +459,19 @@ class GameServer {
         player.y += player.velocityY;
         player.speed = Math.sqrt(player.velocityX ** 2 + player.velocityY ** 2);
         
-        // Boundary check
-        player.x = Math.max(50, Math.min(config.worldWidth - 50, player.x));
-        player.y = Math.max(50, Math.min(config.worldHeight - 50, player.y));
+        // Boundary check with velocity damping
+        const oldX = player.x;
+        const oldY = player.y;
+        player.x = Math.max(50, Math.min(this.config.worldWidth - 50, player.x));
+        player.y = Math.max(50, Math.min(this.config.worldHeight - 50, player.y));
+        
+        // If position was clamped, stop velocity in that direction
+        if (player.x !== oldX) {
+            player.velocityX = 0;
+        }
+        if (player.y !== oldY) {
+            player.velocityY = 0;
+        }
     }
     
     updateAISeagull(ai, deltaTime) {
@@ -461,9 +543,9 @@ class GameServer {
             ai.directionX = Math.abs(ai.directionX);
             ai.x = margin;
             directionChanged = true;
-        } else if (ai.x > config.worldWidth - margin) {
+        } else if (ai.x > this.config.worldWidth - margin) {
             ai.directionX = -Math.abs(ai.directionX);
-            ai.x = config.worldWidth - margin;
+            ai.x = this.config.worldWidth - margin;
             directionChanged = true;
         }
         
@@ -471,9 +553,9 @@ class GameServer {
             ai.directionY = Math.abs(ai.directionY);
             ai.y = margin;
             directionChanged = true;
-        } else if (ai.y > config.worldHeight - margin) {
+        } else if (ai.y > this.config.worldHeight - margin) {
             ai.directionY = -Math.abs(ai.directionY);
-            ai.y = config.worldHeight - margin;
+            ai.y = this.config.worldHeight - margin;
             directionChanged = true;
         }
         
@@ -666,24 +748,24 @@ class GameServer {
     }
       spawnScallops() {
         // Spawn new scallops to maintain minimum count
-        const spawnCount = Math.max(0, config.minScallopCount - this.scallops.length);
+        const spawnCount = Math.max(0, this.config.minScallopCount - this.scallops.length);
         if (spawnCount > 0) {
             const edgeMargin = 80; // Keep scallops away from edges where players can't reach
             for (let i = 0; i < spawnCount; i++) {
                 this.scallops.push(this.createScallop(
-                    Math.random() * (config.worldWidth - 2 * edgeMargin) + edgeMargin,
-                    Math.random() * (config.worldHeight - 2 * edgeMargin) + edgeMargin
+                    Math.random() * (this.config.worldWidth - 2 * edgeMargin) + edgeMargin,
+                    Math.random() * (this.config.worldHeight - 2 * edgeMargin) + edgeMargin
                 ));
             }
         }
     }
     
     cleanupSpoiledScallops() {
-        if (!config.spoiledScallop || !config.spoiledScallop.enabled) return;
+        if (!this.config.spoiledScallop || !this.config.spoiledScallop.enabled) return;
         
         const now = Date.now();
-        const lifetime = config.spoiledScallop.lifetime || 40000;
-        const maxPercentage = config.spoiledScallop.maxPercentage || 0.025;
+        const lifetime = this.config.spoiledScallop.lifetime || 40000;
+        const maxPercentage = this.config.spoiledScallop.maxPercentage || 0.025;
         let removedCount = 0;
         let newlySpoiledCount = 0;
         
@@ -705,8 +787,8 @@ class GameServer {
                     // Spawn a new scallop to replace it
                     const edgeMargin = 80;
                     this.scallops.push(this.createScallop(
-                        Math.random() * (config.worldWidth - 2 * edgeMargin) + edgeMargin,
-                        Math.random() * (config.worldHeight - 2 * edgeMargin) + edgeMargin
+                        Math.random() * (this.config.worldWidth - 2 * edgeMargin) + edgeMargin,
+                        Math.random() * (this.config.worldHeight - 2 * edgeMargin) + edgeMargin
                     ));
                     continue;
                 }
@@ -785,7 +867,7 @@ class GameServer {
     }
     
     makeSpoiled(scallop) {
-        const spoiledConfig = config.spoiledScallop;
+        const spoiledConfig = this.config.spoiledScallop;
         if (!spoiledConfig || scallop.isSpoiled) return;
         
         scallop.isSpoiled = true;
@@ -823,8 +905,8 @@ class GameServer {
         if (deadCount > 0) {
             for (let i = 0; i < deadCount; i++) {
                 this.aiSeagulls.push(this.createAISeagull(
-                    Math.random() * config.worldWidth,
-                    Math.random() * config.worldHeight
+                    Math.random() * this.config.worldWidth,
+                    Math.random() * this.config.worldHeight
                 ));
             }
             this.log('debug', 'Respawned AI seagulls', { count: deadCount });
@@ -837,8 +919,8 @@ class GameServer {
     }
     
     start(onUpdate) {
-        const tickInterval = 1000 / config.tickRate;
-        const stateInterval = 1000 / config.stateUpdateRate;
+        const tickInterval = 1000 / this.config.tickRate;
+        const stateInterval = 1000 / this.config.stateUpdateRate;
         
         // Game update loop
         this.updateInterval = setInterval(() => {
@@ -857,8 +939,8 @@ class GameServer {
         }, stateInterval);
         
         this.log('info', 'Game server started', { 
-            tickRate: config.tickRate, 
-            stateUpdateRate: config.stateUpdateRate 
+            tickRate: this.config.tickRate, 
+            stateUpdateRate: this.config.stateUpdateRate 
         });
     }
     
@@ -873,10 +955,10 @@ class GameServer {
         }
         this.log('info', 'Game server stopped', {});
     }    updateScallopGrowth(deltaTime) {
-        if (!config.scallopGrowth || !config.scallopGrowth.enabled) return;
+        if (!this.config.scallopGrowth || !this.config.scallopGrowth.enabled) return;
         
         const now = Date.now();
-        const growthSpeed = config.scallopGrowth.growthSpeed || 1.0;
+        const growthSpeed = this.config.scallopGrowth.growthSpeed || 1.0;
         const growthAnimationDuration = 5000; // 5 seconds for visual growth animation (increased from 2s for better visibility)
         
         // Get top seagull power for King scallop calculation
@@ -886,7 +968,7 @@ class GameServer {
             // Handle King candidate promotion
             if (scallop.isKingCandidate && !scallop.isKing) {
                 const kingAge = now - scallop.kingGrowthStartTime;
-                if (kingAge >= config.scallopKing.growthTime / growthSpeed) {
+                if (kingAge >= this.config.scallopKing.growthTime / growthSpeed) {
                     this.promoteToScallopKing(scallop, topSeagullPower);
                 }
             }
@@ -897,7 +979,7 @@ class GameServer {
                 
                 if (scallop.isKingCandidate) {
                     // King candidate: grow from 15 to 20 over King growth time
-                    const growthDuration = config.scallopKing.growthTime / growthSpeed;
+                    const growthDuration = this.config.scallopKing.growthTime / growthSpeed;
                     scallop.growthProgress = Math.min(1, growthAge / growthDuration);
                     scallop.currentSize = 15 + (5 * scallop.growthProgress);
                 } else {
@@ -923,11 +1005,11 @@ class GameServer {
             
             const age = now - scallop.birthTime;
               // Check for growth stage transitions
-            if (scallop.growthStage === 'small' && age >= config.scallopGrowth.smallToMediumTime / growthSpeed) {
+            if (scallop.growthStage === 'small' && age >= this.config.scallopGrowth.smallToMediumTime / growthSpeed) {
                 // Check if scallop hasn't been checked for small->medium growth
                 if (!scallop.smallToMediumChecked) {
                     scallop.smallToMediumChecked = true;
-                    const growthChance = config.scallopGrowth.smallToMediumChance || 0.95;
+                    const growthChance = this.config.scallopGrowth.smallToMediumChance || 0.95;
                     
                     if (Math.random() < growthChance) {
                         this.growScallop(scallop, 'medium', 6, 10); // From size 6 to 10
@@ -937,12 +1019,12 @@ class GameServer {
                     }
                 }
             } else if (scallop.growthStage === 'medium') {
-                const totalGrowthTime = config.scallopGrowth.smallToMediumTime + config.scallopGrowth.mediumToLargeTime;
+                const totalGrowthTime = this.config.scallopGrowth.smallToMediumTime + this.config.scallopGrowth.mediumToLargeTime;
                 if (age >= totalGrowthTime / growthSpeed) {
                     // Check if scallop hasn't been checked for medium->large growth
                     if (!scallop.mediumToLargeChecked) {
                         scallop.mediumToLargeChecked = true;
-                        const growthChance = config.scallopGrowth.mediumToLargeChance || 0.50;
+                        const growthChance = this.config.scallopGrowth.mediumToLargeChance || 0.50;
                           if (Math.random() < growthChance) {
                             this.growScallop(scallop, 'large', 10, 15); // From size 10 to 15
                             // console.log(`🌱 Medium scallop growing to large (${Math.floor(growthChance * 100)}% chance)`);
@@ -951,11 +1033,11 @@ class GameServer {
                         }
                     }
                 }            }// Check if large scallop should become King candidate
-            if (scallop.growthStage === 'large' && !scallop.isKingCandidate && config.scallopKing.enabled) {
+            if (scallop.growthStage === 'large' && !scallop.isKingCandidate && this.config.scallopKing.enabled) {
                 // Only check for King candidate eligibility if not already checked
                 if (!scallop.kingEligibilityChecked) {
-                    const largeAge = age - (config.scallopGrowth.smallToMediumTime + config.scallopGrowth.mediumToLargeTime) / growthSpeed;
-                    const eligibleTime = config.scallopKing.largeToKingCandidateTime || 45000;
+                    const largeAge = age - (this.config.scallopGrowth.smallToMediumTime + this.config.scallopGrowth.mediumToLargeTime) / growthSpeed;
+                    const eligibleTime = this.config.scallopKing.largeToKingCandidateTime || 45000;
                     
                     if (largeAge >= eligibleTime / growthSpeed) {
                         scallop.kingEligibilityChecked = true;
@@ -964,12 +1046,12 @@ class GameServer {
                         const currentKingCount = this.scallops.filter(s => s.isKing).length;
                         const currentKingCandidateCount = this.scallops.filter(s => s.isKingCandidate && !s.isKing).length;
                         const totalKingSlots = currentKingCount + currentKingCandidateCount;
-                        const maxKings = config.scallopKing.maxKingScallops || 1;
+                        const maxKings = this.config.scallopKing.maxKingScallops || 1;
                         
                         // Only allow new King candidates if under the limit
                         if (totalKingSlots < maxKings) {
                             // Random chance to become King candidate (default 15%)
-                            const kingChance = config.scallopKing.kingCandidateChance || 0.15;
+                            const kingChance = this.config.scallopKing.kingCandidateChance || 0.15;
                             if (Math.random() < kingChance) {
                                 scallop.isKingCandidate = true;
                                 scallop.kingGrowthStartTime = now;
@@ -1022,8 +1104,8 @@ class GameServer {
         scallop.currentSize = 20;
         scallop.targetSize = 20;
         scallop.powerValue = Math.max(
-            config.scallopKing.minPowerValue,
-            Math.floor(topSeagullPower * config.scallopKing.powerPercentOfTopSeagull)
+            this.config.scallopKing.minPowerValue,
+            Math.floor(topSeagullPower * this.config.scallopKing.powerPercentOfTopSeagull)
         );
         scallop.type = 'king';
         scallop.color = '#FF0000'; // Bright red color for King

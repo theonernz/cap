@@ -424,6 +424,11 @@ const SeagullWorldUI = {
         if (langText) {
             langText.textContent = this.currentLanguage === 'zh' ? 'EN' : '中文';
         }
+        
+        // 如果在游戏大厅页面，重新渲染房间列表
+        if (typeof window.currentRooms !== 'undefined' && typeof window.renderRoomList === 'function') {
+            window.renderRoomList(window.currentRooms);
+        }
     },
     
     // 更新所有翻译文本
@@ -490,25 +495,36 @@ const SeagullWorldUI = {
         this.updateAllTranslations();
         
         // 更新用户界面
-        this.updateUserInterface();
+        await this.updateUserInterface();
         
         // 监听键盘事件（Enter键提交表单）
         this.setupKeyboardListeners();
     },
     
     // 更新用户界面
-    updateUserInterface() {
+    async updateUserInterface() {
         const session = SeagullWorldAuth.getCurrentSession();
+        const user = await SeagullWorldAuth.getCurrentUser();
         const userMenu = document.getElementById('userMenu');
         const guestActions = document.getElementById('guestActions');
+        
+        console.log('[UI] updateUserInterface - session:', session ? 'exists' : 'null');
+        console.log('[UI] updateUserInterface - user:', user);
         
         // 如果页面没有这些元素，直接返回（例如房间选择页面）
         if (!userMenu && !guestActions) {
             return;
         }
         
-        if (session) {
-            // 已登录：显示用户菜单，清除匿名模式设置
+        // getCurrentUser已经处理了session清理，这里重新获取session状态
+        const currentSession = SeagullWorldAuth.getCurrentSession();
+        
+        // 检查是否有有效的用户数据（user必须是有效对象且有userId）
+        const hasValidUserData = currentSession && user && user.userId;
+        console.log('[UI] hasValidUserData:', hasValidUserData);
+        
+        if (hasValidUserData) {
+            // 已登录且有完整用户数据：显示用户菜单
             if (userMenu) {
                 userMenu.style.display = 'flex';
                 const userAvatar = document.getElementById('userAvatar');
@@ -516,14 +532,31 @@ const SeagullWorldUI = {
                 const userLevel = document.getElementById('userLevel');
                 const userCoins = document.getElementById('userCoins');
                 
-                if (userAvatar) userAvatar.textContent = session.avatar || '🦅';
-                if (userName) userName.textContent = session.displayName || session.username;
+                // 使用从服务器获取的最新用户数据
+                console.log('[UI] User data:', user);
+                console.log('[UI] Display name from profile:', user.profile?.displayName);
+                console.log('[UI] Username:', user.username);
                 
-                // 获取完整用户数据
-                const user = SeagullWorldAuth.getCurrentUser();
-                if (user && user.world) {
-                    if (userLevel) userLevel.textContent = `Lv.${user.world.worldLevel || 1}`;
-                    if (userCoins) userCoins.textContent = `💰 ${user.world.seagullCoins || 0}`;
+                const displayName = user.profile?.displayName || user.username || session.username;
+                console.log('[UI] Final display name:', displayName);
+                
+                if (userAvatar) userAvatar.textContent = user.profile?.avatar || session.avatar || '🦅';
+                if (userName) userName.textContent = displayName;
+                
+                // 显示级别和金币（如果有world数据）
+                if (user.world) {
+                    if (userLevel) {
+                        userLevel.style.display = 'inline-block';
+                        userLevel.textContent = `Lv.${user.world.worldLevel || 1}`;
+                    }
+                    if (userCoins) {
+                        userCoins.style.display = 'inline-block';
+                        userCoins.textContent = `💰 ${user.world.seagullCoins || 0}`;
+                    }
+                } else {
+                    // 没有world数据时隐藏级别和金币
+                    if (userLevel) userLevel.style.display = 'none';
+                    if (userCoins) userCoins.style.display = 'none';
                 }
             }
             
@@ -537,9 +570,14 @@ const SeagullWorldUI = {
             // 禁用所有匿名试玩按钮
             this.updateAnonymousButtons(false);
         } else {
-            // 未登录：显示游客提示
+            // 未登录：显示游客提示，隐藏用户信息
             if (userMenu) {
                 userMenu.style.display = 'none';
+                // 确保级别和金币也被隐藏
+                const userLevel = document.getElementById('userLevel');
+                const userCoins = document.getElementById('userCoins');
+                if (userLevel) userLevel.style.display = 'none';
+                if (userCoins) userCoins.style.display = 'none';
             }
             
             if (guestActions) {
@@ -664,8 +702,21 @@ const SeagullWorldUI = {
             if (result.success) {
                 console.log('[Seagull World UI] Login successful:', result.user.username);
                 this.closeAuthDialog();
-                this.updateUserInterface();
+                
+                // 等待一小段时间确保 localStorage 完全更新
+                await new Promise(resolve => setTimeout(resolve, 100));
+                
+                // 更新UI
+                await this.updateUserInterface();
                 this.showNotification('✅ 登录成功！欢迎回到海鸥世界', 'success');
+                
+                // 如果在游戏大厅，刷新房间列表和权限检查
+                if (typeof checkCreateRoomPermission === 'function') {
+                    await checkCreateRoomPermission();
+                }
+                if (typeof loadRoomList === 'function') {
+                    await loadRoomList();
+                }
             } else {
                 this.showAuthError(result.error || '登录失败');
             }
@@ -710,8 +761,21 @@ const SeagullWorldUI = {
             if (result.success) {
                 console.log('[Seagull World UI] Registration successful:', result.user.username);
                 this.closeAuthDialog();
-                this.updateUserInterface();
+                
+                // 等待一小段时间确保 localStorage 完全更新
+                await new Promise(resolve => setTimeout(resolve, 100));
+                
+                // 更新UI
+                await this.updateUserInterface();
                 this.showNotification('🎉 注册成功！欢迎加入海鸥世界', 'success');
+                
+                // 如果在游戏大厅，刷新房间列表和权限检查
+                if (typeof checkCreateRoomPermission === 'function') {
+                    await checkCreateRoomPermission();
+                }
+                if (typeof loadRoomList === 'function') {
+                    await loadRoomList();
+                }
             } else {
                 this.showAuthError(result.error || '注册失败');
             }
@@ -725,10 +789,10 @@ const SeagullWorldUI = {
     },
     
     // 登出
-    logout() {
+    async logout() {
         if (confirm('确定要退出登录吗？')) {
-            SeagullWorldAuth.logout();
-            this.updateUserInterface();
+            await SeagullWorldAuth.logout();
+            await this.updateUserInterface();
             this.showNotification('👋 已退出登录', 'info');
             
             // 如果在游戏中，可以选择刷新页面

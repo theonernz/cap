@@ -2,23 +2,54 @@ const fs = require('fs');
 const path = require('path');
 
 /**
- * 简单的INI文件解析器
+ * INI配置文件解析器（支持配置继承和覆盖）
+ * 支持从基础配置文件继承，并用覆盖配置文件覆盖特定值
  */
 class ConfigParser {
-    constructor(configPath) {
+    constructor(configPath, baseConfigPath = null) {
         this.configPath = configPath;
+        this.baseConfigPath = baseConfigPath;
         this.config = {};
+        this.baseConfig = {};
+        this.watchers = [];
+        this.onConfigChange = null;
+        
         this.load();
     }
     
+    /**
+     * 加载配置文件
+     */
     load() {
+        // 先加载基础配置（如果有）
+        if (this.baseConfigPath) {
+            this.baseConfig = this.parseFile(this.baseConfigPath);
+            console.log(`[ConfigParser] Loaded base config: ${this.baseConfigPath}`);
+        }
+        
+        // 再加载覆盖配置
+        const overrideConfig = this.parseFile(this.configPath);
+        console.log(`[ConfigParser] Loaded config: ${this.configPath}`);
+        
+        // 合并配置（覆盖配置优先）
+        this.config = this.mergeConfig(this.baseConfig, overrideConfig);
+        
+        console.log(`[ConfigParser] Config merged successfully`);
+    }
+    
+    /**
+     * 解析单个INI文件
+     */
+    parseFile(filePath) {
+        const config = {};
+        
         try {
-            if (!fs.existsSync(this.configPath)) {
-                console.warn(`Config file not found: ${this.configPath}`);
-                return;
+            if (!fs.existsSync(filePath)) {
+                console.warn(`[ConfigParser] Config file not found: ${filePath}`);
+                return config;
             }
             
-            const content = fs.readFileSync(this.configPath, 'utf-8');
+            const content = fs.readFileSync(filePath, 'utf-8');
             const lines = content.split('\n');
             let currentSection = null;
             
@@ -33,7 +64,10 @@ class ConfigParser {
                 // 解析段落 [section]
                 if (line.startsWith('[') && line.endsWith(']')) {
                     currentSection = line.substring(1, line.length - 1);
-                    this.config[currentSection] = {};
+                    // 如果段落不存在，创建新段落
+                    if (!config[currentSection]) {
+                        config[currentSection] = {};
+                    }
                     continue;
                 }
                 
@@ -58,12 +92,83 @@ class ConfigParser {
                         value = Number(value);
                     }
                     
-                    this.config[currentSection][key] = value;
+                    config[currentSection][key] = value;
                 }
             }
         } catch (err) {
-            console.error(`Error loading config file: ${err.message}`);
+            console.error(`[ConfigParser] Error loading config file: ${err.message}`);
         }
+        
+        return config;
+    }
+    
+    /**
+     * 合并配置（深度合并）
+     */
+    mergeConfig(base, override) {
+        const result = JSON.parse(JSON.stringify(base));
+        
+        for (const section in override) {
+            if (!result[section]) {
+                result[section] = {};
+            }
+            
+            for (const key in override[section]) {
+                result[section][key] = override[section][key];
+            }
+        }
+        
+        return result;
+    }
+    
+    /**
+     * 重新加载配置（热重载）
+     */
+    reload() {
+        console.log('[ConfigParser] 🔄 Reloading configuration...');
+        this.load();
+        
+        if (this.onConfigChange) {
+            this.onConfigChange(this.config);
+        }
+        
+        console.log('[ConfigParser] ✅ Configuration reloaded');
+    }
+    
+    /**
+     * 监听配置文件变化（热重载）
+     */
+    watchConfig() {
+        if (this.baseConfigPath && fs.existsSync(this.baseConfigPath)) {
+            const baseWatcher = fs.watch(this.baseConfigPath, (eventType) => {
+                if (eventType === 'change') {
+                    console.log(`[ConfigParser] 📝 Base config changed: ${this.baseConfigPath}`);
+                    setTimeout(() => this.reload(), 200);
+                }
+            });
+            this.watchers.push(baseWatcher);
+            console.log(`[ConfigParser] 👁️  Watching: ${this.baseConfigPath}`);
+        }
+        
+        if (fs.existsSync(this.configPath)) {
+            const watcher = fs.watch(this.configPath, (eventType) => {
+                if (eventType === 'change') {
+                    console.log(`[ConfigParser] 📝 Config changed: ${this.configPath}`);
+                    setTimeout(() => this.reload(), 200);
+                }
+            });
+            this.watchers.push(watcher);
+            console.log(`[ConfigParser] 👁️  Watching: ${this.configPath}`);
+        }
+    }
+    
+    /**
+     * 停止监听
+     */
+    unwatchConfig() {
+        this.watchers.forEach(w => w.close());
+        this.watchers = [];
+        console.log('[ConfigParser] 🛑 Stopped watching');
     }
     
     get(section, key, defaultValue = null) {

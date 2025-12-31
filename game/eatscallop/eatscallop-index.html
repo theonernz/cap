@@ -34,7 +34,7 @@
             <button onclick="SaveLoadSystem.saveGame()" id="saveButton" class="save-btn">💾 <span data-lang-key="saveGame">保存游戏</span></button>
             <button onclick="SaveLoadSystem.loadGame()" id="loadButton" class="load-btn">📂 <span data-lang-key="loadGame">读取存档</span></button>
             <button onclick="minimap.toggleMiniMap()" id="minimapBtn"><span data-lang-key="toggleMinimap">切换小地图</span></button>
-            <button class="back-to-lobby-btn" onclick="window.location.href='/game/game-index.html'">⬅️ <span data-lang-key="backToLobby">返回游戏大厅</span></button>
+            <button class="back-to-lobby-btn" onclick="window.location.href='/game'">⬅️ <span data-lang-key="backToLobby">返回游戏大厅</span></button>
             <button onclick="ui.toggleLanguage()" class="lang-btn" id="languageBtn">🌐 <span id="langText">EN</span></button>
         </div>
         
@@ -315,11 +315,11 @@
     <script src="/game/eatscallop/js/serverConfig.js?v=r14"></script>
     
     <!-- File Storage System (JSON-based) - Must load BEFORE auth.js -->
-    <script src="/game/eatscallop/js/file-storage-client.js?v=1.0.3"></script>
+    <script src="/game/eatscallop/js/file-storage-client.js?v=1.0.4"></script>
     
     <!-- 海鸥世界统一平台系统 -->
     <script src="/game/eatscallop/js/seagull-world/game-registry.js?v=1.0.8"></script>
-    <script src="/game/eatscallop/js/seagull-world/auth.js?v=1.0.11"></script>
+    <script src="/game/eatscallop/js/seagull-world/auth.js?v=1.0.12"></script>
     <script src="/game/eatscallop/js/seagull-world/ui.js?v=1.0.8"></script>
     
     <script src="/game/eatscallop/js/entities.js?v=r14"></script>
@@ -333,7 +333,7 @@
     <script src="/game/eatscallop/js/network.js?v=1.0.7"></script>
     <script src="/game/eatscallop/js/multiplayer.js?v=1.0.7"></script>
     <script src="/game/eatscallop/js/game.js?v=1.0.8"></script>
-    <script src="/game/eatscallop/js/main.js?v=1.0"></script>
+    <script src="/game/eatscallop/js/main.js?v=1.0.1"></script>
     <script src="/game/eatscallop/js/enhancements.js?v=r14"></script>
 </body>
 </html>

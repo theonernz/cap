@@ -314,7 +314,7 @@
         </div>
         
         <div class="game-hall-actions">
-            <button class="back-btn" onclick="window.location.href='../index.html'">
+            <button class="back-btn" onclick="window.location.href='/'">
                 ← <span data-lang-key="backToHome">返回主页</span>
             </button>
             
@@ -401,23 +401,101 @@
         </div>
     </div>
     
+    <!-- 登录/注册对话框 -->
+    <div class="auth-dialog-overlay" id="authDialogOverlay" style="display: none;">
+        <div class="auth-dialog">
+            <div class="auth-dialog-header">
+                <h2 id="authDialogTitle">登录海鸥世界</h2>
+                <button class="auth-close-btn" onclick="SeagullWorldUI.closeAuthDialog()">×</button>
+            </div>
+            
+            <div class="auth-dialog-body">
+                <!-- 登录表单 -->
+                <div id="loginForm" class="auth-form">
+                    <div class="auth-branding">
+                        <span class="auth-logo">🦅</span>
+                        <p class="auth-welcome">欢迎回到海鸥世界</p>
+                    </div>
+                    
+                    <div class="auth-input-group">
+                        <label for="loginUsername">用户名</label>
+                        <input type="text" id="loginUsername" placeholder="请输入用户名" autocomplete="username">
+                    </div>
+                    
+                    <div class="auth-input-group">
+                        <label for="loginPassword">密码</label>
+                        <input type="password" id="loginPassword" placeholder="请输入密码" autocomplete="current-password">
+                    </div>
+                    
+                    <div class="auth-remember">
+                        <label>
+                            <input type="checkbox" id="rememberMe">
+                            记住我 (30天)
+                        </label>
+                    </div>
+                    
+                    <button class="auth-submit-btn" onclick="SeagullWorldUI.handleLogin()">
+                        登录
+                    </button>
+                    
+                    <div class="auth-switch">
+                        还没有账号？
+                        <a href="#" onclick="SeagullWorldUI.switchToRegister(); return false;">立即注册</a>
+                    </div>
+                </div>
+                
+                <!-- 注册表单 -->
+                <div id="registerForm" class="auth-form" style="display: none;">
+                    <div class="auth-branding">
+                        <span class="auth-logo">🦅</span>
+                        <p class="auth-welcome">加入海鸥世界</p>
+                    </div>
+                    
+                    <div class="auth-input-group">
+                        <label for="registerUsername">用户名</label>
+                        <input type="text" id="registerUsername" placeholder="3-20个字符" autocomplete="username">
+                        <small>支持字母、数字、下划线、中文</small>
+                    </div>
+                    
+                    <div class="auth-input-group">
+                        <label for="registerPassword">密码</label>
+                        <input type="password" id="registerPassword" placeholder="至少6个字符" autocomplete="new-password">
+                    </div>
+                    
+                    <div class="auth-input-group">
+                        <label for="registerPasswordConfirm">确认密码</label>
+                        <input type="password" id="registerPasswordConfirm" placeholder="再次输入密码" autocomplete="new-password">
+                    </div>
+                    
+                    <div class="auth-input-group">
+                        <label for="registerDisplayName">显示名称（可选）</label>
+                        <input type="text" id="registerDisplayName" placeholder="游戏中显示的名字">
+                    </div>
+                    
+                    <button class="auth-submit-btn" onclick="SeagullWorldUI.handleRegister()">
+                        注册并开始游戏
+                    </button>
+                    
+                    <div class="auth-switch">
+                        已有账号？
+                        <a href="#" onclick="SeagullWorldUI.switchToLogin(); return false;">立即登录</a>
+                    </div>
+                </div>
+                
+                <div id="authError" class="auth-error" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+    
     <!-- JavaScript -->
-    <script src="..enhancements.js?v=r14:446 Game enhancements loaded: Scallop King, Spoiled Scallops, Leaderboard Badges, Fireworks
-version.js?v=1.0:40 🎮 Game Version: SERVER (manually set)
-version.js?v=1.0:93 🎨 Initializing UI for server version...
-auth.js?v=1.0.11:599 [Seagull World Auth] Initializing authentication system...
-auth.js?v=1.0.11:604 [Seagull World Auth] User logged in: phonis
-ui.js?v=1.0.8:10 [Seagull World UI] Initializing UI...
-main.js?v=1.0:20 🦅 Seagull name: phonis
-main.js?v=1.0:21 💾 Save file username: phonis
-eneral/js/config.js?v=1.1"></script>
+    <script src="../general/js/config.js?v=1.1"></script>
     
     <!-- File Storage System - Must load BEFORE auth.js -->
     <script src="../general/js/file-storage-client.js?v=1.1"></script>
     
     <!-- Seagull World Platform Systems -->
-    <script src="../general/js/seagull-world/auth.js?v=1.1"></script>
-    <script src="../general/js/seagull-world/ui.js?v=1.1"></script>
+    <script src="../general/js/seagull-world/auth.js?v=1.2"></script>
+    <script src="../general/js/seagull-world/ui.js?v=1.2"></script>
     <script src="../general/js/dashboard.js?v=1.1"></script>
     
     <!-- Dynamic Game Loader -->
@@ -436,16 +514,25 @@ eneral/js/config.js?v=1.1"></script>
         // 获取在线玩家数（示例）
         async function updateOnlinePlayers() {
             try {
+                const onlinePlayersElement = document.getElementById('onlinePlayers');
+                if (!onlinePlayersElement) {
+                    // Element doesn't exist on this page, skip update
+                    return;
+                }
+                
                 const response = await fetch('/api/rooms/all');
                 const data = await response.json();
                 if (data.success && data.rooms) {
                     // Count total players across all rooms
                     const totalPlayers = data.rooms.reduce((sum, room) => sum + room.currentPlayers, 0);
-                    document.getElementById('onlinePlayers').textContent = totalPlayers;
+                    onlinePlayersElement.textContent = totalPlayers;
                 }
             } catch (error) {
                 console.log('Unable to fetch player count');
-                document.getElementById('onlinePlayers').textContent = '0';
+                const onlinePlayersElement = document.getElementById('onlinePlayers');
+                if (onlinePlayersElement) {
+                    onlinePlayersElement.textContent = '0';
+                }
             }
         }
         
@@ -595,6 +682,9 @@ eneral/js/config.js?v=1.1"></script>
                 return window.SeagullWorldUI?.translations?.[lang]?.[key] || key;
             };
             
+            // 获取当前语言
+            const currentLang = window.SeagullWorldUI?.currentLanguage || 'zh';
+            
             const tableHeaders = `
                 <tr>
                     <th>${getTranslation('roomName')}</th>
@@ -608,10 +698,15 @@ eneral/js/config.js?v=1.1"></script>
                 const statusClass = isFull ? 'full' : 'available';
                 const statusText = isFull ? getTranslation('roomFull') : getTranslation('doubleClickJoin');
                 
+                // 根据当前语言显示房间名称
+                const displayName = currentLang === 'en' ? 
+                    (room.nameEn || room.name) : 
+                    (room.nameZh || room.name);
+                
                 return `
                     <tr class="${isFull ? 'full' : ''}" 
                         ondblclick="${isFull ? '' : `joinRoom('${room.id}')`}">
-                        <td class="room-name-cell">${room.name}</td>
+                        <td class="room-name-cell">${displayName}</td>
                         <td class="room-players-cell">${room.currentPlayers}/${room.maxPlayers}</td>
                         <td class="room-status-cell">
                             <span class="${statusClass}">${statusText}</span>
@@ -642,7 +737,7 @@ eneral/js/config.js?v=1.1"></script>
             if (typeof enterGame === 'function') {
                 enterGame('scallopsIO');
             } else {
-                window.location.href = 'eatscallop/eatscallop-index.html';
+                window.location.href = '/game/eatscallop';
             }
         }
         

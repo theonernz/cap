@@ -759,8 +759,30 @@ const Game = {
         if (currentSpeed > maxSpeed) {
             player.velocityX = (player.velocityX / currentSpeed) * maxSpeed;
             player.velocityY = (player.velocityY / currentSpeed) * maxSpeed;
-        }          player.x += player.velocityX;
+        }
+        
+        player.x += player.velocityX;
         player.y += player.velocityY;
+        
+        // 多人模式：保存真正的客户端预测位置（在边界检查前）
+        if (this.isMultiplayer && player.isControllable) {
+            player._predictedX = player.x;
+            player._predictedY = player.y;
+        }
+        
+        // Boundary check with velocity damping - must match server-side logic (GameServer.js:391-400)
+        const oldX = player.x;
+        const oldY = player.y;
+        player.x = Math.max(50, Math.min(CONFIG.worldWidth - 50, player.x));
+        player.y = Math.max(50, Math.min(CONFIG.worldHeight - 50, player.y));
+        
+        // If position was clamped, stop velocity in that direction (match server behavior)
+        if (player.x !== oldX) {
+            player.velocityX = 0;
+        }
+        if (player.y !== oldY) {
+            player.velocityY = 0;
+        }
         
         // 更新方向向量（用于绘制）
         const speed = Math.sqrt(player.velocityX * player.velocityX + player.velocityY * player.velocityY);
@@ -1006,6 +1028,14 @@ const Game = {
     
     // 处理碰撞
     handleCollisions() {
+        // 多人模式：碰撞检测完全由服务器处理
+        if (this.isMultiplayer) {
+            // 只处理本地的视觉效果，不修改游戏状态
+            // 扇贝的吃取由服务器广播的 gameState 更新
+            return;
+        }
+        
+        // 单人模式：客户端处理所有碰撞
         // 玩家与扇贝碰撞
         CollisionSystem.handlePlayerScallopCollisions(
             EntityManager.players,

@@ -1,24 +1,64 @@
 {
   "rooms": [
     {
-      "id": "bcb47e14-7a4a-4e1e-b2c3-131eaa8a8bf5",
+      "id": "df95baff-0b75-422c-a458-0e85c130c9e2",
+      "nameEn": "Default Room",
+      "nameZh": "默认房间",
       "name": "Default Room",
       "maxPlayers": 16,
       "creatorId": null,
       "isPrivate": false,
       "password": null,
       "isDefault": true,
-      "createdAt": 1766974433711
+      "createdAt": 1767170457042
     },
     {
-      "id": "d16261b0-8cc7-4ec0-b4c1-f08747585bc5",
-      "name": "Phonis01",
-      "maxPlayers": 8,
-      "creatorId": "user_test_phonis",
+      "id": "0e65cc21-95c4-4e04-a643-69a22c6f14a9",
+      "nameEn": "Muriwai Beach",
+      "nameZh": "穆里怀",
+      "name": "Muriwai Beach",
+      "maxPlayers": 16,
+      "creatorId": null,
       "isPrivate": false,
       "password": null,
-      "isDefault": false,
-      "createdAt": 1766979398171
+      "isDefault": true,
+      "createdAt": 1767170457050
+    },
+    {
+      "id": "6415809f-413d-42db-811b-c93b0bbe20da",
+      "nameEn": "Sanya Island",
+      "nameZh": "三亚岛",
+      "name": "Sanya Island",
+      "maxPlayers": 16,
+      "creatorId": null,
+      "isPrivate": false,
+      "password": null,
+      "isDefault": true,
+      "createdAt": 1767170457053
+    },
+    {
+      "id": "a8a63ef1-ddf5-4b37-9c46-af131fce1d57",
+      "nameEn": "Kulangsu",
+      "nameZh": "鼓浪屿",
+      "name": "Kulangsu",
+      "maxPlayers": 16,
+      "creatorId": null,
+      "isPrivate": false,
+      "password": null,
+      "isDefault": true,
+      "createdAt": 1767170457059
+    },
+    {
+      "id": "99d680b8-b414-471f-84c9-17b4c50f66fd",
+      "nameEn": "Red Beach",
+      "nameZh": "红海滩",
+      "name": "Red Beach",
+      "maxPlayers": 16,
+      "creatorId": null,
+      "isPrivate": false,
+      "password": null,
+      "isDefault": true,
+      "createdAt": 1767170457065
     }
   ]
 }

@@ -371,10 +371,15 @@
             </div>
             <form id="createRoomForm" onsubmit="createRoom(event)">
                 <div class="form-group">
-                    <label for="roomName" data-lang-key="roomName">房间名称</label>
-                    <input type="text" id="roomName" required maxlength="30" 
-                           data-lang-key-placeholder="roomNamePlaceholder"
-                           placeholder="输入房间名称...">
+                    <label for="roomNameEn" data-lang-key="roomNameEn">房间名称（英文）</label>
+                    <input type="text" id="roomNameEn" required maxlength="30" 
+                           placeholder="Enter room name in English...">
+                </div>
+                
+                <div class="form-group">
+                    <label for="roomNameZh" data-lang-key="roomNameZh">房间名称（中文）</label>
+                    <input type="text" id="roomNameZh" required maxlength="30" 
+                           placeholder="输入中文房间名称...">
                 </div>
                 
                 <div class="form-group">
@@ -784,21 +789,24 @@
                 return;
             }
             
-            const roomName = document.getElementById('roomName').value.trim();
+            const roomNameEn = document.getElementById('roomNameEn').value.trim();
+            const roomNameZh = document.getElementById('roomNameZh').value.trim();
             const maxPlayers = parseInt(document.getElementById('maxPlayers').value);
             
-            console.log('📝 Room name:', roomName);
+            console.log('📝 Room name (EN):', roomNameEn);
+            console.log('📝 Room name (ZH):', roomNameZh);
             console.log('👥 Max players:', maxPlayers);
             
-            if (!roomName) {
-                alert('请输入房间名称');
-                console.log('❌ Room name is empty');
+            if (!roomNameEn || !roomNameZh) {
+                alert('请输入房间的中英文名称 / Please enter room names in both languages');
+                console.log('❌ Room name is incomplete');
                 return;
             }
             
             try {
                 const requestBody = {
-                    name: roomName,
+                    nameEn: roomNameEn,
+                    nameZh: roomNameZh,
                     maxPlayers: maxPlayers,
                     creatorId: currentUser?.userId || null,
                     isPrivate: false,

@@ -33210,3 +33210,867 @@
 [2025-12-31 09:18:10.213][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
 [2025-12-31 09:18:10.705][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
 [2025-12-31 09:18:10.707][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:34:15.103][INFO] Logger initialized {"level":"DEBUG","maxFileSize":"50MB","maxFiles":5,"logFile":"C:\\Phonis\\Games\\Seagull\\game\\eatscallop\\log\\server.0.log"}
+[2025-12-31 09:34:15.104][INFO] ⏰ Auto-cleanup started {"interval":"60 minutes"}
+[2025-12-31 09:34:15.105][INFO] ✅ Session Manager initialized
+[2025-12-31 09:34:15.108][INFO] Server starting with NO CACHE headers for development
+[2025-12-31 09:34:15.110][INFO] Room Manager initialized
+[2025-12-31 09:34:15.151][INFO] Seagull Multiplayer Server running {"port":3000,"host":"0.0.0.0"}
+[2025-12-31 09:34:15.153][INFO] Server accessible at: {"local":"http://localhost:3000"}
+[2025-12-31 09:34:15.154][INFO] Network address available {"interface":"Wi-Fi","url":"http://192.168.1.68:3000"}
+[2025-12-31 09:34:15.158][INFO] 🎮 Server configuration loaded {"mode":"INI-based","worldSize":"5000x5000","maxPlayers":20,"aiCount":25,"scallops":800}
+[2025-12-31 09:34:15.160][INFO] World initialized {"scallops":800,"aiSeagulls":25}
+[2025-12-31 09:34:15.161][DEBUG] First scallop created {"scallop":{"id":"scallop_1767173655159_0.2346204023720201","x":1883.0592089945794,"y":1490.2496293818256,"size":10,"powerValue":10,"type":"medium","color":"#FFFFFF","innerColor":"#FFB74D","birthTime":1767173655159,"currentSize":10,"targetSize":10,"isGrowing":false,"growthProgress":0,"growthStage":"medium","isSpoiled":false,"spoiledTime":null,"spoilCheckTime":null,"isKingCandidate":false,"isKing":false}}
+[2025-12-31 09:34:15.161][INFO] Game server started {"tickRate":60,"stateUpdateRate":60}
+[2025-12-31 09:34:15.162][INFO] Room created {"nameEn":"Default Room","nameZh":"默认房间","id":"df95baff-0b75-422c-a458-0e85c130c9e2","maxPlayers":16,"isDefault":true}
+[2025-12-31 09:34:15.162][INFO] 🎮 Server configuration loaded {"mode":"INI-based","worldSize":"5000x5000","maxPlayers":20,"aiCount":25,"scallops":800}
+[2025-12-31 09:34:15.163][INFO] World initialized {"scallops":800,"aiSeagulls":25}
+[2025-12-31 09:34:15.164][DEBUG] First scallop created {"scallop":{"id":"scallop_1767173655162_0.26658121346127095","x":560.8599374062886,"y":3517.0389641966813,"size":6,"powerValue":5,"type":"small","color":"#FFFACD","innerColor":"#FFE4B5","birthTime":1767173655162,"currentSize":6,"targetSize":6,"isGrowing":false,"growthProgress":0,"growthStage":"small","isSpoiled":false,"spoiledTime":null,"spoilCheckTime":null,"isKingCandidate":false,"isKing":false}}
+[2025-12-31 09:34:15.164][INFO] Game server started {"tickRate":60,"stateUpdateRate":60}
+[2025-12-31 09:34:15.166][INFO] Room created {"nameEn":"Muriwai Beach","nameZh":"穆里怀","id":"0e65cc21-95c4-4e04-a643-69a22c6f14a9","maxPlayers":16,"isDefault":true}
+[2025-12-31 09:34:15.166][INFO] 🎮 Server configuration loaded {"mode":"INI-based","worldSize":"5000x5000","maxPlayers":20,"aiCount":25,"scallops":800}
+[2025-12-31 09:34:15.171][INFO] World initialized {"scallops":800,"aiSeagulls":25}
+[2025-12-31 09:34:15.171][DEBUG] First scallop created {"scallop":{"id":"scallop_1767173655167_0.9945527352449881","x":1986.720487359511,"y":1816.2199510213145,"size":6,"powerValue":5,"type":"small","color":"#FFFACD","innerColor":"#FFE4B5","birthTime":1767173655167,"currentSize":6,"targetSize":6,"isGrowing":false,"growthProgress":0,"growthStage":"small","isSpoiled":false,"spoiledTime":null,"spoilCheckTime":null,"isKingCandidate":false,"isKing":false}}
+[2025-12-31 09:34:15.172][INFO] Game server started {"tickRate":60,"stateUpdateRate":60}
+[2025-12-31 09:34:15.172][INFO] Room created {"nameEn":"Sanya Island","nameZh":"三亚岛","id":"6415809f-413d-42db-811b-c93b0bbe20da","maxPlayers":16,"isDefault":true}
+[2025-12-31 09:34:15.173][INFO] 🎮 Server configuration loaded {"mode":"INI-based","worldSize":"5000x5000","maxPlayers":20,"aiCount":25,"scallops":800}
+[2025-12-31 09:34:15.174][INFO] World initialized {"scallops":800,"aiSeagulls":25}
+[2025-12-31 09:34:15.174][DEBUG] First scallop created {"scallop":{"id":"scallop_1767173655173_0.006966057592880381","x":3391.3482955825584,"y":451.9584437047329,"size":6,"powerValue":5,"type":"small","color":"#FFFACD","innerColor":"#FFE4B5","birthTime":1767173655173,"currentSize":6,"targetSize":6,"isGrowing":false,"growthProgress":0,"growthStage":"small","isSpoiled":false,"spoiledTime":null,"spoilCheckTime":null,"isKingCandidate":false,"isKing":false}}
+[2025-12-31 09:34:15.175][INFO] Game server started {"tickRate":60,"stateUpdateRate":60}
+[2025-12-31 09:34:15.175][INFO] Room created {"nameEn":"Kulangsu","nameZh":"鼓浪屿","id":"a8a63ef1-ddf5-4b37-9c46-af131fce1d57","maxPlayers":16,"isDefault":true}
+[2025-12-31 09:34:15.176][INFO] 🎮 Server configuration loaded {"mode":"INI-based","worldSize":"5000x5000","maxPlayers":20,"aiCount":25,"scallops":800}
+[2025-12-31 09:34:15.177][INFO] World initialized {"scallops":800,"aiSeagulls":25}
+[2025-12-31 09:34:15.177][DEBUG] First scallop created {"scallop":{"id":"scallop_1767173655176_0.76697451382233","x":439.482163644644,"y":959.8859131285936,"size":6,"powerValue":5,"type":"small","color":"#FFFACD","innerColor":"#FFE4B5","birthTime":1767173655176,"currentSize":6,"targetSize":6,"isGrowing":false,"growthProgress":0,"growthStage":"small","isSpoiled":false,"spoiledTime":null,"spoilCheckTime":null,"isKingCandidate":false,"isKing":false}}
+[2025-12-31 09:34:15.178][INFO] Game server started {"tickRate":60,"stateUpdateRate":60}
+[2025-12-31 09:34:15.178][INFO] Room created {"nameEn":"Red Beach","nameZh":"红海滩","id":"99d680b8-b414-471f-84c9-17b4c50f66fd","maxPlayers":16,"isDefault":true}
+[2025-12-31 09:34:15.179][DEBUG] All default rooms already exist
+[2025-12-31 09:34:15.179][INFO] Room Manager initialization complete {"roomCount":5}
+[2025-12-31 09:34:15.924][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:16.258][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:16.865][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:17.631][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:17.851][DEBUG] Spoiled scallops statistics {"spoiled":0,"total":799,"percentage":"0.0","maxPercentage":"2.5"}
+[2025-12-31 09:34:17.854][DEBUG] Spoiled scallops statistics {"spoiled":0,"total":798,"percentage":"0.0","maxPercentage":"2.5"}
+[2025-12-31 09:34:17.856][DEBUG] Spoiled scallops statistics {"spoiled":0,"total":798,"percentage":"0.0","maxPercentage":"2.5"}
+[2025-12-31 09:34:17.858][DEBUG] Spoiled scallops statistics {"spoiled":0,"total":798,"percentage":"0.0","maxPercentage":"2.5"}
+[2025-12-31 09:34:17.863][DEBUG] Spoiled scallops statistics {"spoiled":0,"total":798,"percentage":"0.0","maxPercentage":"2.5"}
+[2025-12-31 09:34:17.936][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:20.359][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:20.511][WARN] ⚠️ Invalid token: session not found
+[2025-12-31 09:34:21.231][WARN] ⚠️ Invalid token: session not found
+[2025-12-31 09:34:21.309][WARN] ⚠️ Invalid token: session not found
+[2025-12-31 09:34:21.347][WARN] ⚠️ Invalid token: session not found
+[2025-12-31 09:34:21.359][INFO] User logged out
+[2025-12-31 09:34:21.364][INFO] User logged out
+[2025-12-31 09:34:22.243][DEBUG] Spoiled scallops statistics {"spoiled":0,"total":800,"percentage":"0.0","maxPercentage":"2.5"}
+[2025-12-31 09:34:22.246][DEBUG] Spoiled scallops statistics {"spoiled":0,"total":800,"percentage":"0.0","maxPercentage":"2.5"}
+[2025-12-31 09:34:22.252][DEBUG] Spoiled scallops statistics {"spoiled":0,"total":798,"percentage":"0.0","maxPercentage":"2.5"}
+[2025-12-31 09:34:22.259][DEBUG] Spoiled scallops statistics {"spoiled":0,"total":799,"percentage":"0.0","maxPercentage":"2.5"}
+[2025-12-31 09:34:22.264][DEBUG] Spoiled scallops statistics {"spoiled":0,"total":800,"percentage":"0.0","maxPercentage":"2.5"}
+[2025-12-31 09:34:22.600][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:22.882][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:23.052][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:23.301][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:23.523][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:24.673][DEBUG] Spoiled scallops statistics {"spoiled":0,"total":799,"percentage":"0.0","maxPercentage":"2.5"}
+[2025-12-31 09:34:24.680][DEBUG] Spoiled scallops statistics {"spoiled":0,"total":799,"percentage":"0.0","maxPercentage":"2.5"}
+[2025-12-31 09:34:24.706][DEBUG] Spoiled scallops statistics {"spoiled":0,"total":800,"percentage":"0.0","maxPercentage":"2.5"}
+[2025-12-31 09:34:24.719][DEBUG] Spoiled scallops statistics {"spoiled":0,"total":800,"percentage":"0.0","maxPercentage":"2.5"}
+[2025-12-31 09:34:24.730][DEBUG] Spoiled scallops statistics {"spoiled":0,"total":800,"percentage":"0.0","maxPercentage":"2.5"}
+[2025-12-31 09:34:25.845][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:26.559][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:26.652][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:27.101][DEBUG] Spoiled scallops statistics {"spoiled":0,"total":800,"percentage":"0.0","maxPercentage":"2.5"}
+[2025-12-31 09:34:27.103][DEBUG] Spoiled scallops statistics {"spoiled":0,"total":799,"percentage":"0.0","maxPercentage":"2.5"}
+[2025-12-31 09:34:27.109][DEBUG] Spoiled scallops statistics {"spoiled":0,"total":800,"percentage":"0.0","maxPercentage":"2.5"}
+[2025-12-31 09:34:27.112][DEBUG] Spoiled scallops statistics {"spoiled":0,"total":800,"percentage":"0.0","maxPercentage":"2.5"}
+[2025-12-31 09:34:27.116][DEBUG] Spoiled scallops statistics {"spoiled":0,"total":799,"percentage":"0.0","maxPercentage":"2.5"}
+[2025-12-31 09:34:29.355][DEBUG] Spoiled scallops statistics {"spoiled":0,"total":799,"percentage":"0.0","maxPercentage":"2.5"}
+[2025-12-31 09:34:29.359][DEBUG] Spoiled scallops statistics {"spoiled":0,"total":799,"percentage":"0.0","maxPercentage":"2.5"}
+[2025-12-31 09:34:29.367][DEBUG] Spoiled scallops statistics {"spoiled":0,"total":798,"percentage":"0.0","maxPercentage":"2.5"}
+[2025-12-31 09:34:29.384][DEBUG] Spoiled scallops statistics {"spoiled":0,"total":800,"percentage":"0.0","maxPercentage":"2.5"}
+[2025-12-31 09:34:29.415][DEBUG] Spoiled scallops statistics {"spoiled":0,"total":799,"percentage":"0.0","maxPercentage":"2.5"}
+[2025-12-31 09:34:30.176][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:34:30.184][DEBUG] Scallops spoiled naturally {"count":2}
+[2025-12-31 09:34:30.198][DEBUG] Scallops spoiled naturally {"count":2}
+[2025-12-31 09:34:30.473][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:30.482][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:31.816][DEBUG] Spoiled scallops statistics {"spoiled":1,"total":797,"percentage":"0.1","maxPercentage":"2.5"}
+[2025-12-31 09:34:31.820][DEBUG] Spoiled scallops statistics {"spoiled":2,"total":800,"percentage":"0.3","maxPercentage":"2.5"}
+[2025-12-31 09:34:31.828][DEBUG] Spoiled scallops statistics {"spoiled":0,"total":800,"percentage":"0.0","maxPercentage":"2.5"}
+[2025-12-31 09:34:31.830][DEBUG] Spoiled scallops statistics {"spoiled":0,"total":799,"percentage":"0.0","maxPercentage":"2.5"}
+[2025-12-31 09:34:31.833][DEBUG] Spoiled scallops statistics {"spoiled":2,"total":800,"percentage":"0.3","maxPercentage":"2.5"}
+[2025-12-31 09:34:32.284][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:34:32.533][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:33.120][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:33.325][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:34.430][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:34.462][DEBUG] Spoiled scallops statistics {"spoiled":1,"total":800,"percentage":"0.1","maxPercentage":"2.5"}
+[2025-12-31 09:34:34.472][DEBUG] Spoiled scallops statistics {"spoiled":2,"total":799,"percentage":"0.3","maxPercentage":"2.5"}
+[2025-12-31 09:34:34.488][DEBUG] Spoiled scallops statistics {"spoiled":0,"total":799,"percentage":"0.0","maxPercentage":"2.5"}
+[2025-12-31 09:34:34.538][DEBUG] Spoiled scallops statistics {"spoiled":0,"total":799,"percentage":"0.0","maxPercentage":"2.5"}
+[2025-12-31 09:34:34.545][DEBUG] Spoiled scallops statistics {"spoiled":3,"total":800,"percentage":"0.4","maxPercentage":"2.5"}
+[2025-12-31 09:34:35.146][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:35.234][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:34:35.244][DEBUG] Scallops spoiled naturally {"count":3}
+[2025-12-31 09:34:35.247][DEBUG] Scallops spoiled naturally {"count":2}
+[2025-12-31 09:34:35.361][DEBUG] Scallops spoiled naturally {"count":2}
+[2025-12-31 09:34:35.690][INFO] ✅ Session created {"userId":"user_test_phonis","username":"phonis","rememberMe":false,"expiresIn":"240 minutes"}
+[2025-12-31 09:34:35.690][INFO] User logged in {"username":"phonis","userId":"user_test_phonis"}
+[2025-12-31 09:34:35.856][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:36.264][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:37.333][DEBUG] Spoiled scallops statistics {"spoiled":1,"total":798,"percentage":"0.1","maxPercentage":"2.5"}
+[2025-12-31 09:34:37.337][DEBUG] Spoiled scallops statistics {"spoiled":4,"total":800,"percentage":"0.5","maxPercentage":"2.5"}
+[2025-12-31 09:34:37.342][DEBUG] Spoiled scallops statistics {"spoiled":1,"total":799,"percentage":"0.1","maxPercentage":"2.5"}
+[2025-12-31 09:34:37.347][DEBUG] Spoiled scallops statistics {"spoiled":3,"total":799,"percentage":"0.4","maxPercentage":"2.5"}
+[2025-12-31 09:34:37.351][DEBUG] Spoiled scallops statistics {"spoiled":5,"total":800,"percentage":"0.6","maxPercentage":"2.5"}
+[2025-12-31 09:34:37.555][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:37.834][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:34:37.922][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:34:38.001][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:38.258][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:34:38.261][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:38.851][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:39.070][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:39.442][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:39.616][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:34:39.640][DEBUG] Spoiled scallops statistics {"spoiled":2,"total":798,"percentage":"0.3","maxPercentage":"2.5"}
+[2025-12-31 09:34:39.643][DEBUG] Spoiled scallops statistics {"spoiled":5,"total":799,"percentage":"0.6","maxPercentage":"2.5"}
+[2025-12-31 09:34:39.645][DEBUG] Spoiled scallops statistics {"spoiled":1,"total":799,"percentage":"0.1","maxPercentage":"2.5"}
+[2025-12-31 09:34:39.649][DEBUG] Spoiled scallops statistics {"spoiled":4,"total":797,"percentage":"0.5","maxPercentage":"2.5"}
+[2025-12-31 09:34:39.652][DEBUG] Spoiled scallops statistics {"spoiled":6,"total":799,"percentage":"0.8","maxPercentage":"2.5"}
+[2025-12-31 09:34:40.243][DEBUG] Scallops spoiled naturally {"count":2}
+[2025-12-31 09:34:40.255][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:34:40.262][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:34:40.347][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:34:40.387][DEBUG] Scallops spoiled naturally {"count":2}
+[2025-12-31 09:34:40.598][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:41.559][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:34:42.058][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:42.459][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:42.492][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:42.538][DEBUG] Spoiled scallops statistics {"spoiled":3,"total":800,"percentage":"0.4","maxPercentage":"2.5"}
+[2025-12-31 09:34:42.542][DEBUG] Spoiled scallops statistics {"spoiled":8,"total":799,"percentage":"1.0","maxPercentage":"2.5"}
+[2025-12-31 09:34:42.547][DEBUG] Spoiled scallops statistics {"spoiled":3,"total":800,"percentage":"0.4","maxPercentage":"2.5"}
+[2025-12-31 09:34:42.549][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:42.562][DEBUG] Spoiled scallops statistics {"spoiled":5,"total":800,"percentage":"0.6","maxPercentage":"2.5"}
+[2025-12-31 09:34:42.587][DEBUG] Spoiled scallops statistics {"spoiled":7,"total":799,"percentage":"0.9","maxPercentage":"2.5"}
+[2025-12-31 09:34:43.046][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:43.193][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:43.287][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:43.396][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:34:43.978][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:44.629][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:44.945][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:44.988][DEBUG] Spoiled scallops statistics {"spoiled":4,"total":799,"percentage":"0.5","maxPercentage":"2.5"}
+[2025-12-31 09:34:44.994][DEBUG] Spoiled scallops statistics {"spoiled":8,"total":798,"percentage":"1.0","maxPercentage":"2.5"}
+[2025-12-31 09:34:45.010][DEBUG] Spoiled scallops statistics {"spoiled":3,"total":800,"percentage":"0.4","maxPercentage":"2.5"}
+[2025-12-31 09:34:45.020][DEBUG] Spoiled scallops statistics {"spoiled":5,"total":799,"percentage":"0.6","maxPercentage":"2.5"}
+[2025-12-31 09:34:45.026][DEBUG] Spoiled scallops statistics {"spoiled":7,"total":800,"percentage":"0.9","maxPercentage":"2.5"}
+[2025-12-31 09:34:45.295][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:45.618][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:46.139][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:46.414][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:34:46.423][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:34:46.456][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:34:46.678][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:46.733][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:47.092][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:47.156][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:47.635][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:34:47.877][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:48.022][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:34:48.074][DEBUG] Spoiled scallops statistics {"spoiled":5,"total":800,"percentage":"0.6","maxPercentage":"2.5"}
+[2025-12-31 09:34:48.078][DEBUG] Spoiled scallops statistics {"spoiled":9,"total":796,"percentage":"1.1","maxPercentage":"2.5"}
+[2025-12-31 09:34:48.084][DEBUG] Spoiled scallops statistics {"spoiled":4,"total":800,"percentage":"0.5","maxPercentage":"2.5"}
+[2025-12-31 09:34:48.088][DEBUG] Spoiled scallops statistics {"spoiled":7,"total":800,"percentage":"0.9","maxPercentage":"2.5"}
+[2025-12-31 09:34:48.092][DEBUG] Spoiled scallops statistics {"spoiled":7,"total":800,"percentage":"0.9","maxPercentage":"2.5"}
+[2025-12-31 09:34:48.395][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:34:48.735][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:48.760][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:49.074][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:34:49.528][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:49.925][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:50.587][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:50.705][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:34:51.251][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:34:51.292][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:51.328][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:34:51.351][DEBUG] Spoiled scallops statistics {"spoiled":7,"total":800,"percentage":"0.9","maxPercentage":"2.5"}
+[2025-12-31 09:34:51.358][DEBUG] Spoiled scallops statistics {"spoiled":9,"total":797,"percentage":"1.1","maxPercentage":"2.5"}
+[2025-12-31 09:34:51.362][DEBUG] Spoiled scallops statistics {"spoiled":4,"total":799,"percentage":"0.5","maxPercentage":"2.5"}
+[2025-12-31 09:34:51.371][DEBUG] Spoiled scallops statistics {"spoiled":8,"total":800,"percentage":"1.0","maxPercentage":"2.5"}
+[2025-12-31 09:34:51.374][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:34:51.375][DEBUG] Spoiled scallops statistics {"spoiled":10,"total":799,"percentage":"1.3","maxPercentage":"2.5"}
+[2025-12-31 09:34:51.726][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:34:52.148][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:34:52.790][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:34:52.952][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:53.157][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:53.402][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:53.454][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:34:53.506][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:53.974][DEBUG] Spoiled scallops statistics {"spoiled":9,"total":800,"percentage":"1.1","maxPercentage":"2.5"}
+[2025-12-31 09:34:53.978][DEBUG] Spoiled scallops statistics {"spoiled":9,"total":800,"percentage":"1.1","maxPercentage":"2.5"}
+[2025-12-31 09:34:53.982][DEBUG] Spoiled scallops statistics {"spoiled":4,"total":799,"percentage":"0.5","maxPercentage":"2.5"}
+[2025-12-31 09:34:53.991][DEBUG] Spoiled scallops statistics {"spoiled":8,"total":800,"percentage":"1.0","maxPercentage":"2.5"}
+[2025-12-31 09:34:53.995][DEBUG] Spoiled scallops statistics {"spoiled":12,"total":798,"percentage":"1.5","maxPercentage":"2.5"}
+[2025-12-31 09:34:54.684][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:54.730][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:34:55.678][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:34:55.794][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:34:55.869][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:56.156][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:34:56.167][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:56.604][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:56.653][DEBUG] Spoiled scallops statistics {"spoiled":10,"total":800,"percentage":"1.3","maxPercentage":"2.5"}
+[2025-12-31 09:34:56.658][DEBUG] Spoiled scallops statistics {"spoiled":10,"total":800,"percentage":"1.3","maxPercentage":"2.5"}
+[2025-12-31 09:34:56.668][DEBUG] Spoiled scallops statistics {"spoiled":4,"total":799,"percentage":"0.5","maxPercentage":"2.5"}
+[2025-12-31 09:34:56.673][DEBUG] Spoiled scallops statistics {"spoiled":9,"total":799,"percentage":"1.1","maxPercentage":"2.5"}
+[2025-12-31 09:34:56.679][DEBUG] Spoiled scallops statistics {"spoiled":13,"total":799,"percentage":"1.6","maxPercentage":"2.5"}
+[2025-12-31 09:34:57.160][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:57.358][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:57.448][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:57.998][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:34:58.209][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:34:59.469][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:00.171][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:00.821][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:00.863][DEBUG] Spoiled scallops statistics {"spoiled":11,"total":800,"percentage":"1.4","maxPercentage":"2.5"}
+[2025-12-31 09:35:00.874][DEBUG] Spoiled scallops statistics {"spoiled":10,"total":799,"percentage":"1.3","maxPercentage":"2.5"}
+[2025-12-31 09:35:00.879][DEBUG] Spoiled scallops statistics {"spoiled":4,"total":800,"percentage":"0.5","maxPercentage":"2.5"}
+[2025-12-31 09:35:00.887][DEBUG] Spoiled scallops statistics {"spoiled":10,"total":800,"percentage":"1.3","maxPercentage":"2.5"}
+[2025-12-31 09:35:00.905][DEBUG] Spoiled scallops statistics {"spoiled":14,"total":800,"percentage":"1.8","maxPercentage":"2.5"}
+[2025-12-31 09:35:00.932][DEBUG] New WebSocket connection {"clientId":"efed580a-f9a8-4ab0-a4f5-ebcbc68cfed8"}
+[2025-12-31 09:35:00.994][INFO] Player joined {"name":"phonis-seagull","playerId":"da6fbf4e-1491-42f7-8bec-99c7ddf8a7b0"}
+[2025-12-31 09:35:01.145][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:01.320][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:01.552][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:01.646][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:01.856][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:01.977][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:02.346][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":1}
+[2025-12-31 09:35:03.125][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:03.372][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:04.672][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:05.102][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:05.221][DEBUG] Spoiled scallops statistics {"spoiled":13,"total":800,"percentage":"1.6","maxPercentage":"2.5"}
+[2025-12-31 09:35:05.226][DEBUG] Spoiled scallops statistics {"spoiled":10,"total":799,"percentage":"1.3","maxPercentage":"2.5"}
+[2025-12-31 09:35:05.244][DEBUG] Spoiled scallops statistics {"spoiled":4,"total":798,"percentage":"0.5","maxPercentage":"2.5"}
+[2025-12-31 09:35:05.258][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":100,"newPower":105,"powerGain":5,"scallopsEaten":1,"remainingScallops":799}
+[2025-12-31 09:35:05.258][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":105,"newPower":115,"powerGain":10,"scallopsEaten":2,"remainingScallops":798}
+[2025-12-31 09:35:05.261][DEBUG] Spoiled scallops statistics {"spoiled":10,"total":798,"percentage":"1.3","maxPercentage":"2.5"}
+[2025-12-31 09:35:05.277][DEBUG] Spoiled scallops statistics {"spoiled":17,"total":798,"percentage":"2.1","maxPercentage":"2.5"}
+[2025-12-31 09:35:05.311][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:05.424][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":115,"newPower":125,"powerGain":10,"scallopsEaten":3,"remainingScallops":799}
+[2025-12-31 09:35:05.459][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:05.560][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":125,"newPower":135,"powerGain":10,"scallopsEaten":4,"remainingScallops":799}
+[2025-12-31 09:35:06.008][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:06.190][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:06.301][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":135,"newPower":145,"powerGain":10,"scallopsEaten":5,"remainingScallops":799}
+[2025-12-31 09:35:06.802][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:07.111][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:07.409][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":145,"newPower":155,"powerGain":10,"scallopsEaten":6,"remainingScallops":799}
+[2025-12-31 09:35:07.701][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:07.833][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":140,"newPower":150,"powerGain":10,"scallopsEaten":7,"remainingScallops":799}
+[2025-12-31 09:35:07.889][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:08.145][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":150,"newPower":170,"powerGain":20,"scallopsEaten":8,"remainingScallops":799}
+[2025-12-31 09:35:08.189][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:08.393][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:08.442][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:08.529][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":153,"newPower":163,"powerGain":10,"scallopsEaten":9,"remainingScallops":799}
+[2025-12-31 09:35:08.607][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":163,"newPower":183,"powerGain":20,"scallopsEaten":10,"remainingScallops":799}
+[2025-12-31 09:35:08.645][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":183,"newPower":193,"powerGain":10,"scallopsEaten":11,"remainingScallops":799}
+[2025-12-31 09:35:09.102][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":193,"newPower":203,"powerGain":10,"scallopsEaten":12,"remainingScallops":799}
+[2025-12-31 09:35:09.496][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":203,"newPower":223,"powerGain":20,"scallopsEaten":13,"remainingScallops":799}
+[2025-12-31 09:35:09.608][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":223,"newPower":233,"powerGain":10,"scallopsEaten":14,"remainingScallops":799}
+[2025-12-31 09:35:09.687][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":233,"newPower":238,"powerGain":5,"scallopsEaten":15,"remainingScallops":799}
+[2025-12-31 09:35:09.688][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":238,"newPower":248,"powerGain":10,"scallopsEaten":16,"remainingScallops":798}
+[2025-12-31 09:35:09.790][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:09.905][DEBUG] Spoiled scallops statistics {"spoiled":16,"total":800,"percentage":"2.0","maxPercentage":"2.5"}
+[2025-12-31 09:35:09.910][DEBUG] Spoiled scallops statistics {"spoiled":11,"total":800,"percentage":"1.4","maxPercentage":"2.5"}
+[2025-12-31 09:35:09.928][DEBUG] Spoiled scallops statistics {"spoiled":4,"total":799,"percentage":"0.5","maxPercentage":"2.5"}
+[2025-12-31 09:35:09.942][DEBUG] Spoiled scallops statistics {"spoiled":10,"total":800,"percentage":"1.3","maxPercentage":"2.5"}
+[2025-12-31 09:35:09.956][DEBUG] Spoiled scallops statistics {"spoiled":19,"total":800,"percentage":"2.4","maxPercentage":"2.5"}
+[2025-12-31 09:35:10.079][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":248,"newPower":258,"powerGain":10,"scallopsEaten":17,"remainingScallops":799}
+[2025-12-31 09:35:10.192][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:10.192][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:10.201][DEBUG] Removed decayed spoiled scallops {"count":2,"lifetimeSeconds":40}
+[2025-12-31 09:35:10.202][DEBUG] Cleaned up expired spoiled scallops {"count":2}
+[2025-12-31 09:35:10.243][DEBUG] Removed decayed spoiled scallops {"count":2,"lifetimeSeconds":40}
+[2025-12-31 09:35:10.244][DEBUG] Cleaned up expired spoiled scallops {"count":2}
+[2025-12-31 09:35:10.646][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":258,"newPower":268,"powerGain":10,"scallopsEaten":18,"remainingScallops":799}
+[2025-12-31 09:35:11.471][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:11.898][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":268,"newPower":278,"powerGain":10,"scallopsEaten":19,"remainingScallops":799}
+[2025-12-31 09:35:11.974][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":278,"newPower":283,"powerGain":5,"scallopsEaten":20,"remainingScallops":799}
+[2025-12-31 09:35:12.291][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:12.292][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:12.613][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:12.774][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":283,"newPower":293,"powerGain":10,"scallopsEaten":21,"remainingScallops":799}
+[2025-12-31 09:35:13.092][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:13.409][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":1}
+[2025-12-31 09:35:13.628][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:13.768][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":293,"newPower":313,"powerGain":20,"scallopsEaten":22,"remainingScallops":799}
+[2025-12-31 09:35:13.846][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:13.986][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":1}
+[2025-12-31 09:35:14.575][DEBUG] Spoiled scallops statistics {"spoiled":15,"total":799,"percentage":"1.9","maxPercentage":"2.5"}
+[2025-12-31 09:35:14.591][DEBUG] Spoiled scallops statistics {"spoiled":10,"total":799,"percentage":"1.3","maxPercentage":"2.5"}
+[2025-12-31 09:35:14.604][DEBUG] Spoiled scallops statistics {"spoiled":5,"total":800,"percentage":"0.6","maxPercentage":"2.5"}
+[2025-12-31 09:35:14.627][DEBUG] Spoiled scallops statistics {"spoiled":11,"total":799,"percentage":"1.4","maxPercentage":"2.5"}
+[2025-12-31 09:35:14.644][DEBUG] Spoiled scallops statistics {"spoiled":17,"total":798,"percentage":"2.1","maxPercentage":"2.5"}
+[2025-12-31 09:35:14.828][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:14.990][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:15.241][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:15.241][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:15.253][DEBUG] Removed decayed spoiled scallops {"count":3,"lifetimeSeconds":40}
+[2025-12-31 09:35:15.256][DEBUG] Cleaned up expired spoiled scallops {"count":3}
+[2025-12-31 09:35:15.262][DEBUG] Removed decayed spoiled scallops {"count":2,"lifetimeSeconds":40}
+[2025-12-31 09:35:15.271][DEBUG] Cleaned up expired spoiled scallops {"count":2}
+[2025-12-31 09:35:15.385][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:15.427][DEBUG] Removed decayed spoiled scallops {"count":2,"lifetimeSeconds":40}
+[2025-12-31 09:35:15.427][DEBUG] Cleaned up expired spoiled scallops {"count":2}
+[2025-12-31 09:35:15.511][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":313,"newPower":323,"powerGain":10,"scallopsEaten":23,"remainingScallops":799}
+[2025-12-31 09:35:15.748][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":323,"newPower":328,"powerGain":5,"scallopsEaten":24,"remainingScallops":799}
+[2025-12-31 09:35:16.208][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:16.323][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:16.639][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:16.936][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":328,"newPower":338,"powerGain":10,"scallopsEaten":25,"remainingScallops":799}
+[2025-12-31 09:35:17.285][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:17.373][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":1}
+[2025-12-31 09:35:17.419][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":338,"newPower":348,"powerGain":10,"scallopsEaten":26,"remainingScallops":799}
+[2025-12-31 09:35:17.822][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":1}
+[2025-12-31 09:35:17.856][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:17.862][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:17.862][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:17.978][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:18.009][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:18.204][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:18.295][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:18.319][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:18.545][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":348,"newPower":358,"powerGain":10,"scallopsEaten":27,"remainingScallops":799}
+[2025-12-31 09:35:18.603][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:18.629][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":358,"newPower":378,"powerGain":20,"scallopsEaten":28,"remainingScallops":799}
+[2025-12-31 09:35:18.637][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":378,"newPower":398,"powerGain":20,"scallopsEaten":29,"remainingScallops":798}
+[2025-12-31 09:35:18.720][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":398,"newPower":408,"powerGain":10,"scallopsEaten":30,"remainingScallops":799}
+[2025-12-31 09:35:18.765][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":408,"newPower":418,"powerGain":10,"scallopsEaten":31,"remainingScallops":799}
+[2025-12-31 09:35:18.875][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:18.889][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":418,"newPower":438,"powerGain":20,"scallopsEaten":32,"remainingScallops":799}
+[2025-12-31 09:35:19.292][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:19.478][DEBUG] Spoiled scallops statistics {"spoiled":14,"total":800,"percentage":"1.8","maxPercentage":"2.5"}
+[2025-12-31 09:35:19.570][DEBUG] Spoiled scallops statistics {"spoiled":7,"total":796,"percentage":"0.9","maxPercentage":"2.5"}
+[2025-12-31 09:35:19.622][DEBUG] Spoiled scallops statistics {"spoiled":4,"total":800,"percentage":"0.5","maxPercentage":"2.5"}
+[2025-12-31 09:35:19.642][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:19.644][DEBUG] Spoiled scallops statistics {"spoiled":8,"total":800,"percentage":"1.0","maxPercentage":"2.5"}
+[2025-12-31 09:35:19.644][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:19.673][DEBUG] Spoiled scallops statistics {"spoiled":18,"total":798,"percentage":"2.3","maxPercentage":"2.5"}
+[2025-12-31 09:35:20.018][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":438,"newPower":458,"powerGain":20,"scallopsEaten":33,"remainingScallops":799}
+[2025-12-31 09:35:20.039][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:20.243][DEBUG] Removed decayed spoiled scallops {"count":2,"lifetimeSeconds":40}
+[2025-12-31 09:35:20.243][DEBUG] Cleaned up expired spoiled scallops {"count":2}
+[2025-12-31 09:35:20.258][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:20.259][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:20.273][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:20.274][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:20.327][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":458,"newPower":478,"powerGain":20,"scallopsEaten":34,"remainingScallops":799}
+[2025-12-31 09:35:20.329][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:20.359][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:20.360][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:20.423][DEBUG] Removed decayed spoiled scallops {"count":2,"lifetimeSeconds":40}
+[2025-12-31 09:35:20.424][DEBUG] Cleaned up expired spoiled scallops {"count":2}
+[2025-12-31 09:35:20.757][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":478,"newPower":488,"powerGain":10,"scallopsEaten":35,"remainingScallops":799}
+[2025-12-31 09:35:20.910][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":488,"newPower":498,"powerGain":10,"scallopsEaten":36,"remainingScallops":799}
+[2025-12-31 09:35:20.928][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:21.034][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:21.327][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:21.573][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:21.573][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:21.595][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":1}
+[2025-12-31 09:35:21.893][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:22.208][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":498,"newPower":518,"powerGain":20,"scallopsEaten":37,"remainingScallops":799}
+[2025-12-31 09:35:22.271][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:22.677][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:23.493][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:23.512][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:23.556][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":518,"newPower":538,"powerGain":20,"scallopsEaten":38,"remainingScallops":799}
+[2025-12-31 09:35:23.869][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":538,"newPower":548,"powerGain":10,"scallopsEaten":39,"remainingScallops":799}
+[2025-12-31 09:35:24.186][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:24.260][DEBUG] Spoiled scallops statistics {"spoiled":14,"total":800,"percentage":"1.8","maxPercentage":"2.5"}
+[2025-12-31 09:35:24.269][DEBUG] Spoiled scallops statistics {"spoiled":5,"total":798,"percentage":"0.6","maxPercentage":"2.5"}
+[2025-12-31 09:35:24.288][DEBUG] Spoiled scallops statistics {"spoiled":3,"total":799,"percentage":"0.4","maxPercentage":"2.5"}
+[2025-12-31 09:35:24.295][DEBUG] Spoiled scallops statistics {"spoiled":8,"total":800,"percentage":"1.0","maxPercentage":"2.5"}
+[2025-12-31 09:35:24.312][DEBUG] Spoiled scallops statistics {"spoiled":19,"total":800,"percentage":"2.4","maxPercentage":"2.5"}
+[2025-12-31 09:35:24.355][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":548,"newPower":568,"powerGain":20,"scallopsEaten":40,"remainingScallops":799}
+[2025-12-31 09:35:24.784][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":568,"newPower":578,"powerGain":10,"scallopsEaten":41,"remainingScallops":799}
+[2025-12-31 09:35:24.836][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":578,"newPower":598,"powerGain":20,"scallopsEaten":42,"remainingScallops":799}
+[2025-12-31 09:35:25.220][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:25.787][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":598,"newPower":608,"powerGain":10,"scallopsEaten":43,"remainingScallops":799}
+[2025-12-31 09:35:26.109][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":608,"newPower":618,"powerGain":10,"scallopsEaten":44,"remainingScallops":799}
+[2025-12-31 09:35:26.423][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:26.423][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:26.435][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:26.440][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:26.459][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:26.459][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:26.669][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:26.669][WARN] Removed excess spoiled scallops {"removed":1,"max":19,"total":799}
+[2025-12-31 09:35:26.933][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":618,"newPower":623,"powerGain":5,"scallopsEaten":45,"remainingScallops":799}
+[2025-12-31 09:35:26.934][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":623,"newPower":643,"powerGain":20,"scallopsEaten":46,"remainingScallops":798}
+[2025-12-31 09:35:27.304][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:27.505][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":643,"newPower":653,"powerGain":10,"scallopsEaten":47,"remainingScallops":799}
+[2025-12-31 09:35:27.603][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:27.661][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:27.661][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:28.053][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:28.053][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:28.107][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":653,"newPower":663,"powerGain":10,"scallopsEaten":48,"remainingScallops":799}
+[2025-12-31 09:35:28.293][INFO] Player ate scallop {"playerName":"phonis-seagull","oldPower":663,"newPower":683,"powerGain":20,"scallopsEaten":49,"remainingScallops":799}
+[2025-12-31 09:35:28.511][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:28.748][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:28.941][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":1}
+[2025-12-31 09:35:29.100][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:29.101][DEBUG] Spoiled scallops statistics {"spoiled":13,"total":800,"percentage":"1.6","maxPercentage":"2.5"}
+[2025-12-31 09:35:29.101][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:29.106][DEBUG] Spoiled scallops statistics {"spoiled":5,"total":798,"percentage":"0.6","maxPercentage":"2.5"}
+[2025-12-31 09:35:29.125][DEBUG] Spoiled scallops statistics {"spoiled":2,"total":798,"percentage":"0.3","maxPercentage":"2.5"}
+[2025-12-31 09:35:29.144][DEBUG] Spoiled scallops statistics {"spoiled":6,"total":800,"percentage":"0.8","maxPercentage":"2.5"}
+[2025-12-31 09:35:29.161][DEBUG] Spoiled scallops statistics {"spoiled":19,"total":799,"percentage":"2.4","maxPercentage":"2.5"}
+[2025-12-31 09:35:29.805][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:30.725][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:30.726][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:30.975][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:31.152][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:31.269][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:31.270][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:31.362][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:31.367][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:31.367][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:31.421][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:31.422][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:31.750][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:31.751][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:31.889][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:31.933][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:32.176][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:32.177][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:32.790][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:32.790][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:32.953][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:33.473][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:33.474][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:33.742][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:34.345][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:34.741][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:34.742][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:34.993][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:35.166][DEBUG] Spoiled scallops statistics {"spoiled":10,"total":800,"percentage":"1.3","maxPercentage":"2.5"}
+[2025-12-31 09:35:35.182][DEBUG] Spoiled scallops statistics {"spoiled":6,"total":798,"percentage":"0.8","maxPercentage":"2.5"}
+[2025-12-31 09:35:35.203][DEBUG] Spoiled scallops statistics {"spoiled":4,"total":799,"percentage":"0.5","maxPercentage":"2.5"}
+[2025-12-31 09:35:35.215][DEBUG] Spoiled scallops statistics {"spoiled":4,"total":800,"percentage":"0.5","maxPercentage":"2.5"}
+[2025-12-31 09:35:35.241][DEBUG] Spoiled scallops statistics {"spoiled":17,"total":798,"percentage":"2.1","maxPercentage":"2.5"}
+[2025-12-31 09:35:35.744][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:35.745][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:35.821][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:35.821][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:36.203][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:36.254][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:36.744][INFO] Player left {"name":"phonis-seagull","playerId":"da6fbf4e-1491-42f7-8bec-99c7ddf8a7b0"}
+[2025-12-31 09:35:36.745][INFO] Player left room {"roomName":"Kulangsu","roomId":"a8a63ef1-ddf5-4b37-9c46-af131fce1d57","playerId":"da6fbf4e-1491-42f7-8bec-99c7ddf8a7b0","remainingPlayers":0}
+[2025-12-31 09:35:38.127][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:38.216][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:38.216][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:39.475][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:39.476][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:39.795][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:40.168][DEBUG] Spoiled scallops statistics {"spoiled":8,"total":799,"percentage":"1.0","maxPercentage":"2.5"}
+[2025-12-31 09:35:40.173][DEBUG] Spoiled scallops statistics {"spoiled":5,"total":799,"percentage":"0.6","maxPercentage":"2.5"}
+[2025-12-31 09:35:40.181][DEBUG] Spoiled scallops statistics {"spoiled":4,"total":799,"percentage":"0.5","maxPercentage":"2.5"}
+[2025-12-31 09:35:40.187][DEBUG] Spoiled scallops statistics {"spoiled":3,"total":799,"percentage":"0.4","maxPercentage":"2.5"}
+[2025-12-31 09:35:40.192][DEBUG] Spoiled scallops statistics {"spoiled":16,"total":800,"percentage":"2.0","maxPercentage":"2.5"}
+[2025-12-31 09:35:40.303][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:40.434][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:40.828][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:40.829][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:41.667][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:41.669][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:41.858][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:41.858][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:41.993][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:41.995][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:42.274][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:42.696][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:42.751][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:42.802][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:43.096][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:43.437][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:43.438][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:43.582][DEBUG] Spoiled scallops statistics {"spoiled":6,"total":800,"percentage":"0.8","maxPercentage":"2.5"}
+[2025-12-31 09:35:43.587][DEBUG] Spoiled scallops statistics {"spoiled":5,"total":799,"percentage":"0.6","maxPercentage":"2.5"}
+[2025-12-31 09:35:43.606][DEBUG] Spoiled scallops statistics {"spoiled":4,"total":800,"percentage":"0.5","maxPercentage":"2.5"}
+[2025-12-31 09:35:43.625][DEBUG] Spoiled scallops statistics {"spoiled":4,"total":799,"percentage":"0.5","maxPercentage":"2.5"}
+[2025-12-31 09:35:43.677][DEBUG] Spoiled scallops statistics {"spoiled":13,"total":800,"percentage":"1.6","maxPercentage":"2.5"}
+[2025-12-31 09:35:44.311][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:44.730][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:45.123][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:45.123][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:45.293][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:45.450][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:45.968][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:46.028][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:46.029][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:46.036][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:46.359][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:46.547][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:46.800][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:46.801][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:47.278][DEBUG] Spoiled scallops statistics {"spoiled":5,"total":800,"percentage":"0.6","maxPercentage":"2.5"}
+[2025-12-31 09:35:47.286][DEBUG] Spoiled scallops statistics {"spoiled":4,"total":799,"percentage":"0.5","maxPercentage":"2.5"}
+[2025-12-31 09:35:47.304][DEBUG] Spoiled scallops statistics {"spoiled":5,"total":800,"percentage":"0.6","maxPercentage":"2.5"}
+[2025-12-31 09:35:47.309][DEBUG] Spoiled scallops statistics {"spoiled":4,"total":799,"percentage":"0.5","maxPercentage":"2.5"}
+[2025-12-31 09:35:47.321][DEBUG] Spoiled scallops statistics {"spoiled":12,"total":800,"percentage":"1.5","maxPercentage":"2.5"}
+[2025-12-31 09:35:47.496][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:47.716][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:47.716][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:47.901][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:47.903][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:48.200][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:48.210][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:48.433][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:48.434][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:48.508][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:48.575][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:49.979][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:50.101][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:50.124][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:50.301][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:50.337][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:50.791][DEBUG] Spoiled scallops statistics {"spoiled":3,"total":800,"percentage":"0.4","maxPercentage":"2.5"}
+[2025-12-31 09:35:50.797][DEBUG] Spoiled scallops statistics {"spoiled":4,"total":799,"percentage":"0.5","maxPercentage":"2.5"}
+[2025-12-31 09:35:50.809][DEBUG] Spoiled scallops statistics {"spoiled":5,"total":800,"percentage":"0.6","maxPercentage":"2.5"}
+[2025-12-31 09:35:50.815][DEBUG] Spoiled scallops statistics {"spoiled":6,"total":800,"percentage":"0.8","maxPercentage":"2.5"}
+[2025-12-31 09:35:50.824][DEBUG] Spoiled scallops statistics {"spoiled":10,"total":800,"percentage":"1.3","maxPercentage":"2.5"}
+[2025-12-31 09:35:50.998][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:51.489][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:51.490][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:52.288][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:52.628][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:52.629][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:52.703][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:53.120][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:53.120][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:53.849][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:53.850][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:53.959][DEBUG] Spoiled scallops statistics {"spoiled":3,"total":800,"percentage":"0.4","maxPercentage":"2.5"}
+[2025-12-31 09:35:53.966][DEBUG] Spoiled scallops statistics {"spoiled":3,"total":799,"percentage":"0.4","maxPercentage":"2.5"}
+[2025-12-31 09:35:53.971][DEBUG] Spoiled scallops statistics {"spoiled":4,"total":797,"percentage":"0.5","maxPercentage":"2.5"}
+[2025-12-31 09:35:53.978][DEBUG] Spoiled scallops statistics {"spoiled":5,"total":800,"percentage":"0.6","maxPercentage":"2.5"}
+[2025-12-31 09:35:53.986][DEBUG] Spoiled scallops statistics {"spoiled":9,"total":800,"percentage":"1.1","maxPercentage":"2.5"}
+[2025-12-31 09:35:54.380][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:54.569][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:54.660][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:55.017][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:55.020][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:55.427][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:55.436][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:55.705][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:56.140][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:56.372][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:56.373][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:57.060][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:35:57.273][DEBUG] Spoiled scallops statistics {"spoiled":3,"total":799,"percentage":"0.4","maxPercentage":"2.5"}
+[2025-12-31 09:35:57.278][DEBUG] Spoiled scallops statistics {"spoiled":3,"total":798,"percentage":"0.4","maxPercentage":"2.5"}
+[2025-12-31 09:35:57.287][DEBUG] Spoiled scallops statistics {"spoiled":4,"total":800,"percentage":"0.5","maxPercentage":"2.5"}
+[2025-12-31 09:35:57.292][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:57.293][DEBUG] Spoiled scallops statistics {"spoiled":5,"total":799,"percentage":"0.6","maxPercentage":"2.5"}
+[2025-12-31 09:35:57.293][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:57.304][DEBUG] Spoiled scallops statistics {"spoiled":6,"total":800,"percentage":"0.8","maxPercentage":"2.5"}
+[2025-12-31 09:35:57.452][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:57.471][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:57.584][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:35:58.668][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:35:58.669][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:35:58.963][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:00.057][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:36:00.058][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:36:00.695][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:36:00.739][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:36:00.775][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:00.802][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:00.956][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:36:00.956][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:36:01.339][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:36:01.339][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:36:01.377][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:01.416][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:01.603][DEBUG] Spoiled scallops statistics {"spoiled":3,"total":800,"percentage":"0.4","maxPercentage":"2.5"}
+[2025-12-31 09:36:01.607][DEBUG] Spoiled scallops statistics {"spoiled":5,"total":800,"percentage":"0.6","maxPercentage":"2.5"}
+[2025-12-31 09:36:01.615][DEBUG] Spoiled scallops statistics {"spoiled":3,"total":796,"percentage":"0.4","maxPercentage":"2.5"}
+[2025-12-31 09:36:01.621][DEBUG] Spoiled scallops statistics {"spoiled":5,"total":800,"percentage":"0.6","maxPercentage":"2.5"}
+[2025-12-31 09:36:01.627][DEBUG] Spoiled scallops statistics {"spoiled":7,"total":798,"percentage":"0.9","maxPercentage":"2.5"}
+[2025-12-31 09:36:01.747][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:02.104][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:02.258][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:02.275][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:36:02.275][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:36:02.324][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:02.466][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:02.531][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:02.682][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:36:02.683][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:36:02.782][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:02.832][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:03.009][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:03.200][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:04.140][DEBUG] Spoiled scallops statistics {"spoiled":3,"total":799,"percentage":"0.4","maxPercentage":"2.5"}
+[2025-12-31 09:36:04.146][DEBUG] Spoiled scallops statistics {"spoiled":5,"total":800,"percentage":"0.6","maxPercentage":"2.5"}
+[2025-12-31 09:36:04.151][DEBUG] Spoiled scallops statistics {"spoiled":4,"total":798,"percentage":"0.5","maxPercentage":"2.5"}
+[2025-12-31 09:36:04.156][DEBUG] Spoiled scallops statistics {"spoiled":5,"total":800,"percentage":"0.6","maxPercentage":"2.5"}
+[2025-12-31 09:36:04.163][DEBUG] Spoiled scallops statistics {"spoiled":6,"total":800,"percentage":"0.8","maxPercentage":"2.5"}
+[2025-12-31 09:36:04.239][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:36:04.240][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:36:04.249][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:04.346][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:04.367][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:04.922][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:05.113][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:05.230][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:36:05.231][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:36:05.730][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:05.777][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:05.792][DEBUG] Scallops spoiled naturally {"count":2}
+[2025-12-31 09:36:05.923][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:06.051][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:06.606][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:06.751][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:36:06.779][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:36:06.901][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:07.135][DEBUG] Spoiled scallops statistics {"spoiled":4,"total":799,"percentage":"0.5","maxPercentage":"2.5"}
+[2025-12-31 09:36:07.139][DEBUG] Spoiled scallops statistics {"spoiled":5,"total":799,"percentage":"0.6","maxPercentage":"2.5"}
+[2025-12-31 09:36:07.144][DEBUG] Spoiled scallops statistics {"spoiled":5,"total":799,"percentage":"0.6","maxPercentage":"2.5"}
+[2025-12-31 09:36:07.152][DEBUG] Spoiled scallops statistics {"spoiled":5,"total":799,"percentage":"0.6","maxPercentage":"2.5"}
+[2025-12-31 09:36:07.156][DEBUG] Spoiled scallops statistics {"spoiled":7,"total":800,"percentage":"0.9","maxPercentage":"2.5"}
+[2025-12-31 09:36:07.630][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:07.665][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:07.817][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:08.039][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:08.525][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:36:08.525][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:36:08.710][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:08.821][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:09.049][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:09.667][DEBUG] Spoiled scallops statistics {"spoiled":3,"total":799,"percentage":"0.4","maxPercentage":"2.5"}
+[2025-12-31 09:36:09.672][DEBUG] Spoiled scallops statistics {"spoiled":5,"total":797,"percentage":"0.6","maxPercentage":"2.5"}
+[2025-12-31 09:36:09.676][DEBUG] Spoiled scallops statistics {"spoiled":6,"total":798,"percentage":"0.8","maxPercentage":"2.5"}
+[2025-12-31 09:36:09.684][DEBUG] Spoiled scallops statistics {"spoiled":5,"total":800,"percentage":"0.6","maxPercentage":"2.5"}
+[2025-12-31 09:36:09.688][DEBUG] Spoiled scallops statistics {"spoiled":7,"total":800,"percentage":"0.9","maxPercentage":"2.5"}
+[2025-12-31 09:36:09.805][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:36:09.806][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:36:09.871][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:10.770][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:10.921][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:11.184][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:36:11.184][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:36:11.799][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:11.849][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:11.889][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:12.106][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:12.362][DEBUG] Spoiled scallops statistics {"spoiled":3,"total":800,"percentage":"0.4","maxPercentage":"2.5"}
+[2025-12-31 09:36:12.367][DEBUG] Spoiled scallops statistics {"spoiled":6,"total":800,"percentage":"0.8","maxPercentage":"2.5"}
+[2025-12-31 09:36:12.372][DEBUG] Spoiled scallops statistics {"spoiled":5,"total":799,"percentage":"0.6","maxPercentage":"2.5"}
+[2025-12-31 09:36:12.407][DEBUG] Spoiled scallops statistics {"spoiled":6,"total":800,"percentage":"0.8","maxPercentage":"2.5"}
+[2025-12-31 09:36:12.436][DEBUG] Spoiled scallops statistics {"spoiled":8,"total":800,"percentage":"1.0","maxPercentage":"2.5"}
+[2025-12-31 09:36:12.454][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:12.633][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:13.044][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:13.247][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:13.640][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:13.641][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:13.749][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:36:13.749][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:36:13.975][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:14.363][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:36:14.363][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:36:14.732][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:15.015][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:36:15.016][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:36:15.389][DEBUG] Spoiled scallops statistics {"spoiled":3,"total":799,"percentage":"0.4","maxPercentage":"2.5"}
+[2025-12-31 09:36:15.411][DEBUG] Spoiled scallops statistics {"spoiled":6,"total":798,"percentage":"0.8","maxPercentage":"2.5"}
+[2025-12-31 09:36:15.427][DEBUG] Spoiled scallops statistics {"spoiled":5,"total":800,"percentage":"0.6","maxPercentage":"2.5"}
+[2025-12-31 09:36:15.435][DEBUG] Spoiled scallops statistics {"spoiled":6,"total":797,"percentage":"0.8","maxPercentage":"2.5"}
+[2025-12-31 09:36:15.442][DEBUG] Spoiled scallops statistics {"spoiled":8,"total":800,"percentage":"1.0","maxPercentage":"2.5"}
+[2025-12-31 09:36:15.528][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:15.617][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:15.796][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:15.886][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:16.120][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:16.376][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:17.105][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:17.369][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:17.463][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:17.769][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:17.916][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:17.962][DEBUG] Spoiled scallops statistics {"spoiled":3,"total":799,"percentage":"0.4","maxPercentage":"2.5"}
+[2025-12-31 09:36:17.967][DEBUG] Spoiled scallops statistics {"spoiled":7,"total":800,"percentage":"0.9","maxPercentage":"2.5"}
+[2025-12-31 09:36:17.973][DEBUG] Spoiled scallops statistics {"spoiled":7,"total":799,"percentage":"0.9","maxPercentage":"2.5"}
+[2025-12-31 09:36:17.980][DEBUG] Spoiled scallops statistics {"spoiled":7,"total":800,"percentage":"0.9","maxPercentage":"2.5"}
+[2025-12-31 09:36:17.992][DEBUG] Spoiled scallops statistics {"spoiled":9,"total":800,"percentage":"1.1","maxPercentage":"2.5"}
+[2025-12-31 09:36:18.020][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:18.233][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:18.337][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:18.542][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:18.674][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:18.806][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:18.908][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:19.361][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:19.539][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:19.920][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:20.460][DEBUG] Spoiled scallops statistics {"spoiled":4,"total":799,"percentage":"0.5","maxPercentage":"2.5"}
+[2025-12-31 09:36:20.464][DEBUG] Spoiled scallops statistics {"spoiled":7,"total":798,"percentage":"0.9","maxPercentage":"2.5"}
+[2025-12-31 09:36:20.468][DEBUG] Spoiled scallops statistics {"spoiled":7,"total":800,"percentage":"0.9","maxPercentage":"2.5"}
+[2025-12-31 09:36:20.477][DEBUG] Spoiled scallops statistics {"spoiled":7,"total":798,"percentage":"0.9","maxPercentage":"2.5"}
+[2025-12-31 09:36:20.481][DEBUG] Spoiled scallops statistics {"spoiled":10,"total":800,"percentage":"1.3","maxPercentage":"2.5"}
+[2025-12-31 09:36:20.779][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:21.543][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:22.792][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:36:22.793][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:36:22.921][DEBUG] Spoiled scallops statistics {"spoiled":4,"total":798,"percentage":"0.5","maxPercentage":"2.5"}
+[2025-12-31 09:36:22.926][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:22.926][DEBUG] Spoiled scallops statistics {"spoiled":8,"total":798,"percentage":"1.0","maxPercentage":"2.5"}
+[2025-12-31 09:36:22.936][DEBUG] Spoiled scallops statistics {"spoiled":7,"total":799,"percentage":"0.9","maxPercentage":"2.5"}
+[2025-12-31 09:36:22.940][DEBUG] Spoiled scallops statistics {"spoiled":6,"total":799,"percentage":"0.8","maxPercentage":"2.5"}
+[2025-12-31 09:36:22.944][DEBUG] Spoiled scallops statistics {"spoiled":10,"total":799,"percentage":"1.3","maxPercentage":"2.5"}
+[2025-12-31 09:36:23.321][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:23.345][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:23.411][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:24.020][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:24.155][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:24.425][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:24.741][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:25.166][DEBUG] Spoiled scallops statistics {"spoiled":6,"total":799,"percentage":"0.8","maxPercentage":"2.5"}
+[2025-12-31 09:36:25.170][DEBUG] Spoiled scallops statistics {"spoiled":9,"total":799,"percentage":"1.1","maxPercentage":"2.5"}
+[2025-12-31 09:36:25.174][DEBUG] Spoiled scallops statistics {"spoiled":7,"total":800,"percentage":"0.9","maxPercentage":"2.5"}
+[2025-12-31 09:36:25.181][DEBUG] Spoiled scallops statistics {"spoiled":6,"total":800,"percentage":"0.8","maxPercentage":"2.5"}
+[2025-12-31 09:36:25.187][DEBUG] Spoiled scallops statistics {"spoiled":11,"total":798,"percentage":"1.4","maxPercentage":"2.5"}
+[2025-12-31 09:36:25.518][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:25.678][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:25.723][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:25.871][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:25.938][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:25.973][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:36:25.974][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:36:27.328][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:27.339][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:27.764][DEBUG] Spoiled scallops statistics {"spoiled":6,"total":799,"percentage":"0.8","maxPercentage":"2.5"}
+[2025-12-31 09:36:27.769][DEBUG] Spoiled scallops statistics {"spoiled":9,"total":800,"percentage":"1.1","maxPercentage":"2.5"}
+[2025-12-31 09:36:27.773][DEBUG] Spoiled scallops statistics {"spoiled":6,"total":796,"percentage":"0.8","maxPercentage":"2.5"}
+[2025-12-31 09:36:27.779][DEBUG] Spoiled scallops statistics {"spoiled":6,"total":799,"percentage":"0.8","maxPercentage":"2.5"}
+[2025-12-31 09:36:27.784][DEBUG] Spoiled scallops statistics {"spoiled":12,"total":799,"percentage":"1.5","maxPercentage":"2.5"}
+[2025-12-31 09:36:28.147][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:28.436][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:28.570][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:28.979][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:29.154][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:29.855][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:29.934][DEBUG] Spoiled scallops statistics {"spoiled":6,"total":799,"percentage":"0.8","maxPercentage":"2.5"}
+[2025-12-31 09:36:29.939][DEBUG] Spoiled scallops statistics {"spoiled":9,"total":800,"percentage":"1.1","maxPercentage":"2.5"}
+[2025-12-31 09:36:29.942][DEBUG] Spoiled scallops statistics {"spoiled":6,"total":799,"percentage":"0.8","maxPercentage":"2.5"}
+[2025-12-31 09:36:29.950][DEBUG] Spoiled scallops statistics {"spoiled":6,"total":800,"percentage":"0.8","maxPercentage":"2.5"}
+[2025-12-31 09:36:29.956][DEBUG] Spoiled scallops statistics {"spoiled":14,"total":797,"percentage":"1.8","maxPercentage":"2.5"}
+[2025-12-31 09:36:30.109][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:36:30.110][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:36:30.293][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:30.310][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:30.320][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:36:30.321][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:36:30.349][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:30.459][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:30.516][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:30.521][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:30.990][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:31.038][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:31.087][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:31.091][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:31.715][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:31.978][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:32.062][DEBUG] Spoiled scallops statistics {"spoiled":7,"total":799,"percentage":"0.9","maxPercentage":"2.5"}
+[2025-12-31 09:36:32.066][DEBUG] Spoiled scallops statistics {"spoiled":9,"total":799,"percentage":"1.1","maxPercentage":"2.5"}
+[2025-12-31 09:36:32.074][DEBUG] Spoiled scallops statistics {"spoiled":8,"total":800,"percentage":"1.0","maxPercentage":"2.5"}
+[2025-12-31 09:36:32.078][DEBUG] Spoiled scallops statistics {"spoiled":4,"total":798,"percentage":"0.5","maxPercentage":"2.5"}
+[2025-12-31 09:36:32.082][DEBUG] Spoiled scallops statistics {"spoiled":15,"total":800,"percentage":"1.9","maxPercentage":"2.5"}
+[2025-12-31 09:36:32.188][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:32.375][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:32.735][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:33.023][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:33.739][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:34.099][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:34.274][DEBUG] Spoiled scallops statistics {"spoiled":7,"total":799,"percentage":"0.9","maxPercentage":"2.5"}
+[2025-12-31 09:36:34.278][DEBUG] Spoiled scallops statistics {"spoiled":10,"total":800,"percentage":"1.3","maxPercentage":"2.5"}
+[2025-12-31 09:36:34.288][DEBUG] Spoiled scallops statistics {"spoiled":8,"total":800,"percentage":"1.0","maxPercentage":"2.5"}
+[2025-12-31 09:36:34.293][DEBUG] Spoiled scallops statistics {"spoiled":4,"total":800,"percentage":"0.5","maxPercentage":"2.5"}
+[2025-12-31 09:36:34.293][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:34.299][DEBUG] Spoiled scallops statistics {"spoiled":15,"total":799,"percentage":"1.9","maxPercentage":"2.5"}
+[2025-12-31 09:36:34.371][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:34.438][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:34.575][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:36:34.576][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:36:34.636][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:35.343][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:35.715][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:35.779][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:35.880][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:36.127][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:36.590][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:36.852][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:37.108][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:37.380][DEBUG] Spoiled scallops statistics {"spoiled":8,"total":799,"percentage":"1.0","maxPercentage":"2.5"}
+[2025-12-31 09:36:37.388][DEBUG] Spoiled scallops statistics {"spoiled":10,"total":797,"percentage":"1.3","maxPercentage":"2.5"}
+[2025-12-31 09:36:37.395][DEBUG] Spoiled scallops statistics {"spoiled":8,"total":799,"percentage":"1.0","maxPercentage":"2.5"}
+[2025-12-31 09:36:37.404][DEBUG] Spoiled scallops statistics {"spoiled":6,"total":800,"percentage":"0.8","maxPercentage":"2.5"}
+[2025-12-31 09:36:37.409][DEBUG] Spoiled scallops statistics {"spoiled":16,"total":799,"percentage":"2.0","maxPercentage":"2.5"}
+[2025-12-31 09:36:37.475][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:36:37.475][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:36:37.479][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:36:37.480][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:36:37.591][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:36:37.592][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:36:37.687][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:38.025][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:38.164][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:38.202][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:38.628][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:38.694][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:38.711][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:38.885][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:38.953][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:38.965][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:36:38.968][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:36:39.012][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:39.058][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:39.395][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:39.531][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:39.608][DEBUG] Spoiled scallops statistics {"spoiled":8,"total":800,"percentage":"1.0","maxPercentage":"2.5"}
+[2025-12-31 09:36:39.612][DEBUG] Spoiled scallops statistics {"spoiled":9,"total":800,"percentage":"1.1","maxPercentage":"2.5"}
+[2025-12-31 09:36:39.618][DEBUG] Spoiled scallops statistics {"spoiled":8,"total":800,"percentage":"1.0","maxPercentage":"2.5"}
+[2025-12-31 09:36:39.623][DEBUG] Spoiled scallops statistics {"spoiled":6,"total":800,"percentage":"0.8","maxPercentage":"2.5"}
+[2025-12-31 09:36:39.627][DEBUG] Spoiled scallops statistics {"spoiled":16,"total":799,"percentage":"2.0","maxPercentage":"2.5"}
+[2025-12-31 09:36:39.947][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:40.090][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:40.775][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:36:40.776][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:36:40.802][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:36:40.803][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:36:40.819][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:41.204][DEBUG] Scallops spoiled naturally {"count":1}
+[2025-12-31 09:36:41.379][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:36:41.380][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:36:41.506][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:41.887][DEBUG] Spoiled scallops statistics {"spoiled":7,"total":799,"percentage":"0.9","maxPercentage":"2.5"}
+[2025-12-31 09:36:41.892][DEBUG] Spoiled scallops statistics {"spoiled":10,"total":800,"percentage":"1.3","maxPercentage":"2.5"}
+[2025-12-31 09:36:41.896][DEBUG] Spoiled scallops statistics {"spoiled":8,"total":800,"percentage":"1.0","maxPercentage":"2.5"}
+[2025-12-31 09:36:41.905][DEBUG] Spoiled scallops statistics {"spoiled":6,"total":797,"percentage":"0.8","maxPercentage":"2.5"}
+[2025-12-31 09:36:41.909][DEBUG] Spoiled scallops statistics {"spoiled":14,"total":799,"percentage":"1.8","maxPercentage":"2.5"}
+[2025-12-31 09:36:42.002][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:42.109][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:36:42.109][DEBUG] Cleaned up expired spoiled scallops {"count":1}
+[2025-12-31 09:36:42.408][DEBUG] Game state {"scallops":800,"aiSeagulls":25,"players":0}
+[2025-12-31 09:36:42.486][DEBUG] Removed decayed spoiled scallops {"count":1,"lifetimeSeconds":40}
+[2025-12-31 09:36:42.486][DEBUG] Cleaned up expired spoiled scallops {"count":1}

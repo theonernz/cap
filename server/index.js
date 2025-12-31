@@ -614,9 +614,25 @@ app.get('/api/rooms/:roomId', (req, res) => {
 // 创建新房间
 app.post('/api/rooms/create', (req, res) => {
     try {
-        const { name, maxPlayers = 8, creatorId, isPrivate = false, password } = req.body;
+        const { name, nameEn, nameZh, maxPlayers = 8, creatorId, isPrivate = false, password } = req.body;
         
-        if (!name || name.trim().length === 0) {
+        // 支持两种格式：
+        // 1. 新格式：nameEn + nameZh（推荐）
+        // 2. 旧格式：name（兼容性，自动复制到 nameEn 和 nameZh）
+        let roomNameEn = nameEn;
+        let roomNameZh = nameZh;
+        
+        if (!roomNameEn && !roomNameZh && name) {
+            // 旧格式兼容：如果只提供了name，同时用于中英文
+            roomNameEn = name.trim();
+            roomNameZh = name.trim();
+        } else if (!roomNameEn || !roomNameZh) {
+            // 如果只提供了一种语言，自动填充另一种
+            roomNameEn = roomNameEn || roomNameZh;
+            roomNameZh = roomNameZh || roomNameEn;
+        }
+        
+        if (!roomNameEn || roomNameEn.trim().length === 0) {
             return res.status(400).json({ success: false, error: 'Room name is required' });
         }
         
@@ -624,7 +640,19 @@ app.post('/api/rooms/create', (req, res) => {
             return res.status(400).json({ success: false, error: 'Max players must be between 2 and 50' });
         }
         
-        const room = roomManager.createRoom(name.trim(), maxPlayers, creatorId, isPrivate, password);
+        const room = roomManager.createRoom(
+            roomNameEn.trim(), 
+            roomNameZh.trim(), 
+            maxPlayers, 
+            creatorId, 
+            isPrivate, 
+            password
+        );
+        
+        if (!room) {
+            return res.status(500).json({ success: false, error: 'Failed to create room (room limit reached)' });
+        }
+        
         res.json({ success: true, room: room.getInfo() });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });

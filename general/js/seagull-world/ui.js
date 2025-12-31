@@ -189,6 +189,8 @@ const SeagullWorldUI = {
             'availableRooms': '可用房间',
             'createNewRoom': '创建新房间',
             'roomName': '房间名称',
+            'roomNameEn': '房间名称（英文）',
+            'roomNameZh': '房间名称（中文）',
             'maxPlayers': '最大玩家数',
             'cancel': '取消',
             'create': '创建',
@@ -387,6 +389,8 @@ const SeagullWorldUI = {
             'availableRooms': 'Available Rooms',
             'createNewRoom': 'Create New Room',
             'roomName': 'Room Name',
+            'roomNameEn': 'Room Name (English)',
+            'roomNameZh': 'Room Name (Chinese)',
             'maxPlayers': 'Max Players',
             'cancel': 'Cancel',
             'create': 'Create',
@@ -436,7 +440,18 @@ const SeagullWorldUI = {
         // 更新所有带 data-lang-key 属性的元素
         document.querySelectorAll('[data-lang-key]').forEach(element => {
             const key = element.getAttribute('data-lang-key');
-            element.textContent = this.t(key);
+            
+            // 优先使用 data-lang-zh 和 data-lang-en 属性（用于动态内容）
+            const zhText = element.getAttribute('data-lang-zh');
+            const enText = element.getAttribute('data-lang-en');
+            
+            if (zhText && enText) {
+                // 使用动态翻译
+                element.textContent = this.currentLanguage === 'zh' ? zhText : enText;
+            } else {
+                // 使用翻译字典
+                element.textContent = this.t(key);
+            }
         });
         
         // 更新特殊元素

@@ -44,10 +44,10 @@ class GameLoader {
             ? (game.badge?.type === 'featured' ? 'game-card featured' : 'game-card')
             : 'game-card coming-soon';
 
-        // Generate badge HTML
+        // Generate badge HTML with data-lang-key
         const badgeHTML = game.badge 
             ? `<div class="game-badge ${game.badge.type === 'coming-soon' ? 'coming-soon-badge' : ''}">
-                ${game.badge.icon} <span>${badgeText}</span>
+                ${game.badge.icon} <span data-lang-key="badge_${game.gameId}" data-lang-zh="${game.badge.text.zh}" data-lang-en="${game.badge.text.en}">${badgeText}</span>
                </div>`
             : '';
 
@@ -135,8 +135,8 @@ class GameLoader {
             <div class="${cardClass}" data-game-id="${game.gameId}">
                 ${badgeHTML}
                 <div class="game-icon">${game.icon}</div>
-                <h3 class="game-title">${name}</h3>
-                <p class="game-description">${description}</p>
+                <h3 class="game-title" data-lang-key="gameName_${game.gameId}" data-lang-zh="${game.name.zh}" data-lang-en="${game.name.en}">${name}</h3>
+                <p class="game-description" data-lang-key="gameDesc_${game.gameId}" data-lang-zh="${game.description.zh}" data-lang-en="${game.description.en}">${description}</p>
                 ${statsHTML}
                 ${actionsHTML}
             </div>

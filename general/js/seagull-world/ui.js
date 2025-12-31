@@ -462,8 +462,20 @@ const SeagullWorldUI = {
     },
     
     // 初始化UI
-    init() {
+    async init() {
         console.log('[Seagull World UI] Initializing UI...');
+        
+        // 验证服务器端 token（如果已登录）
+        const session = SeagullWorldAuth.getCurrentSession();
+        if (session && session.token) {
+            console.log('[Seagull World UI] Verifying token with server...');
+            const isValid = await SeagullWorldAuth.verifyToken();
+            
+            if (!isValid) {
+                console.log('[Seagull World UI] ⚠️ Token invalid, logging out...');
+                this.showNotification('⚠️ 会话已失效，请重新登录', 'warning');
+            }
+        }
         
         // 加载保存的语言设置
         this.currentLanguage = localStorage.getItem('seagullWorld_language') || 'zh';

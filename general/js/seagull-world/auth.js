@@ -302,36 +302,45 @@ const SeagullWorldAuth = {
      */
     async login(username, password, rememberMe = false) {
         try {
-            // 使用 FileStorageService API 登录
-            const result = await FileStorageService.loginUser(username, password);
+            // 调用服务器登录API
+            const response = await fetch('http://localhost:3000/api/users/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, rememberMe })
+            });
+            
+            const result = await response.json();
             
             if (!result.success) {
                 return { 
                     success: false, 
-                    error: '用户名或密码错误' 
+                    error: result.error || '登录失败' 
                 };
             }
             
-            // 更新最后登录时间
-            const user = result.user;
-            user.profile.lastLogin = Date.now();
+            // 保存 session token 和用户信息
+            const session = {
+                userId: result.user.userId,
+                username: result.user.username,
+                displayName: result.user.profile.displayName,
+                avatar: result.user.profile.avatar,
+                token: result.token,  // 服务器返回的 session token
+                expiresAt: result.expiresAt,
+                createdAt: Date.now()
+            };
             
-            // 更新用户信息到服务器
-            try {
-                await FileStorageService.updateUser(user.userId, user);
-            } catch (updateError) {
-                console.warn('[Auth] Failed to update last login time:', updateError);
-            }
+            localStorage.setItem(this.CURRENT_SESSION_KEY, JSON.stringify(session));
             
-            // 创建会话
-            this.createSession(user, rememberMe);
+            console.log('[Auth] ✅ Login successful with server token');
             
             // 清除匿名模式设置
             this.clearAnonymousMode();
             
             return { 
                 success: true, 
-                user: this.sanitizeUser(user) 
+                user: this.sanitizeUser(result.user) 
             };
         } catch (error) {
             console.error('[Auth] Login failed:', error);
@@ -375,13 +384,50 @@ const SeagullWorldAuth = {
         
         const session = JSON.parse(sessionData);
         
-        // 检查会话是否过期
+        // 检查会话是否过期（客户端时间检查）
         if (Date.now() > session.expiresAt) {
+            console.log('[Auth] ⚠️ Session expired (client-side check)');
             this.logout();
             return null;
         }
         
         return session;
+    },
+    
+    /**
+     * 验证 token 有效性（服务器端验证）
+     * 在页面加载或重要操作前调用
+     */
+    async verifyToken() {
+        const session = this.getCurrentSession();
+        if (!session || !session.token) {
+            return false;
+        }
+        
+        try {
+            const response = await fetch('http://localhost:3000/api/auth/verify', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${session.token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            const result = await response.json();
+            
+            if (!result.success) {
+                console.log('[Auth] ⚠️ Token verification failed:', result.error);
+                this.logout();
+                return false;
+            }
+            
+            console.log('[Auth] ✅ Token verified successfully');
+            return true;
+        } catch (error) {
+            console.error('[Auth] Token verification error:', error);
+            // 网络错误时不强制登出，但返回false
+            return false;
+        }
     },
     
     /**
@@ -466,8 +512,28 @@ const SeagullWorldAuth = {
     /**
      * 登出
      */
-    logout() {
+    async logout() {
+        const session = this.getCurrentSession();
+        
+        // 如果有token，通知服务器销毁会话
+        if (session && session.token) {
+            try {
+                await fetch('http://localhost:3000/api/auth/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${session.token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                console.log('[Auth] 🚪 Logged out from server');
+            } catch (error) {
+                console.error('[Auth] Logout error:', error);
+            }
+        }
+        
+        // 清除本地会话
         localStorage.removeItem(this.CURRENT_SESSION_KEY);
+        console.log('[Auth] 🚪 Local session cleared');
     },
     
     /**

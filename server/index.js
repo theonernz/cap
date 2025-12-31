@@ -11,6 +11,7 @@ const config = require('./config');
 const fileStorageAPI = require('./FileStorageAPI');
 const ConfigParser = require('./ConfigParser');
 const Logger = require('./Logger');
+const SessionManager = require('./SessionManager');
 
 // ==================== Initialize Logger ====================
 const configPath = path.join(__dirname, '../game/eatscallop/config/game.ini');
@@ -29,6 +30,9 @@ const logger = new Logger({
     timestampFormat: logConfig.timestampFormat || 'full',
     logFilePath: logFilePath
 });
+
+// ==================== Initialize Session Manager ====================
+const sessionManager = new SessionManager(logger);
 
 // Create Express app and HTTP server
 const app = express();
@@ -51,6 +55,45 @@ app.use((req, res, next) => {
 app.use(express.static(path.join(__dirname, '..')));
 
 logger.info('Server starting with NO CACHE headers for development');
+
+// ==================== URL Routing (MVC - Hide File Paths) ====================
+
+// 主页路由
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../index.html'));
+});
+
+// 游戏大厅路由
+app.get('/game', (req, res) => {
+    res.sendFile(path.join(__dirname, '../game/game-index.html'));
+});
+
+// 游戏路由 - 隐藏 .html 后缀
+app.get('/game/:gameName', (req, res) => {
+    const { gameName } = req.params;
+    const gamePath = path.join(__dirname, `../game/${gameName}/${gameName}-index.html`);
+    
+    // 检查文件是否存在
+    const fs = require('fs');
+    if (fs.existsSync(gamePath)) {
+        res.sendFile(gamePath);
+    } else {
+        res.status(404).send('Game not found');
+    }
+});
+
+// 测试页面路由
+app.get('/test/:testName', (req, res) => {
+    const { testName } = req.params;
+    const testPath = path.join(__dirname, `../test-${testName}.html`);
+    
+    const fs = require('fs');
+    if (fs.existsSync(testPath)) {
+        res.sendFile(testPath);
+    } else {
+        res.status(404).send('Test page not found');
+    }
+});
 
 // ==================== Initialize Room Manager ====================
 
@@ -150,20 +193,119 @@ app.post('/api/users/register', async (req, res) => {
 
 app.post('/api/users/login', async (req, res) => {
     try {
-        const { username } = req.body;
+        const { username, rememberMe } = req.body;
         const user = await fileStorageAPI.getUserByUsername(username);
         
         if (!user) {
             return res.status(404).json({ success: false, error: 'User not found' });
         }
         
-        res.json({ success: true, user });
+        // 创建服务器端会话并生成 token
+        const { token, expiresAt } = sessionManager.createSession(
+            user.userId, 
+            user.username, 
+            rememberMe || false
+        );
+        
+        logger.info('User logged in', { username, userId: user.userId });
+        
+        res.json({ 
+            success: true, 
+            user,
+            token,  // 返回 session token
+            expiresAt
+        });
     } catch (error) {
+        logger.error('Login error', { error: error.message });
         res.status(500).json({ success: false, error: error.message });
     }
 });
 
-app.get('/api/users/:userId', async (req, res) => {
+// 验证 token API
+app.post('/api/auth/verify', (req, res) => {
+    try {
+        const token = req.headers.authorization?.replace('Bearer ', '');
+        
+        if (!token) {
+            return res.status(401).json({ success: false, error: 'No token provided' });
+        }
+        
+        const session = sessionManager.validateToken(token);
+        
+        if (!session) {
+            return res.status(401).json({ success: false, error: 'Invalid or expired token' });
+        }
+        
+        res.json({ 
+            success: true, 
+            userId: session.userId,
+            username: session.username
+        });
+    } catch (error) {
+        logger.error('Token verification error', { error: error.message });
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// 登出 API
+app.post('/api/auth/logout', (req, res) => {
+    try {
+        const token = req.headers.authorization?.replace('Bearer ', '');
+        
+        if (token) {
+            sessionManager.destroySession(token);
+            logger.info('User logged out');
+        }
+        
+        res.json({ success: true });
+    } catch (error) {
+        logger.error('Logout error', { error: error.message });
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// 刷新会话 API
+app.post('/api/auth/refresh', (req, res) => {
+    try {
+        const token = req.headers.authorization?.replace('Bearer ', '');
+        
+        if (!token) {
+            return res.status(401).json({ success: false, error: 'No token provided' });
+        }
+        
+        const refreshed = sessionManager.refreshSession(token);
+        
+        if (!refreshed) {
+            return res.status(401).json({ success: false, error: 'Invalid or expired token' });
+        }
+        
+        res.json({ success: true });
+    } catch (error) {
+        logger.error('Token refresh error', { error: error.message });
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// 认证中间件 - 保护需要登录的API
+const requireAuth = (req, res, next) => {
+    const token = req.headers.authorization?.replace('Bearer ', '');
+    
+    if (!token) {
+        return res.status(401).json({ success: false, error: 'Authentication required' });
+    }
+    
+    const session = sessionManager.validateToken(token);
+    
+    if (!session) {
+        return res.status(401).json({ success: false, error: 'Invalid or expired token' });
+    }
+    
+    // 将用户信息附加到请求对象
+    req.user = session;
+    next();
+};
+
+app.get('/api/users/:userId', requireAuth, async (req, res) => {
     try {
         const user = await fileStorageAPI.getUserById(req.params.userId);
         
@@ -171,14 +313,24 @@ app.get('/api/users/:userId', async (req, res) => {
             return res.status(404).json({ success: false, error: 'User not found' });
         }
         
+        // 只允许用户获取自己的信息
+        if (user.userId !== req.user.userId) {
+            return res.status(403).json({ success: false, error: 'Access denied' });
+        }
+        
         res.json({ success: true, user });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
     }
 });
 
-app.put('/api/users/:userId', async (req, res) => {
+app.put('/api/users/:userId', requireAuth, async (req, res) => {
     try {
+        // 只允许用户更新自己的信息
+        if (req.params.userId !== req.user.userId) {
+            return res.status(403).json({ success: false, error: 'Access denied' });
+        }
+        
         const result = await fileStorageAPI.updateUser(req.params.userId, req.body);
         res.json(result);
     } catch (error) {
@@ -187,12 +339,17 @@ app.put('/api/users/:userId', async (req, res) => {
 });
 
 // 用户统计数据更新（奖励系统专用）
-app.post('/api/user/update', async (req, res) => {
+app.post('/api/user/update', requireAuth, async (req, res) => {
     try {
         const { userId, experience, seagullCoins, worldLevel } = req.body;
         
         if (!userId) {
             return res.status(400).json({ success: false, error: 'User ID required' });
+        }
+        
+        // 只允许用户更新自己的数据
+        if (userId !== req.user.userId) {
+            return res.status(403).json({ success: false, error: 'Access denied' });
         }
         
         // 获取当前用户
@@ -218,8 +375,16 @@ app.post('/api/user/update', async (req, res) => {
     }
 });
 
-app.delete('/api/users/:userId', async (req, res) => {
+app.delete('/api/users/:userId', requireAuth, async (req, res) => {
     try {
+        // 只允许用户删除自己的账号
+        if (req.params.userId !== req.user.userId) {
+            return res.status(403).json({ success: false, error: 'Access denied' });
+        }
+        
+        // 删除用户的所有会话
+        sessionManager.destroyUserSessions(req.params.userId);
+        
         const result = await fileStorageAPI.deleteUser(req.params.userId);
         res.json(result);
     } catch (error) {
@@ -228,7 +393,7 @@ app.delete('/api/users/:userId', async (req, res) => {
 });
 
 // Game Saves API
-app.post('/api/saves', async (req, res) => {
+app.post('/api/saves', requireAuth, async (req, res) => {
     try {
         const result = await fileStorageAPI.createSave(req.body);
         res.json(result);
@@ -237,8 +402,13 @@ app.post('/api/saves', async (req, res) => {
     }
 });
 
-app.get('/api/saves/:username', async (req, res) => {
+app.get('/api/saves/:username', requireAuth, async (req, res) => {
     try {
+        // 只允许用户访问自己的存档
+        if (req.params.username !== req.user.username) {
+            return res.status(403).json({ success: false, error: 'Access denied' });
+        }
+        
         const isMultiplayer = req.query.multiplayer === 'true';
         const saves = await fileStorageAPI.getSavesByUser(req.params.username, isMultiplayer);
         res.json({ success: true, saves });
@@ -261,7 +431,7 @@ app.get('/api/saves/id/:saveId', async (req, res) => {
     }
 });
 
-app.delete('/api/saves/:saveId', async (req, res) => {
+app.delete('/api/saves/:saveId', requireAuth, async (req, res) => {
     try {
         const result = await fileStorageAPI.deleteSave(req.params.saveId);
         res.json(result);
@@ -270,8 +440,13 @@ app.delete('/api/saves/:saveId', async (req, res) => {
     }
 });
 
-app.delete('/api/saves/user/:username', async (req, res) => {
+app.delete('/api/saves/user/:username', requireAuth, async (req, res) => {
     try {
+        // 只允许用户删除自己的存档
+        if (req.params.username !== req.user.username) {
+            return res.status(403).json({ success: false, error: 'Access denied' });
+        }
+        
         const result = await fileStorageAPI.deleteAllUserSaves(req.params.username);
         res.json(result);
     } catch (error) {

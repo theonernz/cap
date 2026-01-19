@@ -85,9 +85,16 @@ app.use((req, res, next) => {
 
 // NOTE: Static file middleware will be added AFTER all API routes
 
+// Debug middleware - log all API requests
+app.use('/api', (req, res, next) => {
+    logger.debug(`API Request: ${req.method} ${req.path}`);
+    next();
+});
+
 logger.info('Server starting with NO CACHE headers for development');
 
-// ==================== URL Routing (MVC - Hide File Paths) ====================
+// ==================== API Routes - Define FIRST for priority ====================
+// All /api/* routes must be defined before HTML routes and static middleware
 
 // 主页路由
 app.get('/', (req, res) => {

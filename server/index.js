@@ -982,6 +982,19 @@ server.listen(PORT, HOST, () => {
     logger.info('Seagull Multiplayer Server running', { port: PORT, host: HOST });
     logger.info('Server accessible at:', { local: `http://localhost:${PORT}` });
     
+    // Log registered API routes for debugging
+    const apiRoutes = [];
+    app._router.stack.forEach((middleware) => {
+        if (middleware.route) {
+            const methods = Object.keys(middleware.route.methods).join(',').toUpperCase();
+            const path = middleware.route.path;
+            if (path.startsWith('/api/')) {
+                apiRoutes.push(`${methods} ${path}`);
+            }
+        }
+    });
+    logger.info(`Registered API routes: ${apiRoutes.length}`, { routes: apiRoutes.slice(0, 10) });
+    
     // Find and display all network IP addresses
     Object.keys(networkInterfaces).forEach(interfaceName => {
         networkInterfaces[interfaceName].forEach(iface => {

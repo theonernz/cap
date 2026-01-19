@@ -104,7 +104,7 @@ const SeagullWorldAuth = {
     async getAllUsers() {
         try {
             // 使用 FileStorageService API 从 users.json 获取用户
-            const response = await fetch('http://localhost:3000/api/users');
+            const response = await fetch('/api/users');
             if (!response.ok) {
                 console.error('[Auth] Failed to fetch users:', response.statusText);
                 return {};
@@ -303,7 +303,7 @@ const SeagullWorldAuth = {
     async login(username, password, rememberMe = false) {
         try {
             // 调用服务器登录API
-            const response = await fetch('http://localhost:3000/api/users/login', {
+            const response = await fetch('/api/users/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -405,7 +405,7 @@ const SeagullWorldAuth = {
         }
         
         try {
-            const response = await fetch('http://localhost:3000/api/auth/verify', {
+            const response = await fetch('/api/auth/verify', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${session.token}`,
@@ -518,9 +518,9 @@ const SeagullWorldAuth = {
             // 检查是否成功
             if (!result || result.success === false) {
                 console.warn('[Auth] Failed to get user data:', result?.error || 'Unknown error');
-                // 如果是认证错误，清除无效的session
-                if (result?.error && result.error.includes('Authentication')) {
-                    console.log('[Auth] Invalid token, clearing session...');
+                // 如果是认证错误（401 Unauthorized），清除无效的session
+                if (result?.error && (result.error.includes('token') || result.error.includes('Authentication') || result.error.includes('Unauthorized'))) {
+                    console.log('[Auth] Invalid or expired token, clearing session...');
                     await this.logout();
                 }
                 return null;
@@ -543,7 +543,7 @@ const SeagullWorldAuth = {
         // 如果有token，通知服务器销毁会话
         if (session && session.token) {
             try {
-                await fetch('http://localhost:3000/api/auth/logout', {
+                await fetch('/api/auth/logout', {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${session.token}`,

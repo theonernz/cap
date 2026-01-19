@@ -39,7 +39,7 @@ class GameServer {
     // Get default configuration if no INI parser provided
     getDefaultConfig() {
         return {
-            serverPort: 3000,
+            serverPort: 80,
             maxPlayers: 20,
             worldWidth: 5000,
             worldHeight: 5000,

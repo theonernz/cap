@@ -83,8 +83,14 @@ app.use((req, res, next) => {
     next();
 });
 
-// Serve static files (HTML, CSS, JS)
-app.use(express.static(path.join(__dirname, '..')));
+// Serve static files (HTML, CSS, JS) - but NOT for /api routes
+app.use((req, res, next) => {
+    // Skip static file serving for API routes
+    if (req.path.startsWith('/api/')) {
+        return next();
+    }
+    express.static(path.join(__dirname, '..'))(req, res, next);
+});
 
 logger.info('Server starting with NO CACHE headers for development');
 
@@ -962,7 +968,7 @@ setInterval(() => {
 }, 5 * 60 * 1000); // 每5分钟清理一次
 
 // Start HTTP server
-const PORT = process.env.PORT || configParser.get('server', 'port', 3000);
+const PORT = process.env.PORT || configParser.get('server', 'port', 80);
 const HOST = '0.0.0.0'; // Listen on all network interfaces
 
 server.listen(PORT, HOST, () => {

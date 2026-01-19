@@ -11,7 +11,7 @@ const NetworkClient = {
     get serverUrl() {
         return typeof SERVER_CONFIG !== 'undefined' 
             ? SERVER_CONFIG.getCurrentServerUrl() 
-            : 'ws://localhost:3000';
+            : `ws://${window.location.host}`;
     },
     
     // Network state

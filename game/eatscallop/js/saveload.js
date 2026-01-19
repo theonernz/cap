@@ -277,6 +277,18 @@ const SaveLoadSystem = {
         try {
             const username = PlayerIdentity.getUsername();
             const result = await FileStorageService.getSavesByUser(username, isMultiplayer);
+            
+            // Handle authentication errors silently
+            if (!result.success && result.error && result.error.includes('token')) {
+                console.log('[SaveLoad] Authentication required for saves');
+                // Disable load button when not authenticated
+                loadButton.disabled = true;
+                loadButton.style.opacity = '0.5';
+                loadButton.style.cursor = 'not-allowed';
+                loadButton.title = CONFIG.language === 'zh' ? '需要登录' : 'Login required';
+                return;
+            }
+            
             const saves = result.success ? result.saves : [];
             const hasSaves = saves && saves.length > 0;
             

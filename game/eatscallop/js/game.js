@@ -346,7 +346,7 @@ const Game = {
         
         console.log('Starting multiplayer game...');
         console.log('Player:', seagullName);
-        console.log('Attempting to connect to ws://localhost:3000');          try {
+        console.log('Attempting to connect to', NetworkClient.serverUrl);          try {
             // 初始化多人游戏模式
             await MultiplayerGame.init(seagullName, playerColor);
             
@@ -434,7 +434,7 @@ const Game = {
             errorMessage += '请检查 / Please check:\n';
             errorMessage += '1. 服务器是否正在运行 / Server is running\n';
             errorMessage += '   命令 / Command: npm start\n\n';
-            errorMessage += '2. 服务器地址 / Server URL: ws://localhost:3000\n\n';
+            errorMessage += `2. 服务器地址 / Server URL: ${NetworkClient.serverUrl}\n\n`;
             errorMessage += '3. 浏览器控制台查看详细错误 / Check browser console for details\n\n';
             errorMessage += `错误信息 / Error: ${error.message}`;
             

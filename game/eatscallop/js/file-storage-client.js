@@ -91,6 +91,12 @@ const FileStorageService = {
             const response = await fetch(`${this.API_BASE}/api/users/${userId}`, {
                 headers: this.getAuthHeaders()
             });
+            
+            // Check for authentication errors
+            if (response.status === 401) {
+                return { success: false, error: 'Invalid or expired token' };
+            }
+            
             return await response.json();
         } catch (error) {
             console.error('Get user failed:', error);
@@ -157,7 +163,15 @@ const FileStorageService = {
      */
     async getSavesByUser(username, isMultiplayer = false) {
         try {
-            const response = await fetch(`${this.API_BASE}/api/saves/${username}?multiplayer=${isMultiplayer}`);
+            const response = await fetch(`${this.API_BASE}/api/saves/${username}?multiplayer=${isMultiplayer}`, {
+                headers: this.getAuthHeaders()
+            });
+            
+            // Check for authentication errors
+            if (response.status === 401) {
+                return { success: false, error: 'Invalid or expired token', saves: [] };
+            }
+            
             return await response.json();
         } catch (error) {
             console.error('Get saves failed:', error);

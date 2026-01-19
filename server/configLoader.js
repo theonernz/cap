@@ -7,7 +7,7 @@ function loadConfigFromINI(configParser) {
     const config = {};
     
     // 服务器设置
-    config.serverPort = configParser.get('server', 'port', 3000);
+    config.serverPort = configParser.get('server', 'port', 80);
     config.maxPlayers = configParser.get('server', 'maxPlayers', 20);
     
     // 世界设置

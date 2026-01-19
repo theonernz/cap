@@ -7,16 +7,16 @@ const SERVER_CONFIG = {
     servers: {
         local: {
             name: '本地服务器 (Local)',
-            url: 'ws://localhost:3000',
+            url: null, // Will be set dynamically
             description: '在本机运行的服务器 - Server running on this machine'
         },        network: {
             name: '局域网服务器 (Network)',
-            url: 'ws://192.168.1.68:3000', // Server network IP
+            url: 'ws://192.168.1.68:80', // Server network IP
             description: '局域网内的服务器 - Server on local network'
         },
         vdx2242: {
             name: 'VDX2242 服务器',
-            url: 'ws://vdx2242:3000',
+            url: 'ws://vdx2242:80',
             description: 'vdx2242 主机上的服务器'
         },
         custom: {
@@ -35,7 +35,12 @@ const SERVER_CONFIG = {
         const server = this.servers[this.current];
         if (!server) {
             console.error('Invalid server configuration:', this.current);
-            return this.servers.local.url;
+            return `ws://${window.location.host}`;
+        }
+        
+        // 如果是本地服务器，使用当前页面的host
+        if (this.current === 'local') {
+            return `ws://${window.location.host}`;
         }
         
         // 如果是自定义服务器，从 localStorage 读取
@@ -46,7 +51,7 @@ const SERVER_CONFIG = {
             }
             // 如果没有自定义 URL，回退到本地
             console.warn('No custom server URL set, falling back to local');
-            return this.servers.local.url;
+            return `ws://${window.location.host}`;
         }
         
         return server.url;

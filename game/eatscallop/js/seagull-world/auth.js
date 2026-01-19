@@ -398,9 +398,9 @@ const SeagullWorldAuth = {
             // 检查是否成功
             if (!result || result.success === false) {
                 console.warn('[Auth] Failed to get user data:', result?.error || 'Unknown error');
-                // 如果是认证错误，清除无效的session
-                if (result?.error && (result.error.includes('Authentication') || result.error.includes('Unauthorized'))) {
-                    console.log('[Auth] Invalid token, clearing session...');
+                // 如果是认证错误（401 Unauthorized），清除无效的session
+                if (result?.error && (result.error.includes('token') || result.error.includes('Authentication') || result.error.includes('Unauthorized'))) {
+                    console.log('[Auth] Invalid or expired token, clearing session...');
                     this.logout();
                 }
                 return null;

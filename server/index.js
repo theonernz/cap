@@ -83,14 +83,7 @@ app.use((req, res, next) => {
     next();
 });
 
-// Serve static files (HTML, CSS, JS) - but NOT for /api routes
-app.use((req, res, next) => {
-    // Skip static file serving for API routes
-    if (req.path.startsWith('/api/')) {
-        return next();
-    }
-    express.static(path.join(__dirname, '..'))(req, res, next);
-});
+// NOTE: Static file middleware will be added AFTER all API routes
 
 logger.info('Server starting with NO CACHE headers for development');
 
@@ -664,6 +657,10 @@ app.post('/api/rooms/create', (req, res) => {
         res.status(500).json({ success: false, error: error.message });
     }
 });
+
+// ==================== Serve Static Files ====================
+// Place AFTER all API routes so API routes take priority
+app.use(express.static(path.join(__dirname, '..')));
 
 // ==================== WebSocket Server ====================
 

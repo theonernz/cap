@@ -35,12 +35,14 @@ const SERVER_CONFIG = {
         const server = this.servers[this.current];
         if (!server) {
             console.error('Invalid server configuration:', this.current);
-            return `ws://${window.location.host}`;
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            return `${protocol}//${window.location.host}`;
         }
         
-        // 如果是本地服务器，使用当前页面的host
+        // 如果是本地服务器，使用当前页面的host，自动检测协议
         if (this.current === 'local') {
-            return `ws://${window.location.host}`;
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            return `${protocol}//${window.location.host}`;
         }
         
         // 如果是自定义服务器，从 localStorage 读取
@@ -51,7 +53,8 @@ const SERVER_CONFIG = {
             }
             // 如果没有自定义 URL，回退到本地
             console.warn('No custom server URL set, falling back to local');
-            return `ws://${window.location.host}`;
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            return `${protocol}//${window.location.host}`;
         }
         
         return server.url;

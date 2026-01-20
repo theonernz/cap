@@ -9,9 +9,12 @@ const NetworkClient = {
     
     // 使用配置文件中的服务器地址
     get serverUrl() {
-        return typeof SERVER_CONFIG !== 'undefined' 
-            ? SERVER_CONFIG.getCurrentServerUrl() 
-            : `ws://${window.location.host}`;
+        if (typeof SERVER_CONFIG !== 'undefined') {
+            return SERVER_CONFIG.getCurrentServerUrl();
+        }
+        // Auto-detect protocol: wss for https, ws for http
+        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        return `${protocol}//${window.location.host}`;
     },
     
     // Network state

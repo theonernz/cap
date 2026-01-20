@@ -103,7 +103,7 @@ const NetworkClient = {
                     clearTimeout(connectionTimeout);
                     console.error('✗ WebSocket error:', error);
                     console.error('Server URL:', this.serverUrl);
-                    console.error('Please ensure the server is running on port 3000');
+                    console.error('Please check server configuration and WebSocket proxy settings');
                     reject(new Error('Failed to connect to server. Please ensure the server is running.'));
                 };
                 

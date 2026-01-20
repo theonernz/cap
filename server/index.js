@@ -972,7 +972,7 @@ setInterval(() => {
 }, 5 * 60 * 1000); // 每5分钟清理一次
 
 // Start HTTP server
-const PORT = process.env.PORT || configParser.get('server', 'port', 80);
+const PORT = process.env.PORT || configParser.get('server', 'port', 3000);
 const HOST = '0.0.0.0'; // Listen on all network interfaces
 
 server.listen(PORT, HOST, () => {

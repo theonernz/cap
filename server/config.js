@@ -1,5 +1,5 @@
 // ==================== Server Configuration ====================
-module.exports = {    serverPort: 80,
+module.exports = {    serverPort: 3000,
     
     // Game world settings - 更大的地图
     worldWidth: 5000,
